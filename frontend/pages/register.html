@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register Farmer Account | KisanSetu</title>
+
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Core Design System -->
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body class="bg-[#f8fafc] text-[#0f172a] min-h-screen flex flex-col justify-between antialiased">
+
+  <!-- Top Simple Navigation Bar -->
+  <header class="bg-white border-b border-slate-200 py-3 px-4">
+    <div class="container mx-auto flex items-center justify-between">
+      <a href="../index.html" class="flex items-center gap-2.5 text-decoration-none">
+        <div class="w-8 h-8 rounded-lg bg-[#15803d] text-white flex items-center justify-center font-bold text-sm">
+          K
+        </div>
+        <div>
+          <span class="text-lg font-bold text-slate-900 tracking-tight">KisanSetu</span>
+          <span class="text-xs text-slate-500 ml-1">| किसान सेतु</span>
+        </div>
+      </a>
+      <a href="login.html"
+        class="text-xs font-medium text-slate-600 hover:text-[#15803d] flex items-center gap-1 transition-colors">
+        Already registered? <strong class="text-[#15803d] ml-1">Log In</strong>
+      </a>
+    </div>
+  </header>
+
+  <!-- Main Registration Container -->
+  <main class="flex-1 flex items-center justify-center py-10 px-4">
+    <div class="w-full max-w-lg">
+
+      <!-- Registration Card -->
+      <div class="card shadow-md border-slate-200 bg-white p-6 sm:p-8">
+
+        <!-- Progress Indicator -->
+        <div class="mb-6">
+          <div class="flex items-center justify-between text-xs font-semibold text-slate-500 mb-2">
+            <span class="text-[#15803d]">Step 1 of 2: Account Information</span>
+            <span>Next: Profile Details</span>
+          </div>
+          <div class="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
+            <div class="bg-[#15803d] h-full w-1/2 rounded-full"></div>
+          </div>
+        </div>
+
+        <!-- Header -->
+        <div class="mb-5">
+          <div
+            class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-50 text-[#15803d] border border-emerald-200 text-[11px] font-semibold mb-2">
+            <span>●</span> Farmer Public Onboarding
+          </div>
+          <h1 class="text-2xl font-bold text-slate-900 tracking-tight">Create Your Farmer Account</h1>
+          <p class="text-xs text-slate-500 mt-1">
+            Public registration is currently available for farmers. (Operator and administrative accounts are assigned
+            via system administrator).
+          </p>
+        </div>
+
+        <!-- Inline Error Banner -->
+        <div id="register-error-box" class="alert alert-danger hidden mb-4 text-xs" role="alert">
+          <svg class="w-4 h-4 text-rose-600 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          <span id="register-error-text">Please complete all fields.</span>
+        </div>
+
+        <!-- Registration Form -->
+        <form id="register-form" class="space-y-4">
+
+          <!-- Full Name -->
+          <div class="form-group mb-3">
+            <label for="reg-name" class="form-label text-xs">
+              Full Name <span class="text-rose-500">*</span>
+            </label>
+            <input type="text" id="reg-name" class="form-input text-sm" placeholder="e.g. Rameshwar Singh" required
+              autocomplete="name">
+          </div>
+
+          <!-- Phone Number -->
+          <div class="form-group mb-3">
+            <label for="reg-phone" class="form-label text-xs">
+              Mobile Number (For SMS &amp; Queue Alerts) <span class="text-rose-500">*</span>
+            </label>
+            <div class="relative">
+              <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-xs text-slate-400 font-mono">+91</span>
+              <input type="tel" id="reg-phone" class="form-input text-sm pl-12" placeholder="98765 43210"
+                pattern="[0-9]{10}" maxlength="10" required autocomplete="tel">
+            </div>
+            <span class="text-[11px] text-slate-400 mt-1 block">Enter 10-digit mobile number without country code</span>
+          </div>
+
+          <!-- Email Address -->
+          <div class="form-group mb-3">
+            <label for="reg-email" class="form-label text-xs">
+              Email Address <span class="text-rose-500">*</span>
+            </label>
+            <input type="email" id="reg-email" class="form-input text-sm" placeholder="e.g. rameshwar@example.com"
+              required autocomplete="email">
+          </div>
+
+          <!-- Password & Confirm Password Grid -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-2">
+
+            <div class="form-group mb-0">
+              <label for="reg-password" class="form-label text-xs">
+                Password <span class="text-rose-500">*</span>
+              </label>
+              <div class="relative">
+                <input type="password" id="reg-password" class="form-input text-sm pr-9" placeholder="Min. 6 characters"
+                  minlength="6" required autocomplete="new-password">
+                <button type="button"
+                  class="toggle-pass-btn absolute inset-y-0 right-0 pr-2.5 flex items-center text-slate-400 hover:text-slate-600"
+                  data-target="reg-password" aria-label="Toggle password visibility">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
+                    </path>
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <div class="form-group mb-0">
+              <label for="reg-confirm-password" class="form-label text-xs">
+                Confirm Password <span class="text-rose-500">*</span>
+              </label>
+              <div class="relative">
+                <input type="password" id="reg-confirm-password" class="form-input text-sm pr-9"
+                  placeholder="Repeat password" minlength="6" required autocomplete="new-password">
+                <button type="button"
+                  class="toggle-pass-btn absolute inset-y-0 right-0 pr-2.5 flex items-center text-slate-400 hover:text-slate-600"
+                  data-target="reg-confirm-password" aria-label="Toggle password visibility">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
+                    </path>
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Submit Button -->
+          <button type="submit" id="submit-reg-btn"
+            class="btn btn-primary w-full py-2.5 font-semibold text-sm shadow-sm mt-4 flex items-center justify-center gap-2">
+            Continue to Profile Details
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+            </svg>
+          </button>
+
+        </form>
+
+        <!-- Bottom Login Link -->
+        <div class="mt-6 pt-4 border-t border-slate-100 text-center text-xs text-slate-600">
+          <span>Already registered on KisanSetu?</span>
+          <a href="login.html" class="font-semibold text-[#15803d] hover:underline ml-1">Log in here</a>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Simple Footer -->
+  <footer class="py-4 text-center text-xs text-slate-400 border-t border-slate-200 bg-white">
+    KisanSetu &copy; 2026 • SIH Innovation Project
+  </footer>
+
+  <!-- Scripts -->
+  <script src="../js/utils.js"></script>
+  <script src="../js/auth.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const regForm = document.getElementById('register-form');
+      const nameInput = document.getElementById('reg-name');
+      const phoneInput = document.getElementById('reg-phone');
+      const emailInput = document.getElementById('reg-email');
+      const passwordInput = document.getElementById('reg-password');
+      const confirmPasswordInput = document.getElementById('reg-confirm-password');
+      const errorBox = document.getElementById('register-error-box');
+      const errorText = document.getElementById('register-error-text');
+
+      // Password visibility toggles
+      document.querySelectorAll('.toggle-pass-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const targetId = btn.getAttribute('data-target');
+          const targetInput = document.getElementById(targetId);
+          if (targetInput) {
+            targetInput.type = targetInput.type === 'password' ? 'text' : 'password';
+          }
+        });
+      });
+
+      regForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        errorBox.classList.add('hidden');
+
+        // Validation 1: Passwords match
+        if (passwordInput.value !== confirmPasswordInput.value) {
+          errorText.textContent = "Passwords do not match. Please re-enter.";
+          errorBox.classList.remove('hidden');
+          confirmPasswordInput.focus();
+          return;
+        }
+
+        // Validation 2: Phone format
+        const phoneClean = phoneInput.value.replace(/\s+/g, '');
+        if (!/^\d{10}$/.test(phoneClean)) {
+          errorText.textContent = "Please enter a valid 10-digit mobile number.";
+          errorBox.classList.remove('hidden');
+          phoneInput.focus();
+          return;
+        }
+
+        const result = window.KisanAuth.registerFarmer({
+          name: nameInput.value,
+          phone: "+91 " + phoneClean,
+          email: emailInput.value,
+          password: passwordInput.value
+        });
+
+        if (result.success) {
+          window.location.href = result.redirectUrl;
+        } else {
+          errorText.textContent = result.error || "Registration failed.";
+          errorBox.classList.remove('hidden');
+        }
+      });
+    });
+  </script>
+</body>
+
+</html>
