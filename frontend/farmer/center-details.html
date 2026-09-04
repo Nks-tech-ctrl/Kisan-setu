@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="hi">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>केंद्र विवरण | Center Details — KisanSetu</title>
+
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Core Design System -->
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body class="bg-[#f8fafc] text-[#0f172a] min-h-screen flex flex-col justify-between antialiased">
+
+  <!-- Authenticated Header -->
+  <header class="bg-white border-b border-slate-200 py-3.5 px-4 sticky top-0 z-40 shadow-xs">
+    <div class="container mx-auto flex flex-wrap items-center justify-between gap-3">
+      <!-- Brand & Back Button -->
+      <div class="flex items-center gap-3">
+        <a href="dashboard.html"
+          class="w-9 h-9 rounded-lg bg-[#15803d] text-white flex items-center justify-center font-bold text-sm shadow-xs">
+          K
+        </a>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="text-base font-bold text-slate-900 tracking-tight">KisanSetu</span>
+            <span class="text-xs text-slate-400">| किसान सेतु</span>
+          </div>
+          <div class="text-[11px] font-semibold text-[#15803d] -mt-0.5">
+            केंद्र विवरण (Center Details)
+          </div>
+        </div>
+      </div>
+
+      <!-- Navigation & Logout -->
+      <div class="flex items-center gap-3">
+        <a href="centers.html" class="btn btn-outline btn-sm text-xs font-semibold flex items-center gap-1.5 py-1.5 px-3">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+          </svg>
+          खरीद केंद्रों पर वापस (Back to Centers)
+        </a>
+
+        <button type="button" id="logout-btn" class="btn btn-outline btn-sm text-xs py-1.5 px-3">
+          लॉगआउट (Logout)
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Container -->
+  <main class="container mx-auto py-6 sm:py-8 px-4 flex-1">
+
+    <!-- Not Found Error Container (Hidden by default) -->
+    <div id="error-container" class="card p-10 bg-white border-slate-200 text-center max-w-lg mx-auto hidden shadow-xs my-8">
+      <div class="w-14 h-14 rounded-full bg-rose-50 text-rose-600 flex items-center justify-center mx-auto mb-3">
+        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+        </svg>
+      </div>
+      <h2 class="text-xl font-bold text-slate-900 mb-1">खरीद केंद्र नहीं मिला</h2>
+      <p class="text-xs text-slate-500 mb-6">
+        (Procurement center not found or invalid ID provided)
+      </p>
+      <a href="centers.html" class="btn btn-primary text-xs font-semibold py-2.5 px-5 inline-flex items-center gap-1.5">
+        ← खरीद केंद्रों पर वापस जाएं (Back to Centers)
+      </a>
+    </div>
+
+    <!-- Center Details Content (Populated dynamically) -->
+    <div id="center-details-content" class="max-w-4xl mx-auto space-y-6 hidden">
+
+      <!-- Breadcrumbs & Quick Back -->
+      <nav class="flex items-center gap-2 text-xs text-slate-500 font-medium" aria-label="Breadcrumb">
+        <a href="dashboard.html" class="hover:text-[#15803d]">डैशबोर्ड</a>
+        <span>/</span>
+        <a href="centers.html" class="hover:text-[#15803d]">खरीद केंद्र</a>
+        <span>/</span>
+        <span class="text-slate-900 font-bold" id="crumb-center-name">केंद्र विवरण</span>
+      </nav>
+
+      <!-- Center Hero Card -->
+      <div class="card p-6 bg-white border-slate-200 shadow-xs">
+        <div class="flex flex-wrap items-start justify-between gap-4">
+          <div>
+            <div class="flex items-center gap-2 mb-2">
+              <span class="text-xs font-mono font-bold px-2.5 py-0.5 bg-slate-100 text-slate-700 rounded border border-slate-200" id="center-id-badge">
+                CTR-ID
+              </span>
+              <div id="center-load-badge"></div>
+            </div>
+            <h1 class="text-2xl sm:text-3xl font-bold text-slate-900" id="center-name">
+              लोड हो रहा है...
+            </h1>
+            <p class="text-xs sm:text-sm text-slate-500 flex items-center gap-1.5 mt-1.5" id="center-location">
+              <svg class="w-4 h-4 text-slate-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+              </svg>
+              <span>ज़िला व राज्य</span>
+            </p>
+          </div>
+
+          <!-- Primary Book Slot CTA -->
+          <div class="w-full sm:w-auto">
+            <a href="#" id="primary-book-slot-btn"
+              class="btn btn-primary py-3 px-6 font-semibold text-sm shadow-sm flex items-center justify-center gap-2 w-full sm:w-auto">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+              </svg>
+              स्लॉट बुक करें (Book Slot) &rarr;
+            </a>
+          </div>
+        </div>
+
+        <!-- Address and Operating Hours -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6 pt-5 border-t border-slate-100 text-xs">
+          <div class="space-y-1">
+            <span class="text-slate-400 font-semibold block text-[11px] uppercase tracking-wider">
+              पता (Facility Address)
+            </span>
+            <p class="text-slate-700 leading-relaxed font-medium" id="center-address">
+              -
+            </p>
+          </div>
+          <div class="space-y-1">
+            <span class="text-slate-400 font-semibold block text-[11px] uppercase tracking-wider">
+              कार्य समय (Operating Hours)
+            </span>
+            <p class="text-slate-700 leading-relaxed font-medium flex items-center gap-1.5" id="center-hours">
+              <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+              <span>-</span>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Center Status & Operational Metrics Grid (Clearly Marked Demo Data) -->
+      <div class="card p-6 bg-white border-slate-200 shadow-xs">
+        <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-4">
+          <h2 class="text-sm font-bold text-slate-900 uppercase tracking-wide flex items-center gap-2">
+            <span>📊</span> वर्तमान केंद्र स्थिति (Center Status)
+          </h2>
+          <span class="text-[10px] text-amber-700 font-semibold px-2 py-0.5 bg-amber-50 rounded border border-amber-200">
+            डेमो डेटा • Demo Data
+          </span>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+          <div class="metric-box bg-slate-50 p-4 border border-slate-200">
+            <span class="text-[11px] text-slate-500 block">भीड़ स्तर (Load Status)</span>
+            <span class="text-sm sm:text-base font-bold text-slate-900 mt-1 block" id="status-load">-</span>
+          </div>
+
+          <div class="metric-box bg-slate-50 p-4 border border-slate-200">
+            <span class="text-[11px] text-slate-500 block">कतार में वाहन (Queue)</span>
+            <span class="text-sm sm:text-base font-bold text-slate-900 mt-1 block" id="status-queue">-</span>
+          </div>
+
+          <div class="metric-box bg-slate-50 p-4 border border-slate-200">
+            <span class="text-[11px] text-slate-500 block">अनुमानित प्रतीक्षा (Wait)</span>
+            <span class="text-sm sm:text-base font-bold text-slate-900 mt-1 block" id="status-wait">-</span>
+          </div>
+
+          <div class="metric-box bg-slate-50 p-4 border border-slate-200">
+            <span class="text-[11px] text-slate-500 block">दैनिक क्षमता (Capacity)</span>
+            <span class="text-sm sm:text-base font-bold text-slate-900 mt-1 block" id="status-capacity">-</span>
+          </div>
+        </div>
+
+        <p class="text-[11px] text-slate-400 mt-3 flex items-center gap-1.5">
+          <svg class="w-3.5 h-3.5 text-slate-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          <span>उपरोक्त कतार और समय मान प्रोटोटाइप मूल्यांकन हेतु सांकेतिक हैं (Illustrative prototype metrics).</span>
+        </p>
+      </div>
+
+      <!-- Supported Commodities Card -->
+      <div class="card p-6 bg-white border-slate-200 shadow-xs">
+        <h2 class="text-sm font-bold text-slate-900 uppercase tracking-wide mb-3 flex items-center gap-2">
+          <span>🌾</span> स्वीकृत फसलें (Supported Commodities)
+        </h2>
+        <p class="text-xs text-slate-500 mb-4">
+          इस खरीद केंद्र पर न्यूनतम समर्थन मूल्य (MSP) पर स्वीकृत प्रमुख फसलें:
+        </p>
+        <div id="commodities-list" class="flex flex-wrap gap-2">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+
+      <!-- Facility Amenities Card -->
+      <div class="card p-6 bg-white border-slate-200 shadow-xs">
+        <h2 class="text-sm font-bold text-slate-900 uppercase tracking-wide mb-3 flex items-center gap-2">
+          <span>🏛️</span> केंद्र सुविधाएं (Center Facilities)
+        </h2>
+        <div id="facilities-list" class="grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+
+      <!-- Bottom Action Bar -->
+      <div class="card p-5 bg-gradient-to-r from-emerald-50 to-slate-50 border-emerald-200 flex flex-wrap items-center justify-between gap-4 shadow-xs">
+        <div>
+          <h3 class="text-sm font-bold text-slate-900">फसल लाने के लिए तैयार हैं?</h3>
+          <p class="text-xs text-slate-500 mt-0.5">
+            अपनी सुविधा अनुसार स्लॉट बुक करें और बिना लाइन में लगे टोकन प्राप्त करें।
+          </p>
+        </div>
+        <a href="#" id="secondary-book-slot-btn" class="btn btn-primary py-2.5 px-5 font-semibold text-xs shadow-sm">
+          स्लॉट बुक करें (Book Slot) &rarr;
+        </a>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- Simple Footer -->
+  <footer class="py-4 text-center text-xs text-slate-400 border-t border-slate-200 bg-white">
+    KisanSetu &copy; 2026 • SIH Innovation Project
+  </footer>
+
+  <!-- Scripts: Mock Data, Utils, Auth Engine, and Farmer UI -->
+  <script src="../js/mock-data.js"></script>
+  <script src="../js/utils.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="farmer.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // 1. Enforce Farmer route protection
+      const user = window.KisanAuth.requireAuth('farmer', '../pages/login.html');
+      if (!user) return;
+
+      // 2. Logout handler
+      document.getElementById('logout-btn').addEventListener('click', () => {
+        window.KisanAuth.logout('../pages/login.html');
+      });
+
+      // 3. Read center ID from URL query parameters
+      const urlParams = new URLSearchParams(window.location.search);
+      const centerId = urlParams.get('id');
+
+      const errorContainer = document.getElementById('error-container');
+      const detailsContainer = document.getElementById('center-details-content');
+
+      if (!centerId) {
+        errorContainer.classList.remove('hidden');
+        return;
+      }
+
+      const center = window.FarmerPortal.getCenterById(centerId);
+
+      if (!center) {
+        errorContainer.classList.remove('hidden');
+        return;
+      }
+
+      // Show details
+      detailsContainer.classList.remove('hidden');
+
+      // Populate identity
+      document.getElementById('crumb-center-name').textContent = center.name;
+      document.getElementById('center-name').textContent = center.name;
+      document.getElementById('center-id-badge').textContent = center.id;
+      document.getElementById('center-location').querySelector('span').textContent = `${center.district}, ${center.state}`;
+      document.getElementById('center-address').textContent = center.address || `${center.name}, ${center.district}, ${center.state}`;
+      document.getElementById('center-hours').querySelector('span').textContent = center.operatingHours || '09:00 AM – 05:00 PM (सोमवार से शनिवार)';
+
+      // Load badge
+      document.getElementById('center-load-badge').innerHTML = window.FarmerPortal.getLoadBadge(center.loadStatus);
+
+      // Operational metrics (Demo data)
+      const loadLabels = {
+        low: "कम प्रतीक्षा (Low)",
+        medium: "मध्यम भार (Moderate)",
+        high: "भारी भीड़ (High)"
+      };
+      document.getElementById('status-load').textContent = loadLabels[(center.loadStatus || '').toLowerCase()] || center.loadStatus;
+      document.getElementById('status-queue').textContent = `${center.currentQueueVehicles || 0} वाहन`;
+      document.getElementById('status-wait').textContent = `~${center.estimatedWaitMinutes || 0} मिनट`;
+      document.getElementById('status-capacity').textContent = center.dailyCapacity || `${center.dailyCapacityMT || 500} MT / दिन`;
+
+      // Supported Commodities
+      const commoditiesList = document.getElementById('commodities-list');
+      const commodities = center.commodities || [center.commodity || 'Wheat (Grade A)'];
+      commoditiesList.innerHTML = commodities
+        .map(crop => `
+          <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-emerald-50 text-emerald-800 border border-emerald-200 text-xs font-semibold">
+            <span>🌾</span> ${crop}
+          </span>
+        `)
+        .join('');
+
+      // Facilities
+      const facilitiesList = document.getElementById('facilities-list');
+      const facilities = center.facilities || [
+        "डिजिटल टोकन",
+        "स्लॉट बुकिंग",
+        "प्रतीक्षा क्षेत्र",
+        "ऑपरेटर सहायता",
+        "इलेक्ट्रॉनिक वेईब्रिज"
+      ];
+      facilitiesList.innerHTML = facilities
+        .map(f => `
+          <div class="flex items-center gap-2 p-2.5 rounded bg-slate-50 border border-slate-200 text-slate-700">
+            <span class="text-emerald-600 font-bold">✔</span>
+            <span class="font-medium">${f}</span>
+          </div>
+        `)
+        .join('');
+
+      // Setup Booking Links
+      const bookingUrl = `booking.html?center=${encodeURIComponent(center.id)}`;
+      document.getElementById('primary-book-slot-btn').setAttribute('href', bookingUrl);
+      document.getElementById('secondary-book-slot-btn').setAttribute('href', bookingUrl);
+    });
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="hi">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>स्लॉट बुकिंग | Slot Booking — KisanSetu</title>
+
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Core Design System -->
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body class="bg-[#f8fafc] text-[#0f172a] min-h-screen flex flex-col justify-between antialiased">
+
+  <!-- Authenticated Header -->
+  <header class="bg-white border-b border-slate-200 py-3.5 px-4 sticky top-0 z-40 shadow-xs">
+    <div class="container mx-auto flex flex-wrap items-center justify-between gap-3">
+      <!-- Brand & Back Button -->
+      <div class="flex items-center gap-3">
+        <a href="dashboard.html"
+          class="w-9 h-9 rounded-lg bg-[#15803d] text-white flex items-center justify-center font-bold text-sm shadow-xs">
+          K
+        </a>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="text-base font-bold text-slate-900 tracking-tight">KisanSetu</span>
+            <span class="text-xs text-slate-400">| किसान सेतु</span>
+          </div>
+          <div class="text-[11px] font-semibold text-[#15803d] -mt-0.5">
+            स्लॉट बुकिंग (Slot Booking)
+          </div>
+        </div>
+      </div>
+
+      <!-- Navigation & Logout -->
+      <div class="flex items-center gap-3">
+        <a href="#" id="back-to-details-btn" class="btn btn-outline btn-sm text-xs font-semibold flex items-center gap-1.5 py-1.5 px-3">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+          </svg>
+          केंद्र विवरण पर वापस (Back)
+        </a>
+
+        <button type="button" id="logout-btn" class="btn btn-outline btn-sm text-xs py-1.5 px-3">
+          लॉगआउट (Logout)
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Container -->
+  <main class="container mx-auto py-6 sm:py-8 px-4 flex-1">
+
+    <!-- Not Found Error Container (Hidden by default) -->
+    <div id="error-container" class="card p-10 bg-white border-slate-200 text-center max-w-lg mx-auto hidden shadow-xs my-8">
+      <div class="w-14 h-14 rounded-full bg-rose-50 text-rose-600 flex items-center justify-center mx-auto mb-3">
+        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+        </svg>
+      </div>
+      <h2 class="text-xl font-bold text-slate-900 mb-1">खरीद केंद्र का चयन नहीं हुआ</h2>
+      <p class="text-xs text-slate-500 mb-6">
+        (No procurement center selected or invalid Center ID provided)
+      </p>
+      <a href="centers.html" class="btn btn-primary text-xs font-semibold py-2.5 px-5 inline-flex items-center gap-1.5">
+        ← खरीद केंद्र चुनें (Select a Center)
+      </a>
+    </div>
+
+    <!-- Booking Form Container -->
+    <div id="booking-container" class="max-w-4xl mx-auto space-y-6 hidden">
+
+      <!-- Breadcrumbs -->
+      <nav class="flex items-center gap-2 text-xs text-slate-500 font-medium" aria-label="Breadcrumb">
+        <a href="dashboard.html" class="hover:text-[#15803d]">डैशबोर्ड</a>
+        <span>/</span>
+        <a href="centers.html" class="hover:text-[#15803d]">खरीद केंद्र</a>
+        <span>/</span>
+        <a href="#" id="crumb-center-link" class="hover:text-[#15803d]">केंद्र विवरण</a>
+        <span>/</span>
+        <span class="text-slate-900 font-bold">स्लॉट बुकिंग</span>
+      </nav>
+
+      <!-- Center Summary Card -->
+      <div class="card p-5 bg-white border-slate-200 shadow-xs">
+        <div class="flex flex-wrap items-start justify-between gap-3">
+          <div>
+            <div class="flex items-center gap-2 mb-1.5">
+              <span class="text-xs font-mono font-bold px-2 py-0.5 bg-slate-100 text-slate-700 rounded border border-slate-200" id="center-id-badge">
+                CTR-ID
+              </span>
+              <div id="center-load-badge"></div>
+              <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-semibold bg-blue-50 text-blue-700 border border-blue-200">
+                डेमो स्लॉट डेटा • Demo Slot Data
+              </span>
+            </div>
+            <h1 class="text-xl sm:text-2xl font-bold text-slate-900" id="center-name">
+              लोड हो रहा है...
+            </h1>
+            <p class="text-xs text-slate-500 flex items-center gap-1.5 mt-1" id="center-location">
+              <svg class="w-3.5 h-3.5 text-slate-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+              </svg>
+              <span>ज़िला, राज्य</span>
+            </p>
+          </div>
+          <div class="text-right text-xs">
+            <span class="text-slate-400 block text-[10px] uppercase font-bold">समय</span>
+            <span class="font-medium text-slate-700" id="center-hours">09:00 AM – 05:00 PM</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 1: Select Commodity -->
+      <div class="card p-6 bg-white border-slate-200 shadow-xs">
+        <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-4">
+          <div class="flex items-center gap-2.5">
+            <span class="w-6 h-6 rounded-full bg-[#15803d] text-white flex items-center justify-center font-bold text-xs">
+              1
+            </span>
+            <div>
+              <h2 class="text-sm font-bold text-slate-900">फसल चुनें (Select Commodity)</h2>
+              <p class="text-[11px] text-slate-500">इस केंद्र पर स्वीकार्य फसल का चयन करें</p>
+            </div>
+          </div>
+          <span class="text-xs font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200" id="commodity-selected-badge">
+            चयनित: कोई नहीं
+          </span>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3" id="commodity-options">
+          <!-- Populated by JavaScript -->
+        </div>
+      </div>
+
+      <!-- Step 2: Select Date -->
+      <div class="card p-6 bg-white border-slate-200 shadow-xs">
+        <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-4">
+          <div class="flex items-center gap-2.5">
+            <span class="w-6 h-6 rounded-full bg-[#15803d] text-white flex items-center justify-center font-bold text-xs">
+              2
+            </span>
+            <div>
+              <h2 class="text-sm font-bold text-slate-900">तारीख चुनें (Select Date)</h2>
+              <p class="text-[11px] text-slate-500">खरीद केंद्र पर आने की उपयुक्त तारीख चुनें</p>
+            </div>
+          </div>
+          <span class="text-xs font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200" id="date-selected-badge">
+            चयनित: कोई नहीं
+          </span>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3" id="date-options">
+          <!-- Populated by JavaScript -->
+        </div>
+      </div>
+
+      <!-- Step 3: Select Time Slot -->
+      <div class="card p-6 bg-white border-slate-200 shadow-xs">
+        <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-4">
+          <div class="flex items-center gap-2.5">
+            <span class="w-6 h-6 rounded-full bg-[#15803d] text-white flex items-center justify-center font-bold text-xs">
+              3
+            </span>
+            <div>
+              <h2 class="text-sm font-bold text-slate-900">समय स्लॉट चुनें (Select Time Slot)</h2>
+              <p class="text-[11px] text-slate-500">उपलब्ध 1 घंटे का आगमन स्लॉट चुनें</p>
+            </div>
+          </div>
+          <span class="text-xs font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200" id="slot-selected-badge">
+            चयनित: कोई नहीं
+          </span>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3" id="slot-options">
+          <!-- Populated by JavaScript -->
+        </div>
+      </div>
+
+      <!-- Booking Confirmation Preview & Actions -->
+      <div class="card p-6 bg-white border-slate-200 shadow-sm border-l-4 border-l-[#15803d]">
+        <h3 class="text-sm font-bold text-slate-900 mb-3 flex items-center gap-2">
+          <span>📋</span> बुकिंग पूर्वावलोकन (Booking Summary Preview)
+        </h3>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 p-4 rounded-lg bg-slate-50 border border-slate-200 text-xs">
+          <div>
+            <span class="text-slate-400 block text-[10px] uppercase font-bold">किसान (Farmer)</span>
+            <span class="font-bold text-slate-900" id="summary-farmer">-</span>
+          </div>
+          <div>
+            <span class="text-slate-400 block text-[10px] uppercase font-bold">फसल (Crop)</span>
+            <span class="font-bold text-slate-900" id="summary-commodity">चयन प्रतीक्षित</span>
+          </div>
+          <div>
+            <span class="text-slate-400 block text-[10px] uppercase font-bold">तारीख (Date)</span>
+            <span class="font-bold text-slate-900" id="summary-date">चयन प्रतीक्षित</span>
+          </div>
+          <div>
+            <span class="text-slate-400 block text-[10px] uppercase font-bold">समय स्लॉट (Slot)</span>
+            <span class="font-bold text-slate-900" id="summary-slot">चयन प्रतीक्षित</span>
+          </div>
+        </div>
+
+        <!-- Inline Validation Warning (Hidden by default) -->
+        <div id="validation-warning" class="hidden mt-4 p-3 rounded bg-rose-50 border border-rose-200 text-rose-800 text-xs font-medium flex items-center gap-2">
+          <svg class="w-4 h-4 shrink-0 text-rose-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          <span id="validation-message">कृपया फसल, तारीख और समय स्लॉट चुनें। (Please complete all 3 selections)</span>
+        </div>
+
+        <!-- Note on prototype nature -->
+        <div class="mt-4 text-[11px] text-slate-500 flex items-start gap-1.5 leading-relaxed">
+          <span class="text-amber-500 font-bold shrink-0">ℹ</span>
+          <span>
+            यह एक प्रोटोटाइप स्लॉट बुकिंग प्रणाली है। पुष्टि करने पर डिजिटल टोकन पर्ची तैयार होगी। केंद्र पर पहुंचने पर गेट ऑपरेटर द्वारा सत्यापन के बाद लाइव कतार स्थिति सक्रिय होगी।
+          </span>
+        </div>
+
+        <!-- Confirm CTA -->
+        <div class="mt-5 flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-slate-100">
+          <a href="#" id="cancel-booking-btn" class="btn btn-outline btn-sm text-xs py-2.5 px-4 font-semibold text-slate-600">
+            रद्द करें (Cancel)
+          </a>
+
+          <button type="button" id="confirm-booking-btn"
+            class="btn btn-primary py-3 px-6 text-sm font-semibold shadow-sm flex items-center gap-2">
+            <span>स्लॉट बुकिंग की पुष्टि करें (Confirm Booking)</span>
+            <span>&rarr;</span>
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- Simple Footer -->
+  <footer class="py-4 text-center text-xs text-slate-400 border-t border-slate-200 bg-white">
+    KisanSetu &copy; 2026 • SIH Innovation Project
+  </footer>
+
+  <!-- Scripts: Mock Data, Utils, Auth Engine, and Farmer UI -->
+  <script src="../js/mock-data.js"></script>
+  <script src="../js/utils.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="farmer.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // 1. Enforce Farmer route protection
+      const user = window.KisanAuth.requireAuth('farmer', '../pages/login.html');
+      if (!user) return;
+
+      // 2. Setup Logout
+      document.getElementById('logout-btn').addEventListener('click', () => {
+        window.KisanAuth.logout('../pages/login.html');
+      });
+
+      // 3. Read Query Parameter (?center=CTR-ID)
+      const urlParams = new URLSearchParams(window.location.search);
+      const centerId = urlParams.get('center');
+
+      const errorContainer = document.getElementById('error-container');
+      const bookingContainer = document.getElementById('booking-container');
+
+      if (!centerId) {
+        errorContainer.classList.remove('hidden');
+        return;
+      }
+
+      // 4. Retrieve Center
+      const center = window.FarmerPortal.getCenterById(centerId);
+      if (!center) {
+        errorContainer.classList.remove('hidden');
+        return;
+      }
+
+      // Center found: Reveal booking container
+      bookingContainer.classList.remove('hidden');
+
+      // Populate Center details
+      document.getElementById('center-name').textContent = center.name;
+      document.getElementById('center-id-badge').textContent = center.id;
+      document.getElementById('center-location').querySelector('span').textContent = `${center.district}, ${center.state}`;
+      document.getElementById('center-hours').textContent = center.operatingHours || '09:00 AM – 05:00 PM';
+      document.getElementById('center-load-badge').innerHTML = window.FarmerPortal.getLoadBadge(center.loadStatus);
+
+      // Back navigation links
+      const centerDetailsUrl = `center-details.html?id=${encodeURIComponent(center.id)}`;
+      document.getElementById('back-to-details-btn').setAttribute('href', centerDetailsUrl);
+      document.getElementById('crumb-center-link').setAttribute('href', centerDetailsUrl);
+      document.getElementById('crumb-center-link').textContent = center.name;
+      document.getElementById('cancel-booking-btn').setAttribute('href', centerDetailsUrl);
+
+      // Summary Farmer details
+      const farmerDisplayName = user.name || "Demo Farmer";
+      document.getElementById('summary-farmer').textContent = farmerDisplayName;
+
+      // Selection State
+      let selectedCommodity = null;
+      let selectedDate = null;
+      let selectedSlot = null;
+
+      // DOM refs for summary and badges
+      const summaryCommodity = document.getElementById('summary-commodity');
+      const summaryDate = document.getElementById('summary-date');
+      const summarySlot = document.getElementById('summary-slot');
+
+      const commodityBadge = document.getElementById('commodity-selected-badge');
+      const dateBadge = document.getElementById('date-selected-badge');
+      const slotBadge = document.getElementById('slot-selected-badge');
+
+      const validationWarning = document.getElementById('validation-warning');
+      const validationMessage = document.getElementById('validation-message');
+
+      // 5. Render Commodities
+      const commodityOptions = document.getElementById('commodity-options');
+      const commodities = center.commodities || [center.commodity || 'Wheat (Grade A)'];
+
+      commodityOptions.innerHTML = commodities.map((crop, idx) => `
+        <button type="button" class="commodity-btn text-left p-3.5 rounded-lg border border-slate-200 hover:border-emerald-500 bg-white transition-all text-xs flex items-center justify-between" data-crop="${crop}">
+          <div class="flex items-center gap-2">
+            <span class="text-base">🌾</span>
+            <span class="font-bold text-slate-800">${crop}</span>
+          </div>
+          <span class="check-icon hidden text-emerald-600 font-bold">✔</span>
+        </button>
+      `).join('');
+
+      // Auto-select first commodity if only one exists
+      if (commodities.length === 1) {
+        selectCommodity(commodities[0]);
+      }
+
+      document.querySelectorAll('.commodity-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const crop = btn.getAttribute('data-crop');
+          selectCommodity(crop);
+        });
+      });
+
+      function selectCommodity(crop) {
+        selectedCommodity = crop;
+        commodityBadge.textContent = `चयनित: ${crop}`;
+        summaryCommodity.textContent = crop;
+        validationWarning.classList.add('hidden');
+
+        document.querySelectorAll('.commodity-btn').forEach(btn => {
+          const isCurrent = btn.getAttribute('data-crop') === crop;
+          btn.classList.toggle('border-emerald-600', isCurrent);
+          btn.classList.toggle('bg-emerald-50', isCurrent);
+          btn.classList.toggle('text-emerald-900', isCurrent);
+          btn.classList.toggle('border-slate-200', !isCurrent);
+          btn.classList.toggle('bg-white', !isCurrent);
+          btn.querySelector('.check-icon').classList.toggle('hidden', !isCurrent);
+        });
+      }
+
+      // 6. Render Dates (Dynamic via FarmerPortal.getUpcomingDates)
+      const dateOptions = document.getElementById('date-options');
+      const upcomingDates = window.FarmerPortal.getUpcomingDates(4);
+
+      dateOptions.innerHTML = upcomingDates.map(d => `
+        <button type="button" class="date-btn text-center p-3 rounded-lg border border-slate-200 hover:border-emerald-500 bg-white transition-all text-xs flex flex-col items-center justify-center gap-0.5" data-iso="${d.dateIso}">
+          <span class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">${d.tag}</span>
+          <span class="text-base font-bold text-slate-800">${d.dayNum} ${d.monthName}</span>
+          <span class="text-[10px] text-slate-500">${d.dayOfWeek}</span>
+        </button>
+      `).join('');
+
+      document.querySelectorAll('.date-btn').forEach((btn, index) => {
+        btn.addEventListener('click', () => {
+          const iso = btn.getAttribute('data-iso');
+          const dateObj = upcomingDates.find(d => d.dateIso === iso);
+          selectDate(dateObj);
+        });
+      });
+
+      function selectDate(dateObj) {
+        if (!dateObj) return;
+        selectedDate = dateObj;
+        dateBadge.textContent = `चयनित: ${dateObj.displayLabel}`;
+        summaryDate.textContent = dateObj.displayLabel;
+        validationWarning.classList.add('hidden');
+
+        document.querySelectorAll('.date-btn').forEach(btn => {
+          const isCurrent = btn.getAttribute('data-iso') === dateObj.dateIso;
+          btn.classList.toggle('border-emerald-600', isCurrent);
+          btn.classList.toggle('bg-emerald-50', isCurrent);
+          btn.classList.toggle('ring-1', isCurrent);
+          btn.classList.toggle('ring-emerald-600', isCurrent);
+          btn.classList.toggle('border-slate-200', !isCurrent);
+          btn.classList.toggle('bg-white', !isCurrent);
+        });
+      }
+
+      // 7. Render Time Slots
+      const slotOptions = document.getElementById('slot-options');
+      const timeSlots = window.FarmerPortal.getMockTimeSlots();
+
+      slotOptions.innerHTML = timeSlots.map(slot => {
+        const isFull = slot.state === 'full';
+        if (isFull) {
+          return `
+            <div class="p-3 rounded-lg border border-slate-200 bg-slate-100 text-slate-400 opacity-60 cursor-not-allowed text-xs flex items-center justify-between">
+              <span class="font-medium">${slot.timeRange}</span>
+              <span class="text-[10px] font-semibold bg-rose-100 text-rose-700 px-2 py-0.5 rounded">पूर्ण (Full)</span>
+            </div>
+          `;
+        }
+
+        return `
+          <button type="button" class="slot-btn p-3 rounded-lg border border-slate-200 hover:border-emerald-500 bg-white transition-all text-xs flex items-center justify-between text-left" data-slot-id="${slot.id}">
+            <div>
+              <span class="font-bold text-slate-800 block">${slot.timeRange}</span>
+              <span class="text-[10px] text-emerald-600 font-medium">उपलब्ध (Available)</span>
+            </div>
+            <span class="slot-check hidden text-emerald-600 font-bold">✔</span>
+          </button>
+        `;
+      }).join('');
+
+      document.querySelectorAll('.slot-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const slotId = btn.getAttribute('data-slot-id');
+          const slotObj = timeSlots.find(s => s.id === slotId);
+          selectSlot(slotObj);
+        });
+      });
+
+      function selectSlot(slotObj) {
+        if (!slotObj) return;
+        selectedSlot = slotObj;
+        slotBadge.textContent = `चयनित: ${slotObj.timeRange}`;
+        summarySlot.textContent = slotObj.timeRange;
+        validationWarning.classList.add('hidden');
+
+        document.querySelectorAll('.slot-btn').forEach(btn => {
+          const isCurrent = btn.getAttribute('data-slot-id') === slotObj.id;
+          btn.classList.toggle('border-emerald-600', isCurrent);
+          btn.classList.toggle('bg-emerald-50', isCurrent);
+          btn.classList.toggle('ring-1', isCurrent);
+          btn.classList.toggle('ring-emerald-600', isCurrent);
+          btn.classList.toggle('border-slate-200', !isCurrent);
+          btn.classList.toggle('bg-white', !isCurrent);
+          const check = btn.querySelector('.slot-check');
+          if (check) check.classList.toggle('hidden', !isCurrent);
+        });
+      }
+
+      // 8. Handle Booking Submission
+      const confirmBtn = document.getElementById('confirm-booking-btn');
+
+      confirmBtn.addEventListener('click', () => {
+        // Validation check
+        const missing = [];
+        if (!selectedCommodity) missing.push("फसल (Commodity)");
+        if (!selectedDate) missing.push("तारीख (Date)");
+        if (!selectedSlot) missing.push("समय स्लॉट (Time Slot)");
+
+        if (missing.length > 0) {
+          validationMessage.textContent = `कृपया निम्नलिखित चुनें: ${missing.join(', ')} (Please make all required selections)`;
+          validationWarning.classList.remove('hidden');
+          validationWarning.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          return;
+        }
+
+        // Generate IDs
+        const bookingId = window.FarmerPortal.generateBookingId();
+        const tokenId = window.FarmerPortal.generateTokenNumber({ bookingId });
+
+        // Construct booking record
+        const bookingData = {
+          bookingId: bookingId,
+          tokenId: tokenId,
+          farmerId: user.id || "USR-FARMER-01",
+          farmerName: farmerDisplayName,
+          farmerPhone: user.phone || "9876543210",
+          centerId: center.id,
+          centerName: center.name,
+          district: center.district,
+          state: center.state,
+          commodity: selectedCommodity,
+          bookingDate: selectedDate.displayLabel,
+          bookingDateIso: selectedDate.dateIso,
+          timeSlot: selectedSlot.timeRange,
+          status: "confirmed",
+          createdAt: new Date().toISOString(),
+          tokenStatus: "generated"
+        };
+
+        // Save to active booking & history
+        const saved = window.FarmerPortal.saveBooking(bookingData);
+        if (saved) {
+          window.location.href = "booking-confirmation.html";
+        } else {
+          alert("बुकिंग सहेजने में त्रुटि हुई। कृपया पुनः प्रयास करें। (Error saving booking, please retry.)");
+        }
+      });
+    });
+  </script>
+</body>
+
+</html>

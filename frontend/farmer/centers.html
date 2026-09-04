@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="hi">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>खरीद केंद्र खोजें | Find Procurement Centers — KisanSetu</title>
+
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Core Design System -->
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body class="bg-[#f8fafc] text-[#0f172a] min-h-screen flex flex-col justify-between antialiased">
+
+  <!-- Authenticated Header -->
+  <header class="bg-white border-b border-slate-200 py-3.5 px-4 sticky top-0 z-40 shadow-xs">
+    <div class="container mx-auto flex flex-wrap items-center justify-between gap-3">
+      <!-- Brand & Back Button -->
+      <div class="flex items-center gap-3">
+        <a href="dashboard.html"
+          class="w-9 h-9 rounded-lg bg-[#15803d] text-white flex items-center justify-center font-bold text-sm shadow-xs">
+          K
+        </a>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="text-base font-bold text-slate-900 tracking-tight">KisanSetu</span>
+            <span class="text-xs text-slate-400">| किसान सेतु</span>
+          </div>
+          <div class="text-[11px] font-semibold text-[#15803d] -mt-0.5">
+            खरीद केंद्र खोज (Center Discovery)
+          </div>
+        </div>
+      </div>
+
+      <!-- Navigation & Logout -->
+      <div class="flex items-center gap-3">
+        <a href="dashboard.html"
+          class="btn btn-outline btn-sm text-xs font-semibold flex items-center gap-1.5 py-1.5 px-3">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18">
+            </path>
+          </svg>
+          वापस डैशबोर्ड (Back to Dashboard)
+        </a>
+
+        <button type="button" id="logout-btn" class="btn btn-outline btn-sm text-xs py-1.5 px-3">
+          लॉगआउट (Logout)
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Container -->
+  <main class="container mx-auto py-6 sm:py-8 px-4 flex-1">
+
+    <!-- Page Title Banner -->
+    <div class="mb-6">
+      <div class="flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <div
+            class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-50 text-[#15803d] border border-emerald-200 text-[11px] font-semibold mb-2">
+            <span>📍</span> केंद्र निर्देशिका (Procurement Directory)
+          </div>
+          <h1 class="text-2xl sm:text-3xl font-bold text-slate-900">
+            खरीद केंद्र खोजें
+          </h1>
+          <p class="text-sm text-slate-600 mt-1">
+            अपने लिए उपयुक्त खरीद केंद्र खोजें और तुलना करें।
+          </p>
+          <p class="text-xs text-slate-400 mt-0.5">
+            Discover authorized government procurement centers, compare queue load, and evaluate wait times.
+          </p>
+        </div>
+
+        <div class="bg-white border border-slate-200 rounded-lg py-2 px-3.5 shadow-xs text-xs">
+          <span class="text-slate-400 block text-[10px]">प्रदर्शित केंद्र (Showing Centers)</span>
+          <span class="font-bold text-slate-900 text-sm">
+            <span id="visible-count">0</span> / <span id="total-count">0</span>
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Search & Filter Controls Card -->
+    <div class="card p-5 bg-white border-slate-200 mb-6 shadow-xs">
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-3.5 items-center">
+
+        <!-- Search Input (Span 5 cols) -->
+        <div class="md:col-span-5 relative">
+          <label for="center-search-input" class="sr-only">खोजें (Search)</label>
+          <div class="relative">
+            <input type="text" id="center-search-input" class="form-input text-xs sm:text-sm pl-9 pr-8 w-full"
+              placeholder="केंद्र का नाम, ज़िला या राज्य खोजें... (Search name, district, state)">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+              </svg>
+            </div>
+            <button type="button" id="clear-search-btn"
+              class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-300 hover:text-slate-500 hidden"
+              aria-label="Clear search">
+              ✕
+            </button>
+          </div>
+        </div>
+
+        <!-- State Dropdown (Span 2 cols) -->
+        <div class="md:col-span-2">
+          <label for="state-filter" class="sr-only">राज्य (State)</label>
+          <select id="state-filter" class="form-select text-xs w-full py-2">
+            <option value="">सभी राज्य (All States)</option>
+          </select>
+        </div>
+
+        <!-- District Dropdown (Span 2 cols) -->
+        <div class="md:col-span-2">
+          <label for="district-filter" class="sr-only">ज़िला (District)</label>
+          <select id="district-filter" class="form-select text-xs w-full py-2">
+            <option value="">सभी ज़िले (All Districts)</option>
+          </select>
+        </div>
+
+        <!-- Commodity Dropdown (Span 2 cols) -->
+        <div class="md:col-span-2">
+          <label for="commodity-filter" class="sr-only">फसल (Commodity)</label>
+          <select id="commodity-filter" class="form-select text-xs w-full py-2">
+            <option value="">सभी फसलें (All Crops)</option>
+          </select>
+        </div>
+
+        <!-- Reset Button (Span 1 col) -->
+        <div class="md:col-span-1 text-right">
+          <button type="button" id="reset-filters-btn" class="btn btn-outline btn-sm text-xs w-full py-2 px-2"
+            title="फ़िल्टर रीसेट करें">
+            रीसेट
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Center Cards Grid Container -->
+    <div id="centers-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+      <!-- Cards rendered dynamically via JavaScript -->
+    </div>
+
+    <!-- Empty State (Hidden by default) -->
+    <div id="empty-state" class="card p-12 bg-white border-slate-200 text-center hidden my-8 shadow-xs">
+      <div class="w-14 h-14 rounded-full bg-amber-50 text-amber-600 flex items-center justify-center mx-auto mb-3">
+        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+      </div>
+      <h3 class="text-base font-bold text-slate-800">
+        कोई खरीद केंद्र नहीं मिला
+      </h3>
+      <div class="text-xs text-slate-500 font-medium mt-0.5">
+        No procurement center found
+      </div>
+      <p class="text-xs text-slate-400 mt-2 max-w-sm mx-auto leading-relaxed">
+        आपके द्वारा चुने गए खोज शब्द या फ़िल्टर के अनुसार कोई केंद्र उपलब्ध नहीं है। कृपया दूसरा ज़िला या फसल चुनें।
+      </p>
+      <div class="mt-4">
+        <button type="button" id="empty-clear-btn" class="btn btn-primary btn-sm text-xs font-semibold py-2 px-4">
+          फ़िल्टर साफ़ करें (Clear Filters)
+        </button>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Simple Footer -->
+  <footer class="py-4 text-center text-xs text-slate-400 border-t border-slate-200 bg-white">
+    KisanSetu &copy; 2026 • SIH Innovation Project
+  </footer>
+
+  <!-- Scripts: Mock Data, Utils, Auth Engine, and Farmer UI -->
+  <script src="../js/mock-data.js"></script>
+  <script src="../js/utils.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="farmer.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // 1. Enforce Farmer route protection
+      const user = window.KisanAuth.requireAuth('farmer', '../pages/login.html');
+      if (!user) return;
+
+      // 2. Logout handler
+      document.getElementById('logout-btn').addEventListener('click', () => {
+        window.KisanAuth.logout('../pages/login.html');
+      });
+
+      // 3. Elements
+      const centersGrid = document.getElementById('centers-grid');
+      const emptyState = document.getElementById('empty-state');
+      const searchInput = document.getElementById('center-search-input');
+      const clearSearchBtn = document.getElementById('clear-search-btn');
+      const stateFilter = document.getElementById('state-filter');
+      const districtFilter = document.getElementById('district-filter');
+      const commodityFilter = document.getElementById('commodity-filter');
+      const resetFiltersBtn = document.getElementById('reset-filters-btn');
+      const emptyClearBtn = document.getElementById('empty-clear-btn');
+      const visibleCount = document.getElementById('visible-count');
+      const totalCount = document.getElementById('total-count');
+
+      // 4. Load centers from mock data
+      const allCenters = window.FarmerPortal.getCenters();
+      totalCount.textContent = allCenters.length;
+
+      // 5. Dynamically populate filters strictly from MOCK_CENTERS
+      function populateDynamicFilters() {
+        const uniqueStates = [...new Set(allCenters.map(c => c.state).filter(Boolean))].sort();
+        const uniqueDistricts = [...new Set(allCenters.map(c => c.district).filter(Boolean))].sort();
+        const uniqueCommodities = [...new Set(allCenters.map(c => c.commodity).filter(Boolean))].sort();
+
+        uniqueStates.forEach(st => {
+          const opt = document.createElement('option');
+          opt.value = st;
+          opt.textContent = st;
+          stateFilter.appendChild(opt);
+        });
+
+        uniqueDistricts.forEach(dist => {
+          const opt = document.createElement('option');
+          opt.value = dist;
+          opt.textContent = dist;
+          districtFilter.appendChild(opt);
+        });
+
+        uniqueCommodities.forEach(comm => {
+          const opt = document.createElement('option');
+          opt.value = comm;
+          opt.textContent = comm;
+          commodityFilter.appendChild(opt);
+        });
+      }
+
+      populateDynamicFilters();
+
+      // 6. Filter & Render Function
+      function filterAndRenderCenters() {
+        const query = searchInput.value.trim().toLowerCase();
+        const selectedState = stateFilter.value;
+        const selectedDistrict = districtFilter.value;
+        const selectedCommodity = commodityFilter.value;
+
+        // Toggle clear search button visibility
+        clearSearchBtn.classList.toggle('hidden', query.length === 0);
+
+        const filtered = allCenters.filter(center => {
+          // Search query check (name, district, state)
+          const matchesQuery =
+            !query ||
+            (center.name && center.name.toLowerCase().includes(query)) ||
+            (center.district && center.district.toLowerCase().includes(query)) ||
+            (center.state && center.state.toLowerCase().includes(query)) ||
+            (center.commodity && center.commodity.toLowerCase().includes(query));
+
+          // State filter
+          const matchesState = !selectedState || center.state === selectedState;
+
+          // District filter
+          const matchesDistrict = !selectedDistrict || center.district === selectedDistrict;
+
+          // Commodity filter
+          const matchesCommodity = !selectedCommodity || center.commodity === selectedCommodity;
+
+          return matchesQuery && matchesState && matchesDistrict && matchesCommodity;
+        });
+
+        visibleCount.textContent = filtered.length;
+
+        if (filtered.length === 0) {
+          centersGrid.innerHTML = '';
+          centersGrid.classList.add('hidden');
+          emptyState.classList.remove('hidden');
+        } else {
+          emptyState.classList.add('hidden');
+          centersGrid.classList.remove('hidden');
+          centersGrid.innerHTML = filtered
+            .map(center => window.FarmerPortal.renderCenterCard(center, false))
+            .join('');
+        }
+      }
+
+      // 7. Event Listeners
+      searchInput.addEventListener('input', filterAndRenderCenters);
+      stateFilter.addEventListener('change', filterAndRenderCenters);
+      districtFilter.addEventListener('change', filterAndRenderCenters);
+      commodityFilter.addEventListener('change', filterAndRenderCenters);
+
+      function resetAllFilters() {
+        searchInput.value = '';
+        stateFilter.value = '';
+        districtFilter.value = '';
+        commodityFilter.value = '';
+        filterAndRenderCenters();
+      }
+
+      clearSearchBtn.addEventListener('click', () => {
+        searchInput.value = '';
+        filterAndRenderCenters();
+        searchInput.focus();
+      });
+
+      resetFiltersBtn.addEventListener('click', resetAllFilters);
+      emptyClearBtn.addEventListener('click', resetAllFilters);
+
+      // Initial Render
+      filterAndRenderCenters();
+    });
+  </script>
+</body>
+
+</html>

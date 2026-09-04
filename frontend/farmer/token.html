@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="hi">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>डिजिटल टोकन | Digital Token — KisanSetu</title>
+
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Core Design System -->
+  <link rel="stylesheet" href="../css/style.css">
+
+  <style>
+    @media print {
+
+      header,
+      footer,
+      .no-print {
+        display: none !important;
+      }
+
+      body {
+        background-color: #ffffff !important;
+      }
+
+      .print-shadow-none {
+        box-shadow: none !important;
+        border: 1px solid #cbd5e1 !important;
+      }
+    }
+  </style>
+</head>
+
+<body class="bg-[#f8fafc] text-[#0f172a] min-h-screen flex flex-col justify-between antialiased">
+
+  <!-- Authenticated Header -->
+  <header class="bg-white border-b border-slate-200 py-3.5 px-4 sticky top-0 z-40 shadow-xs no-print">
+    <div class="container mx-auto flex flex-wrap items-center justify-between gap-3">
+      <!-- Brand & Back Button -->
+      <div class="flex items-center gap-3">
+        <a href="dashboard.html"
+          class="w-9 h-9 rounded-lg bg-[#15803d] text-white flex items-center justify-center font-bold text-sm shadow-xs">
+          K
+        </a>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="text-base font-bold text-slate-900 tracking-tight">KisanSetu</span>
+            <span class="text-xs text-slate-400">| किसान सेतु</span>
+          </div>
+          <div class="text-[11px] font-semibold text-[#15803d] -mt-0.5">
+            मेरा डिजिटल टोकन (My Digital Token)
+          </div>
+        </div>
+      </div>
+
+      <!-- Navigation & Logout -->
+      <div class="flex items-center gap-3">
+        <a href="dashboard.html"
+          class="btn btn-outline btn-sm text-xs font-semibold flex items-center gap-1.5 py-1.5 px-3">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6">
+            </path>
+          </svg>
+          डैशबोर्ड (Dashboard)
+        </a>
+
+        <button type="button" id="logout-btn" class="btn btn-outline btn-sm text-xs py-1.5 px-3">
+          लॉगआउट (Logout)
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Container -->
+  <main class="container mx-auto py-6 sm:py-10 px-4 flex-1">
+
+    <!-- Empty State (No Active Token Found) -->
+    <div id="no-token-container"
+      class="card p-10 bg-white border-slate-200 text-center max-w-lg mx-auto hidden shadow-xs my-8">
+      <div class="w-14 h-14 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center mx-auto mb-3">
+        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z">
+          </path>
+        </svg>
+      </div>
+      <h2 class="text-xl font-bold text-slate-900 mb-1">कोई सक्रिय टोकन नहीं है</h2>
+      <p class="text-xs text-slate-500 mb-6">
+        (No active digital token found. Please book a procurement slot first.)
+      </p>
+      <a href="centers.html" class="btn btn-primary text-xs font-semibold py-2.5 px-5 inline-flex items-center gap-1.5">
+        ← खरीद केंद्र खोजें और स्लॉट बुक करें (Find Centers)
+      </a>
+    </div>
+
+    <!-- Active Token Container -->
+    <div id="token-content" class="max-w-xl mx-auto space-y-6 hidden">
+
+      <!-- Breadcrumbs & Actions Bar -->
+      <div class="flex items-center justify-between no-print text-xs">
+        <nav class="flex items-center gap-2 text-slate-500 font-medium" aria-label="Breadcrumb">
+          <a href="dashboard.html" class="hover:text-[#15803d]">डैशबोर्ड</a>
+          <span>/</span>
+          <span class="text-slate-900 font-bold">मेरा डिजिटल टोकन</span>
+        </nav>
+
+        <button type="button" id="print-token-btn"
+          class="btn btn-outline btn-sm text-xs font-semibold flex items-center gap-1.5 py-1.5 px-3">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z">
+            </path>
+          </svg>
+          टोकन प्रिंट करें (Print Slip)
+        </button>
+      </div>
+
+      <!-- Digital Pass / Token Card -->
+      <div class="card bg-white border border-slate-200 shadow-md rounded-2xl overflow-hidden print-shadow-none">
+
+        <!-- Pass Header -->
+        <div class="bg-gradient-to-r from-emerald-800 to-[#15803d] text-white p-5 sm:p-6 relative">
+          <div class="flex items-start justify-between gap-3">
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="text-xs font-bold tracking-wider uppercase opacity-90">KisanSetu • किसान सेतु</span>
+                <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-white/20 text-white border border-white/30">
+                  प्रोटोटाइप पास
+                </span>
+              </div>
+              <h1 class="text-lg sm:text-xl font-bold mt-1" id="token-center-name">
+                खरीद केंद्र
+              </h1>
+              <p class="text-xs opacity-90 mt-0.5" id="token-center-loc">
+                ज़िला, राज्य
+              </p>
+            </div>
+
+            <!-- Status Badge -->
+            <div class="bg-white/10 backdrop-blur-xs border border-white/20 px-3 py-1 rounded-lg text-right shrink-0">
+              <span class="text-[10px] uppercase font-bold tracking-wider block opacity-80">स्थिति (Status)</span>
+              <span class="text-xs font-bold text-emerald-200">जारी (Active)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Token Number Hero Block -->
+        <div class="p-6 bg-slate-50 border-b border-dashed border-slate-200 text-center">
+          <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400 block">
+            डिजिटल टोकन क्रमांक (Digital Token Number)
+          </span>
+          <div class="text-3xl sm:text-4xl font-mono font-black text-slate-900 tracking-wider my-1.5" id="token-number">
+            KS-TKN-XXXX
+          </div>
+          <div
+            class="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800 border border-emerald-300">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse"></span>
+            सत्यापन हेतु वैध (Valid for Verification)
+          </div>
+        </div>
+
+        <!-- Token Meta Grid -->
+        <div class="p-6 space-y-5">
+          <div class="grid grid-cols-2 gap-4 text-xs">
+            <div>
+              <span class="text-slate-400 block text-[10px] uppercase font-bold">किसान (Farmer)</span>
+              <span class="font-bold text-slate-800 text-sm block mt-0.5" id="token-farmer-name">-</span>
+            </div>
+
+            <div>
+              <span class="text-slate-400 block text-[10px] uppercase font-bold">बुकिंग आईडी (Booking ID)</span>
+              <span class="font-mono font-bold text-slate-800 text-sm block mt-0.5" id="token-booking-id">-</span>
+            </div>
+
+            <div>
+              <span class="text-slate-400 block text-[10px] uppercase font-bold">फसल (Commodity)</span>
+              <span class="font-bold text-slate-800 block mt-0.5" id="token-commodity">-</span>
+            </div>
+
+            <div>
+              <span class="text-slate-400 block text-[10px] uppercase font-bold">आगमन तिथि (Date)</span>
+              <span class="font-bold text-slate-800 block mt-0.5" id="token-date">-</span>
+            </div>
+
+            <div class="col-span-2 p-3 rounded-lg bg-emerald-50/60 border border-emerald-200">
+              <span class="text-emerald-800 block text-[10px] uppercase font-bold">निर्धारित आगमन समय स्लॉट (Allocated
+                Time Slot)</span>
+              <span class="text-base font-bold text-[#15803d] block mt-0.5" id="token-timeslot">-</span>
+            </div>
+          </div>
+
+          <!-- CSS QR Verification Placeholder -->
+          <div class="border-2 border-dashed border-slate-300 rounded-xl p-5 text-center bg-white">
+            <div class="w-24 h-24 mx-auto bg-slate-900 rounded-lg p-2.5 flex items-center justify-center shadow-xs">
+              <!-- Geometric SVG simulating a QR code pattern -->
+              <svg class="w-full h-full text-white" viewBox="0 0 100 100" fill="currentColor">
+                <!-- Outer Corner Finder 1 -->
+                <rect x="5" y="5" width="28" height="28" rx="2" fill="none" stroke="currentColor" stroke-width="6" />
+                <rect x="13" y="13" width="12" height="12" />
+                <!-- Outer Corner Finder 2 -->
+                <rect x="67" y="5" width="28" height="28" rx="2" fill="none" stroke="currentColor" stroke-width="6" />
+                <rect x="75" y="13" width="12" height="12" />
+                <!-- Outer Corner Finder 3 -->
+                <rect x="5" y="67" width="28" height="28" rx="2" fill="none" stroke="currentColor" stroke-width="6" />
+                <rect x="13" y="75" width="12" height="12" />
+                <!-- Internal Data Blocks Mock -->
+                <rect x="42" y="10" width="16" height="8" />
+                <rect x="42" y="24" width="8" height="14" />
+                <rect x="10" y="42" width="14" height="8" />
+                <rect x="28" y="42" width="10" height="10" />
+                <rect x="44" y="44" width="12" height="12" />
+                <rect x="62" y="42" width="16" height="8" />
+                <rect x="82" y="42" width="8" height="16" />
+                <rect x="42" y="62" width="8" height="16" />
+                <rect x="56" y="62" width="18" height="8" />
+                <rect x="78" y="66" width="12" height="12" />
+                <rect x="42" y="82" width="16" height="8" />
+                <rect x="64" y="76" width="8" height="14" />
+              </svg>
+            </div>
+            <div class="mt-3">
+              <span class="text-xs font-bold text-slate-800 block">
+                QR Verification Placeholder • Prototype
+              </span>
+              <p class="text-[11px] text-slate-500 mt-0.5">
+                केंद्र ऑपरेटर द्वारा गेट चेक-इन व तौल सत्यापन हेतु (For gate scanning by procurement operator)
+              </p>
+            </div>
+          </div>
+
+          <!-- Arrival Notice Notice Box -->
+          <div class="p-3.5 rounded-lg bg-amber-50 border border-amber-200 text-amber-900 text-xs space-y-1">
+            <div class="font-bold flex items-center gap-1.5">
+              <span>⏱</span> कतार स्थिति सूचना (Queue Activation Notice):
+            </div>
+            <p class="text-slate-700 leading-relaxed text-[11px]">
+              कतार सक्रियता केंद्र पर आगमन और गेट सत्यापन के बाद उपलब्ध होगी। अनुमानित प्रतीक्षा समय एवं कतार स्थिति
+              ऑपरेटर द्वारा प्रविष्टि दर्ज होने पर प्रदर्शित होगी।
+            </p>
+          </div>
+
+          <!-- Footer Badge Inside Pass -->
+          <div class="text-center pt-2">
+            <span class="text-[10px] font-mono text-slate-400">
+              डेमो डेटा • Illustrative Prototype Token • SIH 2026
+            </span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Action Buttons (no-print) -->
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-3 no-print pt-2">
+        <a href="dashboard.html" class="btn btn-outline text-xs font-semibold py-2.5 px-4 w-full sm:w-auto text-center">
+          ← डैशबोर्ड पर वापस जाएं (Back to Dashboard)
+        </a>
+
+        <a href="centers.html" class="btn btn-primary text-xs font-semibold py-2.5 px-4 w-full sm:w-auto text-center">
+          अन्य खरीद केंद्र देखें (View Centers) &rarr;
+        </a>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- Simple Footer -->
+  <footer class="py-4 text-center text-xs text-slate-400 border-t border-slate-200 bg-white no-print">
+    KisanSetu &copy; 2026 • SIH Innovation Project
+  </footer>
+
+  <!-- Scripts: Mock Data, Utils, Auth Engine, and Farmer UI -->
+  <script src="../js/mock-data.js"></script>
+  <script src="../js/utils.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="farmer.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // 1. Enforce Farmer route protection
+      const user = window.KisanAuth.requireAuth('farmer', '../pages/login.html');
+      if (!user) return;
+
+      // 2. Setup Logout
+      document.getElementById('logout-btn').addEventListener('click', () => {
+        window.KisanAuth.logout('../pages/login.html');
+      });
+
+      // 3. Print Token handler
+      document.getElementById('print-token-btn').addEventListener('click', () => {
+        window.print();
+      });
+
+      // 4. Load Active Booking
+      const booking = window.FarmerPortal.getActiveBooking();
+      const noTokenContainer = document.getElementById('no-token-container');
+      const tokenContent = document.getElementById('token-content');
+
+      if (!booking || !booking.bookingId) {
+        noTokenContainer.classList.remove('hidden');
+        return;
+      }
+
+      // Token exists: reveal content
+      tokenContent.classList.remove('hidden');
+
+      // Populate details
+      document.getElementById('token-center-name').textContent = booking.centerName;
+      document.getElementById('token-center-loc').textContent = `${booking.district}, ${booking.state} (ID: ${booking.centerId})`;
+
+      const tokenNum = booking.tokenId || window.FarmerPortal.generateTokenNumber(booking);
+      document.getElementById('token-number').textContent = tokenNum;
+
+      document.getElementById('token-farmer-name').textContent = booking.farmerName || user.name || "Demo Farmer";
+      document.getElementById('token-booking-id').textContent = booking.bookingId;
+      document.getElementById('token-commodity').textContent = booking.commodity;
+      document.getElementById('token-date').textContent = booking.bookingDate;
+      document.getElementById('token-timeslot').textContent = booking.timeSlot;
+    });
+  </script>
+</body>
+
+</html>
