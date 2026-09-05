@@ -42,9 +42,12 @@
 
       <!-- Navigation & Logout -->
       <div class="flex items-center gap-3">
-        <a href="dashboard.html" class="btn btn-outline btn-sm text-xs font-semibold flex items-center gap-1.5 py-1.5 px-3">
+        <a href="dashboard.html"
+          class="btn btn-outline btn-sm text-xs font-semibold flex items-center gap-1.5 py-1.5 px-3">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6">
+            </path>
           </svg>
           डैशबोर्ड (Dashboard)
         </a>
@@ -60,7 +63,8 @@
   <main class="container mx-auto py-8 sm:py-10 px-4 flex-1">
 
     <!-- Empty State (No Active Booking Found) -->
-    <div id="no-booking-container" class="card p-10 bg-white border-slate-200 text-center max-w-lg mx-auto hidden shadow-xs my-8">
+    <div id="no-booking-container"
+      class="card p-10 bg-white border-slate-200 text-center max-w-lg mx-auto hidden shadow-xs my-8">
       <div class="w-14 h-14 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center mx-auto mb-3">
         <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -83,13 +87,15 @@
       <div class="card p-6 sm:p-8 bg-white border-slate-200 shadow-xs text-center relative overflow-hidden">
         <div class="absolute top-0 left-0 right-0 h-1.5 bg-[#15803d]"></div>
 
-        <div class="w-16 h-16 rounded-full bg-emerald-50 text-[#15803d] border-2 border-emerald-200 flex items-center justify-center mx-auto mb-4">
+        <div
+          class="w-16 h-16 rounded-full bg-emerald-50 text-[#15803d] border-2 border-emerald-200 flex items-center justify-center mx-auto mb-4">
           <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path>
           </svg>
         </div>
 
-        <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200 mb-2">
+        <div
+          class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200 mb-2">
           <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
           पुष्टि हो गई (Confirmed)
         </div>
@@ -114,7 +120,9 @@
           <h2 class="text-sm font-bold text-slate-900 flex items-center gap-2">
             <span>🧾</span> बुकिंग रसीद (Booking Receipt)
           </h2>
-          <span class="text-xs font-mono font-bold text-[#15803d] bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200" id="confirm-booking-id">
+          <span
+            class="text-xs font-mono font-bold text-[#15803d] bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200"
+            id="confirm-booking-id">
             KS-BOOK-XXXX
           </span>
         </div>
@@ -167,15 +175,22 @@
 
         <!-- Action CTAs -->
         <div class="pt-3 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <a href="dashboard.html" class="btn btn-outline text-xs font-semibold py-2.5 px-4 w-full sm:w-auto text-center order-2 sm:order-1">
+          <a href="dashboard.html"
+            class="btn btn-outline text-xs font-semibold py-2.5 px-4 w-full sm:w-auto text-center order-3 sm:order-1">
             ← डैशबोर्ड पर वापस जाएं (Dashboard)
           </a>
 
-          <a href="token.html"
-            class="btn btn-primary text-xs font-semibold py-3 px-6 w-full sm:w-auto text-center flex items-center justify-center gap-2 shadow-sm order-1 sm:order-2">
-            <span>मेरा डिजिटल टोकन देखें (View Digital Token)</span>
-            <span>&rarr;</span>
-          </a>
+          <div class="flex flex-col sm:flex-row items-center gap-2 w-full sm:w-auto order-1 sm:order-2">
+            <a href="queue.html"
+              class="btn btn-outline text-xs font-semibold py-2.5 px-4 w-full sm:w-auto text-center flex items-center justify-center gap-1.5 text-[#15803d] border-emerald-300 hover:bg-emerald-50">
+              <span>⚡</span> लाइव कतार स्थिति देखें (View Live Queue)
+            </a>
+            <a href="token.html"
+              class="btn btn-primary text-xs font-semibold py-2.5 px-5 w-full sm:w-auto text-center flex items-center justify-center gap-2 shadow-sm">
+              <span>मेरा डिजिटल टोकन देखें</span>
+              <span>&rarr;</span>
+            </a>
+          </div>
         </div>
       </div>
 

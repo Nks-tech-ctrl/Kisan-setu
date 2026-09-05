@@ -243,22 +243,21 @@
               </div>
             </a>
 
-            <!-- Action 4: Live Queue (Disabled / Upcoming) -->
-            <div class="card p-5 bg-white border-slate-200 opacity-90 flex flex-col justify-between">
+            <!-- Action 4: Live Queue -->
+            <a href="queue.html" id="quick-action-queue-btn"
+              class="card p-5 bg-white border-slate-200 hover:border-emerald-500 hover:shadow-sm transition-all group flex flex-col justify-between">
               <div>
                 <div class="flex items-center justify-between mb-3">
-                  <div class="w-10 h-10 rounded-lg bg-slate-100 text-slate-500 flex items-center justify-center">
+                  <div
+                    class="w-10 h-10 rounded-lg bg-emerald-50 text-[#15803d] flex items-center justify-center group-hover:scale-105 transition-transform">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                     </svg>
                   </div>
-                  <span
-                    class="inline-block px-2 py-0.5 rounded text-[10px] font-semibold bg-slate-100 text-slate-600 border border-slate-200">
-                    शीघ्र उपलब्ध
-                  </span>
+                  <span class="badge badge-success text-[10px]">लाइव ट्रैकिंग</span>
                 </div>
-                <h3 class="text-sm font-bold text-slate-900">
+                <h3 class="text-sm font-bold text-slate-900 group-hover:text-[#15803d] transition-colors">
                   लाइव कतार
                 </h3>
                 <div class="text-[11px] font-medium text-slate-400">Live Queue</div>
@@ -266,14 +265,11 @@
                   गेट और वजन कांटे पर अपनी गाड़ी का वास्तविक क्रम और आगे के वाहनों की संख्या देखें।
                 </p>
               </div>
-              <div class="mt-4 pt-2 border-t border-slate-100">
-                <button type="button"
-                  class="upcoming-feature-btn text-xs font-semibold text-slate-400 hover:text-slate-600 flex items-center gap-1"
-                  data-feature="लाइव कतार ट्रैकिंग आपकी टोकन तिथि पर केंद्र पहुंचने पर सक्रिय होगी (Live queue tracking activates on scheduled appointment day in Phase B).">
-                  <span>कतार विवरण (Queue Info)</span> &rarr;
-                </button>
+              <div
+                class="mt-4 pt-2 border-t border-slate-100 text-xs font-semibold text-[#15803d] flex items-center gap-1">
+                कतार स्थिति देखें &rarr;
               </div>
-            </div>
+            </a>
 
           </div>
         </div>
@@ -464,12 +460,18 @@
 
             <div class="pt-3 border-t border-emerald-200/60 flex flex-wrap items-center justify-between gap-2">
               <span class="text-[11px] text-slate-500">बुकिंग आईडी: <strong class="font-mono text-slate-700">${activeBooking.bookingId}</strong></span>
-              <div class="flex items-center gap-2">
-                <a href="booking-confirmation.html" class="btn btn-outline btn-sm text-xs font-semibold py-1.5 px-3">
-                  रसीद (Receipt)
+              <div class="flex flex-wrap items-center gap-2">
+                <a href="queue.html" class="btn btn-primary btn-sm text-xs font-semibold py-1.5 px-3 shadow-xs flex items-center gap-1">
+                  <span>⚡ लाइव कतार (Live Queue)</span>
                 </a>
-                <a href="token.html" class="btn btn-primary btn-sm text-xs font-semibold py-1.5 px-3 shadow-xs flex items-center gap-1">
-                  <span>मेरा डिजिटल टोकन</span> &rarr;
+                <a href="procurement-status.html" class="btn btn-outline btn-sm text-xs font-semibold py-1.5 px-3">
+                  खरीद स्थिति (Status)
+                </a>
+                <a href="token.html" class="btn btn-outline btn-sm text-xs font-semibold py-1.5 px-3">
+                  डिजिटल टोकन
+                </a>
+                <a href="booking-confirmation.html" class="btn btn-outline btn-sm text-xs font-semibold py-1.5 px-2.5">
+                  रसीद (Receipt)
                 </a>
               </div>
             </div>
@@ -477,7 +479,21 @@
         `;
       }
 
-      // 6. Render Recommended Centers (up to 3 cards)
+      // 6. Quick Action Live Queue Handler
+      const quickQueueBtn = document.getElementById('quick-action-queue-btn');
+      if (quickQueueBtn) {
+        quickQueueBtn.addEventListener('click', (e) => {
+          if (!activeBooking || !activeBooking.bookingId) {
+            e.preventDefault();
+            window.FarmerPortal.showInfoModal(
+              "सक्रिय बुकिंग आवश्यक है (Booking Required)",
+              "लाइव कतार देखने के लिए पहले खरीद केंद्र पर समय स्लॉट बुक करें।<br><br><span class=\"text-xs text-slate-500\">Please book a procurement slot first to access real-time queue tracking.</span>"
+            );
+          }
+        });
+      }
+
+      // 7. Render Recommended Centers (up to 3 cards)
       const centersContainer = document.getElementById('recommended-centers-list');
       const allCenters = window.FarmerPortal.getCenters();
       const recommendedCenters = allCenters.slice(0, 3);
@@ -494,10 +510,10 @@
           .join('');
       }
 
-      // 6. Upcoming Feature dialog triggers
+      // 8. Upcoming Feature dialog triggers
       document.querySelectorAll('.upcoming-feature-btn').forEach(btn => {
         btn.addEventListener('click', () => {
-          const msg = btn.getAttribute('data-feature') || 'यह सेवा अगले चरण (Phase B) में उपलब्ध होगी।';
+          const msg = btn.getAttribute('data-feature') || 'यह सेवा अगले चरण में उपलब्ध होगी।';
           window.FarmerPortal.showInfoModal('शीघ्र उपलब्ध सेवा (Coming Soon)', msg);
         });
       });

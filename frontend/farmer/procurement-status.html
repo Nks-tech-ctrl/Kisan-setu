@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="hi">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>खरीद स्थिति | Procurement Status — KisanSetu</title>
+
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Core Design System -->
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body class="bg-[#f8fafc] text-[#0f172a] min-h-screen flex flex-col justify-between antialiased">
+
+  <!-- Authenticated Header -->
+  <header class="bg-white border-b border-slate-200 py-3.5 px-4 sticky top-0 z-40 shadow-xs">
+    <div class="container mx-auto flex flex-wrap items-center justify-between gap-3">
+      <!-- Brand & Back Button -->
+      <div class="flex items-center gap-3">
+        <a href="dashboard.html"
+          class="w-9 h-9 rounded-lg bg-[#15803d] text-white flex items-center justify-center font-bold text-sm shadow-xs">
+          K
+        </a>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="text-base font-bold text-slate-900 tracking-tight">KisanSetu</span>
+            <span class="text-xs text-slate-400">| किसान सेतु</span>
+          </div>
+          <div class="text-[11px] font-semibold text-[#15803d] -mt-0.5">
+            खरीद स्थिति (Procurement Status)
+          </div>
+        </div>
+      </div>
+
+      <!-- Navigation & Logout -->
+      <div class="flex items-center gap-3">
+        <a href="dashboard.html"
+          class="btn btn-outline btn-sm text-xs font-semibold flex items-center gap-1.5 py-1.5 px-3">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18">
+            </path>
+          </svg>
+          डैशबोर्ड पर वापस (Back to Dashboard)
+        </a>
+
+        <button type="button" id="logout-btn" class="btn btn-outline btn-sm text-xs py-1.5 px-3">
+          लॉगआउट (Logout)
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Container -->
+  <main class="container mx-auto py-6 sm:py-8 px-4 flex-1">
+
+    <!-- No Active Booking State (Hidden by default) -->
+    <div id="no-booking-container"
+      class="card p-10 bg-white border-slate-200 text-center max-w-lg mx-auto hidden shadow-xs my-8">
+      <div class="w-14 h-14 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center mx-auto mb-3">
+        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+          </path>
+        </svg>
+      </div>
+      <h2 class="text-xl font-bold text-slate-900 mb-1">कोई सक्रिय खरीद प्रक्रिया नहीं है</h2>
+      <p class="text-xs text-slate-500 mb-6">
+        अपनी फसल की खरीद स्थिति ट्रैक करने के लिए पहले खरीद केंद्र पर स्लॉट बुक करें।
+        <br>
+        <span class="text-[11px] text-slate-400">(No active procurement process in progress.)</span>
+      </p>
+      <a href="centers.html" class="btn btn-primary text-xs font-semibold py-2.5 px-5 inline-flex items-center gap-1.5">
+        ← खरीद केंद्र खोजें (Find Centers)
+      </a>
+    </div>
+
+    <!-- Active Procurement Status Content -->
+    <div id="procurement-container" class="max-w-4xl mx-auto space-y-6 hidden">
+
+      <!-- Breadcrumbs & Quick Nav -->
+      <nav class="flex items-center justify-between text-xs text-slate-500 font-medium" aria-label="Breadcrumb">
+        <div class="flex items-center gap-2">
+          <a href="dashboard.html" class="hover:text-[#15803d]">डैशबोर्ड</a>
+          <span>/</span>
+          <span class="text-slate-900 font-bold">खरीद स्थिति</span>
+        </div>
+        <a href="queue.html" class="text-[#15803d] font-semibold hover:underline flex items-center gap-1">
+          लाइव कतार स्थिति देखें &rarr;
+        </a>
+      </nav>
+
+      <!-- Main Page Banner -->
+      <div class="card p-5 sm:p-6 bg-white border-slate-200 shadow-xs">
+        <div class="flex flex-wrap items-start justify-between gap-4">
+          <div>
+            <div class="flex items-center gap-2 mb-1">
+              <span
+                class="text-xs font-mono font-bold px-2 py-0.5 bg-slate-100 text-slate-700 rounded border border-slate-200"
+                id="proc-token-id">
+                KS-TKN-XXXX
+              </span>
+              <span
+                class="text-[10px] text-blue-700 bg-blue-50 px-2.5 py-0.5 rounded border border-blue-200 font-semibold">
+                डेमो डेटा • Demo Data
+              </span>
+            </div>
+            <h1 class="text-2xl font-bold text-slate-900 tracking-tight">
+              खरीद स्थिति (Procurement Status)
+            </h1>
+            <p class="text-xs sm:text-sm text-slate-500 mt-1">
+              अपनी खरीद प्रक्रिया की वर्तमान प्रगति और चरणबद्ध विवरण देखें।
+            </p>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <a href="queue.html" class="btn btn-primary btn-sm text-xs font-semibold py-1.5 px-3">
+              लाइव कतार देखें
+            </a>
+            <a href="token.html" class="btn btn-outline btn-sm text-xs font-semibold py-1.5 px-3">
+              डिजिटल टोकन
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- 6-Stage Visual Journey Tracker -->
+      <div class="card p-6 sm:p-8 bg-white border-slate-200 shadow-xs">
+        <div class="flex items-center justify-between pb-4 border-b border-slate-100 mb-6">
+          <h2 class="text-sm font-bold text-slate-900 uppercase tracking-wide flex items-center gap-2">
+            <span>🔄</span> खरीद जीवन चक्र प्रगति (Procurement Journey)
+          </h2>
+          <span
+            class="text-xs font-semibold text-emerald-800 bg-emerald-50 px-2.5 py-0.5 rounded border border-emerald-200"
+            id="current-stage-counter">
+            चरण 1 / 6
+          </span>
+        </div>
+
+        <!-- Stepper Tracker Container -->
+        <div class="relative py-2" id="journey-tracker">
+          <!-- Populated dynamically -->
+        </div>
+      </div>
+
+      <!-- Current Status Card -->
+      <div class="card p-6 bg-white border-slate-200 shadow-xs space-y-5">
+        <div class="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-slate-100">
+          <div>
+            <span class="text-[10px] uppercase font-bold text-slate-400 block">वर्तमान स्थिति (Current Status)</span>
+            <h3 class="text-lg font-bold text-slate-900 mt-0.5" id="proc-current-status">
+              लोड हो रहा है...
+            </h3>
+          </div>
+          <div id="proc-status-badge"></div>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs">
+          <div class="p-3 rounded-lg bg-slate-50 border border-slate-200">
+            <span class="text-slate-400 block text-[10px] uppercase font-bold">खरीद केंद्र (Center)</span>
+            <span class="font-bold text-slate-900 block mt-0.5" id="proc-center-name">-</span>
+          </div>
+
+          <div class="p-3 rounded-lg bg-slate-50 border border-slate-200">
+            <span class="text-slate-400 block text-[10px] uppercase font-bold">फसल (Commodity)</span>
+            <span class="font-bold text-slate-900 block mt-0.5" id="proc-commodity">-</span>
+          </div>
+
+          <div class="p-3 rounded-lg bg-slate-50 border border-slate-200">
+            <span class="text-slate-400 block text-[10px] uppercase font-bold">टोकन कतार स्थान</span>
+            <span class="font-bold text-slate-900 font-mono block mt-0.5" id="proc-queue-pos">-</span>
+          </div>
+
+          <div class="p-3 rounded-lg bg-slate-50 border border-slate-200">
+            <span class="text-slate-400 block text-[10px] uppercase font-bold">अनुमानित प्रतीक्षा</span>
+            <span class="font-bold text-slate-900 block mt-0.5" id="proc-estimated-wait">-</span>
+          </div>
+        </div>
+
+        <!-- Operational disclaimer -->
+        <div class="text-[11px] text-slate-500 flex items-center justify-between pt-1">
+          <span>सभी समय एवं कतार मान केवल प्रोटोटाइप मूल्यांकन हेतु सिमुलेटेड हैं।</span>
+          <span class="font-semibold text-blue-700">डेमो डेटा • Demo Data</span>
+        </div>
+      </div>
+
+      <!-- In Progress / Completion Simulation Callout Area -->
+      <div id="simulation-callout-area">
+        <!-- Injected dynamically based on stage -->
+      </div>
+
+      <!-- Quick Actions Footer -->
+      <div class="flex flex-wrap items-center justify-between gap-3 pt-2">
+        <a href="dashboard.html" class="btn btn-outline text-xs font-semibold py-2.5 px-4">
+          ← डैशबोर्ड पर वापस जाएं (Back to Dashboard)
+        </a>
+        <a href="queue.html" class="btn btn-primary text-xs font-semibold py-2.5 px-5 flex items-center gap-1.5">
+          <span>⚡</span> लाइव कतार स्थिति देखें &rarr;
+        </a>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- Simple Footer -->
+  <footer class="py-4 text-center text-xs text-slate-400 border-t border-slate-200 bg-white">
+    KisanSetu &copy; 2026 • SIH Innovation Project
+  </footer>
+
+  <!-- Scripts: Mock Data, Utils, Auth Engine, and Farmer UI -->
+  <script src="../js/mock-data.js"></script>
+  <script src="../js/utils.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="farmer.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // 1. Enforce Farmer route protection
+      const user = window.KisanAuth.requireAuth('farmer', '../pages/login.html');
+      if (!user) return;
+
+      // 2. Setup Logout
+      document.getElementById('logout-btn').addEventListener('click', () => {
+        window.KisanAuth.logout('../pages/login.html');
+      });
+
+      // 3. Load Active Booking & Queue Status
+      const booking = window.FarmerPortal.getActiveBooking();
+      const noBookingContainer = document.getElementById('no-booking-container');
+      const procurementContainer = document.getElementById('procurement-container');
+
+      if (!booking || !booking.bookingId) {
+        noBookingContainer.classList.remove('hidden');
+        return;
+      }
+
+      procurementContainer.classList.remove('hidden');
+
+      // Populate static booking summary details
+      document.getElementById('proc-token-id').textContent = booking.tokenId || window.FarmerPortal.generateTokenNumber(booking);
+      document.getElementById('proc-center-name').textContent = booking.centerName;
+      document.getElementById('proc-commodity').textContent = booking.commodity;
+
+      // 4. Render Procurement Journey Function
+      function renderProcurementJourney() {
+        const proc = window.FarmerPortal.getProcurementStatus();
+        if (!proc) return;
+
+        const currentStageIdx = proc.currentStageIndex;
+        const stages = proc.stages;
+        const queue = proc.queueData;
+
+        // Stage counter badge
+        document.getElementById('current-stage-counter').textContent = `चरण ${currentStageIdx} / ${stages.length}: ${proc.currentStage.nameHindi}`;
+
+        // Status Card details
+        document.getElementById('proc-current-status').textContent = queue.status || proc.currentStage.nameHindi;
+        document.getElementById('proc-queue-pos').textContent = queue.queuePosition > 0 ? `#${queue.queuePosition}` : (currentStageIdx >= 5 ? "प्रक्रियाधीन" : "गेट सत्यापन");
+        document.getElementById('proc-estimated-wait').textContent = queue.estimatedWaitMinutes > 0 ? `~${queue.estimatedWaitMinutes} मिनट` : "कोई प्रतीक्षा नहीं";
+
+        // Status badge
+        const badgeElem = document.getElementById('proc-status-badge');
+        let badgeColor = "bg-emerald-50 text-emerald-800 border-emerald-300";
+        if (currentStageIdx === 6) {
+          badgeColor = "bg-purple-50 text-purple-800 border-purple-300";
+        } else if (currentStageIdx <= 2) {
+          badgeColor = "bg-blue-50 text-blue-800 border-blue-300";
+        }
+        badgeElem.innerHTML = `
+          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold ${badgeColor} border">
+            <span class="w-1.5 h-1.5 rounded-full bg-current ${currentStageIdx < 6 ? 'animate-pulse' : ''}"></span>
+            ${queue.status || proc.currentStage.nameHindi}
+          </span>
+        `;
+
+        // Render Visual Journey Stepper
+        const tracker = document.getElementById('journey-tracker');
+        tracker.innerHTML = `
+          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-6 gap-3 relative">
+            ${stages.map((st, i) => {
+          const isCompleted = st.index < currentStageIdx;
+          const isCurrent = st.index === currentStageIdx;
+          const isFuture = st.index > currentStageIdx;
+
+          let iconBg = "bg-slate-100 text-slate-400 border-slate-200";
+          let cardBg = "bg-white border-slate-200 opacity-60";
+          let textStyle = "text-slate-500";
+
+          if (isCompleted) {
+            iconBg = "bg-emerald-600 text-white border-emerald-600";
+            cardBg = "bg-emerald-50/40 border-emerald-200";
+            textStyle = "text-emerald-900";
+          } else if (isCurrent) {
+            iconBg = "bg-emerald-500 text-white border-emerald-500 ring-4 ring-emerald-100 animate-pulse";
+            cardBg = "bg-white border-emerald-500 shadow-xs";
+            textStyle = "text-slate-900 font-bold";
+          }
+
+          return `
+                <div class="card p-3 border rounded-xl flex flex-col justify-between ${cardBg}">
+                  <div>
+                    <div class="flex items-center justify-between mb-2">
+                      <div class="w-7 h-7 rounded-full flex items-center justify-center font-bold text-xs border ${iconBg}">
+                        ${isCompleted ? '✔' : st.index}
+                      </div>
+                      ${isCurrent ? '<span class="text-[9px] font-bold uppercase text-emerald-700 bg-emerald-100 px-1.5 py-0.5 rounded">सक्रिय</span>' : ''}
+                      ${isCompleted ? '<span class="text-[9px] font-semibold text-emerald-600">पूर्ण</span>' : ''}
+                    </div>
+                    <h4 class="text-xs font-bold ${textStyle}">${st.nameHindi}</h4>
+                    <p class="text-[10px] text-slate-400">${st.nameEnglish}</p>
+                    <p class="text-[10px] text-slate-500 mt-1.5 leading-snug">${st.description}</p>
+                  </div>
+                </div>
+              `;
+        }).join('')}
+          </div>
+        `;
+
+        // Render Simulation Callout Area
+        const calloutArea = document.getElementById('simulation-callout-area');
+
+        if (currentStageIdx === 5) {
+          calloutArea.innerHTML = `
+            <div class="card p-6 bg-emerald-50 border-emerald-300 shadow-sm border-l-4 border-l-[#15803d] space-y-3">
+              <div class="flex flex-wrap items-center justify-between gap-3">
+                <div>
+                  <h3 class="text-base font-bold text-emerald-950 flex items-center gap-2">
+                    <span>🌾</span> खरीद प्रक्रिया शुरू हो गई है (Procurement in Progress)
+                  </h3>
+                  <p class="text-xs text-emerald-800 mt-1">
+                    इलेक्ट्रॉनिक वेईब्रिज पर तौल और गुणवत्ता परीक्षण का कार्य प्रगति पर है।
+                  </p>
+                </div>
+                <button type="button" id="btn-complete-procurement" class="btn btn-primary text-xs font-semibold py-2.5 px-5 shadow-sm">
+                  खरीद प्रक्रिया पूर्ण करें (Complete Procurement) &rarr;
+                </button>
+              </div>
+            </div>
+          `;
+          document.getElementById('btn-complete-procurement').addEventListener('click', () => {
+            window.FarmerPortal.completeProcurement();
+            renderProcurementJourney();
+          });
+        } else if (currentStageIdx === 6) {
+          calloutArea.innerHTML = `
+            <div class="card p-6 bg-purple-50/70 border-purple-200 shadow-sm text-center relative overflow-hidden">
+              <div class="w-14 h-14 rounded-full bg-purple-100 text-purple-700 flex items-center justify-center mx-auto mb-3 font-bold text-2xl">
+                ✓
+              </div>
+              <h3 class="text-xl font-bold text-purple-950">
+                खरीद प्रक्रिया पूर्ण हो गई (Procurement Completed)
+              </h3>
+              <p class="text-xs text-purple-800 mt-1 max-w-md mx-auto">
+                आपकी फसल की तुलाई और कागजी कार्रवाई सफलतापूर्वक संपन्न हो चुकी है। अधिकृत खरीद रसीद जारी कर दी गई है।
+              </p>
+
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-lg mx-auto mt-4 p-3 bg-white rounded-lg border border-purple-200 text-xs text-left">
+                <div>
+                  <span class="text-slate-400 block text-[10px]">केंद्र:</span>
+                  <span class="font-bold text-slate-800">${booking.centerName}</span>
+                </div>
+                <div>
+                  <span class="text-slate-400 block text-[10px]">फसल:</span>
+                  <span class="font-bold text-slate-800">${booking.commodity}</span>
+                </div>
+                <div>
+                  <span class="text-slate-400 block text-[10px]">बुकिंग आईडी:</span>
+                  <span class="font-mono font-bold text-slate-800">${booking.bookingId}</span>
+                </div>
+                <div>
+                  <span class="text-slate-400 block text-[10px]">टोकन नंबर:</span>
+                  <span class="font-mono font-bold text-slate-800">${booking.tokenId || '-'}</span>
+                </div>
+              </div>
+
+              <div class="mt-4">
+                <span class="text-[11px] font-semibold text-purple-700 bg-white px-2.5 py-0.5 rounded border border-purple-200 inline-block">
+                  डेमो प्रोटोटाइप डेटा • Demo Prototype Data
+                </span>
+              </div>
+            </div>
+          `;
+        } else {
+          calloutArea.innerHTML = `
+            <div class="card p-4 bg-slate-50 border-slate-200 text-xs flex flex-wrap items-center justify-between gap-3">
+              <div class="text-slate-600">
+                कतार स्थिति आगे बढ़ाने या चेक-इन करने के लिए लाइव कतार पृष्ठ का उपयोग करें।
+              </div>
+              <a href="queue.html" class="btn btn-outline btn-sm text-xs font-semibold py-1.5 px-3">
+                लाइव कतार में सिमुलेशन देखें &rarr;
+              </a>
+            </div>
+          `;
+        }
+      }
+
+      // Initial Render
+      renderProcurementJourney();
+    });
+  </script>
+</body>
+
+</html>

@@ -11,10 +11,12 @@
 (function () {
   const ACTIVE_BOOKING_KEY = "kisansetu_active_booking";
   const BOOKINGS_HISTORY_KEY = "kisansetu_bookings";
+  const QUEUE_STATUS_KEY = "kisansetu_queue_status";
 
   const FarmerPortal = {
     ACTIVE_BOOKING_KEY,
     BOOKINGS_HISTORY_KEY,
+    QUEUE_STATUS_KEY,
 
     /**
      * Retrieve all procurement centers from mock data
@@ -90,6 +92,261 @@
         console.error("KisanSetu: Error saving booking to localStorage.", e);
         return false;
       }
+    },
+
+    /**
+     * Retrieve the current live queue status from localStorage with defensive parsing
+     */
+    getQueueStatus() {
+      try {
+        const raw = localStorage.getItem(QUEUE_STATUS_KEY);
+        if (!raw) return null;
+        const parsed = JSON.parse(raw);
+        return (parsed && parsed.bookingId) ? parsed : null;
+      } catch (e) {
+        console.warn("KisanSetu: Invalid JSON in queue status, falling back cleanly.", e);
+        return null;
+      }
+    },
+
+    /**
+     * Save queue status to localStorage with timestamp
+     */
+    saveQueueStatus(queueData) {
+      try {
+        if (!queueData) return false;
+        queueData.lastUpdated = new Date().toISOString();
+        localStorage.setItem(QUEUE_STATUS_KEY, JSON.stringify(queueData));
+        return true;
+      } catch (e) {
+        console.error("KisanSetu: Error saving queue status to localStorage.", e);
+        return false;
+      }
+    },
+
+    /**
+     * Initialize demo queue status for a confirmed booking if not already present.
+     * Ensures consistent values across browser reloads.
+     */
+    initializeQueueForBooking(booking) {
+      if (!booking || !booking.bookingId) return null;
+
+      // Maintain reload stability: if a queue object already exists for this booking, return it
+      const existing = this.getQueueStatus();
+      if (existing && existing.bookingId === booking.bookingId) {
+        return existing;
+      }
+
+      const initialQueue = {
+        bookingId: booking.bookingId,
+        tokenId: booking.tokenId || this.generateTokenNumber(booking),
+        centerId: booking.centerId,
+        centerName: booking.centerName,
+        queuePosition: 12,
+        totalVehiclesAhead: 11,
+        estimatedWaitMinutes: 45,
+        status: "बुकिंग की पुष्टि (Booking Confirmed)",
+        arrivalStatus: "not_arrived",
+        lastUpdated: new Date().toISOString()
+      };
+
+      this.saveQueueStatus(initialQueue);
+      return initialQueue;
+    },
+
+    /**
+     * Simulate arrival at procurement center: "मैं केंद्र पर पहुंच गया हूँ"
+     */
+    simulateArrival() {
+      let queue = this.getQueueStatus();
+      if (!queue) {
+        const booking = this.getActiveBooking();
+        if (!booking) return null;
+        queue = this.initializeQueueForBooking(booking);
+      }
+      queue.arrivalStatus = "arrived";
+      queue.status = "केंद्र पर पहुंच गए (Arrived at Center)";
+      this.saveQueueStatus(queue);
+      return queue;
+    },
+
+    /**
+     * Simulate gate verification: "गेट पर चेक-इन करें"
+     */
+    simulateGateCheckIn() {
+      let queue = this.getQueueStatus();
+      if (!queue) {
+        const booking = this.getActiveBooking();
+        if (!booking) return null;
+        queue = this.initializeQueueForBooking(booking);
+      }
+      queue.arrivalStatus = "checked_in";
+      queue.status = "गेट सत्यापन पूर्ण (Gate Verification Complete)";
+      queue.queuePosition = 5;
+      queue.totalVehiclesAhead = 4;
+      queue.estimatedWaitMinutes = 20;
+      this.saveQueueStatus(queue);
+      return queue;
+    },
+
+    /**
+     * Simulate queue progress manually via UI trigger
+     * Progression: 12 -> 8 -> 5 -> 2 -> 1 -> 0
+     * Never allows negative queue positions
+     */
+    updateMockQueueProgress() {
+      let queue = this.getQueueStatus();
+      if (!queue) {
+        const booking = this.getActiveBooking();
+        if (!booking) return null;
+        queue = this.initializeQueueForBooking(booking);
+      }
+
+      let pos = typeof queue.queuePosition === 'number' ? queue.queuePosition : 12;
+
+      if (pos > 8) {
+        queue.queuePosition = 8;
+        queue.totalVehiclesAhead = 7;
+        queue.estimatedWaitMinutes = 30;
+        queue.status = "कतार में प्रतीक्षा (Waiting in Queue)";
+      } else if (pos > 5) {
+        queue.queuePosition = 5;
+        queue.totalVehiclesAhead = 4;
+        queue.estimatedWaitMinutes = 20;
+        queue.status = "कतार में प्रतीक्षा (Waiting in Queue)";
+      } else if (pos > 2) {
+        queue.queuePosition = 2;
+        queue.totalVehiclesAhead = 1;
+        queue.estimatedWaitMinutes = 10;
+        queue.status = "कतार में प्रतीक्षा (Waiting in Queue)";
+      } else if (pos === 2) {
+        queue.queuePosition = 1;
+        queue.totalVehiclesAhead = 0;
+        queue.estimatedWaitMinutes = 5;
+        queue.status = "आपकी बारी जल्द है (Your Turn Is Next)";
+      } else if (pos === 1) {
+        queue.queuePosition = 0;
+        queue.totalVehiclesAhead = 0;
+        queue.estimatedWaitMinutes = 0;
+        queue.status = "खरीद प्रक्रिया में (Procurement in Progress)";
+      } else {
+        queue.queuePosition = 0;
+        queue.totalVehiclesAhead = 0;
+        queue.estimatedWaitMinutes = 0;
+        if (queue.status !== "खरीद पूर्ण (Procurement Completed)") {
+          queue.status = "खरीद प्रक्रिया में (Procurement in Progress)";
+        }
+      }
+
+      // Safety bounds check
+      queue.queuePosition = Math.max(0, queue.queuePosition);
+      queue.totalVehiclesAhead = Math.max(0, queue.totalVehiclesAhead);
+      queue.estimatedWaitMinutes = Math.max(0, queue.estimatedWaitMinutes);
+
+      this.saveQueueStatus(queue);
+      return queue;
+    },
+
+    /**
+     * Mark procurement as fully completed
+     */
+    completeProcurement() {
+      let queue = this.getQueueStatus();
+      if (!queue) {
+        const booking = this.getActiveBooking();
+        if (!booking) return null;
+        queue = this.initializeQueueForBooking(booking);
+      }
+      queue.queuePosition = 0;
+      queue.totalVehiclesAhead = 0;
+      queue.estimatedWaitMinutes = 0;
+      queue.status = "खरीद पूर्ण (Procurement Completed)";
+      this.saveQueueStatus(queue);
+      return queue;
+    },
+
+    /**
+     * Derive procurement lifecycle status and stages
+     */
+    getProcurementStatus() {
+      const booking = this.getActiveBooking();
+      if (!booking) return null;
+
+      let queue = this.getQueueStatus();
+      if (!queue) {
+        queue = this.initializeQueueForBooking(booking);
+      }
+
+      const stages = [
+        {
+          index: 1,
+          id: "booking_confirmed",
+          nameHindi: "स्लॉट बुकिंग",
+          nameEnglish: "Booking Confirmed",
+          description: "खरीद केंद्र पर समय स्लॉट की पुष्टि हो चुकी है।"
+        },
+        {
+          index: 2,
+          id: "arrived_center",
+          nameHindi: "केंद्र पर आगमन",
+          nameEnglish: "Arrival at Center",
+          description: "किसान खरीद केंद्र पर पहुंच चुके हैं।"
+        },
+        {
+          index: 3,
+          id: "gate_verification",
+          nameHindi: "गेट सत्यापन",
+          nameEnglish: "Gate Verification",
+          description: "गेट पर डिजिटल टोकन और दस्तावेज़ सत्यापन पूर्ण।"
+        },
+        {
+          index: 4,
+          id: "waiting_queue",
+          nameHindi: "कतार में प्रतीक्षा",
+          nameEnglish: "Waiting in Queue",
+          description: "वेईब्रिज और अनलोडिंग हेतु कतार में प्रतीक्षारत।"
+        },
+        {
+          index: 5,
+          id: "procurement_processing",
+          nameHindi: "खरीद प्रक्रिया",
+          nameEnglish: "Procurement Processing",
+          description: "फसल तौल, गुणवत्ता जांच एवं कागजी कार्रवाई प्रगति पर है।"
+        },
+        {
+          index: 6,
+          id: "procurement_completed",
+          nameHindi: "खरीद पूर्ण",
+          nameEnglish: "Procurement Completed",
+          description: "खरीद रसीद जारी एवं भुगतान प्रक्रिया आरंभ।"
+        }
+      ];
+
+      let currentStageIndex = 1;
+
+      if (queue.status && queue.status.includes("खरीद पूर्ण")) {
+        currentStageIndex = 6;
+      } else if (queue.queuePosition === 0 || (queue.status && queue.status.includes("खरीद प्रक्रिया में"))) {
+        currentStageIndex = 5;
+      } else if (queue.arrivalStatus === "checked_in") {
+        if (queue.queuePosition < 5 || (queue.status && (queue.status.includes("कतार") || queue.status.includes("आपकी बारी")))) {
+          currentStageIndex = 4;
+        } else {
+          currentStageIndex = 3;
+        }
+      } else if (queue.arrivalStatus === "arrived") {
+        currentStageIndex = 2;
+      } else {
+        currentStageIndex = 1;
+      }
+
+      return {
+        currentStageIndex,
+        currentStage: stages[currentStageIndex - 1],
+        stages,
+        queueData: queue,
+        bookingData: booking
+      };
     },
 
     /**
