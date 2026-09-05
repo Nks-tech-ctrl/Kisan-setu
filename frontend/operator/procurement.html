@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Procurement Operations | Operator Desk — KisanSetu</title>
+
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Core Design System -->
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body class="bg-[#f8fafc] text-[#0f172a] min-h-screen flex flex-col justify-between antialiased">
+
+  <!-- Authenticated Operator Header & Navigation -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-xs">
+    <div class="container mx-auto px-4">
+      <div class="flex items-center justify-between py-3 border-b border-slate-100">
+        <!-- Brand -->
+        <div class="flex items-center gap-3">
+          <a href="dashboard.html"
+            class="w-9 h-9 rounded-lg bg-[#0f766e] text-white flex items-center justify-center font-bold text-sm shadow-xs">
+            K
+          </a>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-base font-bold text-slate-900 tracking-tight">KisanSetu</span>
+              <span class="text-xs text-slate-400">| Operator Desk</span>
+            </div>
+            <div class="text-[11px] font-semibold text-[#0f766e] -mt-0.5" id="facility-badge">
+              Karnal Central Procurement Center
+            </div>
+          </div>
+        </div>
+
+        <!-- User Info & Logout -->
+        <div class="flex items-center gap-3">
+          <div class="text-right hidden sm:block">
+            <div class="text-xs font-semibold text-slate-900" id="header-user-name">Loading...</div>
+            <div class="text-[11px] text-teal-700 font-medium">Facility Operator</div>
+          </div>
+          <button type="button" id="logout-btn" class="btn btn-outline btn-sm text-xs py-1.5 px-3">
+            Logout
+          </button>
+        </div>
+      </div>
+
+      <!-- Navigation Tabs -->
+      <nav class="flex items-center gap-1 sm:gap-2 overflow-x-auto py-2 text-xs font-semibold">
+        <a href="dashboard.html"
+          class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors">
+          Dashboard Overview
+        </a>
+        <a href="queue.html"
+          class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors">
+          Queue Management
+        </a>
+        <a href="gate-verification.html"
+          class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors">
+          Gate Verification
+        </a>
+        <a href="procurement.html" class="px-3 py-1.5 rounded-lg bg-teal-50 text-[#0f766e] border border-teal-200">
+          Procurement Operations
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content Container -->
+  <main class="container mx-auto py-6 sm:py-8 px-4 flex-1">
+
+    <!-- Header Card -->
+    <div class="card p-6 bg-white border-slate-200 shadow-xs mb-6">
+      <div class="flex flex-wrap items-start justify-between gap-4">
+        <div>
+          <div class="flex items-center gap-2 mb-1.5">
+            <span class="text-xs font-bold text-teal-800 bg-teal-50 px-2 py-0.5 rounded border border-teal-200">
+              Weighbridge & MSP Intake Desk (तौल व खरीद केंद्र)
+            </span>
+            <span class="text-[10px] text-blue-700 bg-blue-50 px-2 py-0.5 rounded border border-blue-200 font-semibold">
+              डेमो डेटा • Demo Data
+            </span>
+          </div>
+          <h1 class="text-2xl font-bold text-slate-900 tracking-tight">
+            Weighbridge Intake & MSP Procurement (इलेक्ट्रॉनिक तौल व खरीद)
+          </h1>
+          <p class="text-xs sm:text-sm text-slate-500 mt-1">
+            Conduct gross and tare weight capture, verify grain quality benchmarks, start crop intake, and finalize
+            digital procurement certificates.
+          </p>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <a href="queue.html" class="btn btn-outline btn-sm text-xs font-semibold py-2 px-3 flex items-center gap-1.5">
+            &larr; Return to Queue
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Active Weighbridge Status Lanes Banner -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+      <div class="card p-4 bg-white border-slate-200 shadow-xs">
+        <div class="flex items-center justify-between text-xs mb-2">
+          <span class="font-bold text-slate-700">Weighbridge Lane #1</span>
+          <span
+            class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-200">
+            Active • 60T Gross
+          </span>
+        </div>
+        <div class="text-lg font-bold text-slate-900 font-mono" id="wb-lane-1-reading">Ready / Idle</div>
+        <div class="text-[11px] text-slate-500 mt-1">Digital Load-Cell Calibrated • Zeroed</div>
+      </div>
+
+      <div class="card p-4 bg-white border-slate-200 shadow-xs">
+        <div class="flex items-center justify-between text-xs mb-2">
+          <span class="font-bold text-slate-700">Weighbridge Lane #2</span>
+          <span
+            class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-200">
+            Active • 40T Tare
+          </span>
+        </div>
+        <div class="text-lg font-bold text-slate-900 font-mono" id="wb-lane-2-reading">Ready / Idle</div>
+        <div class="text-[11px] text-slate-500 mt-1">Empty Vehicle Tare Recording Terminal</div>
+      </div>
+
+      <div class="card p-4 bg-white border-slate-200 shadow-xs">
+        <div class="flex items-center justify-between text-xs mb-2">
+          <span class="font-bold text-slate-700">Quality Inspection Lab</span>
+          <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-teal-50 text-teal-800 border border-teal-200">
+            FCI Certified
+          </span>
+        </div>
+        <div class="text-lg font-bold text-[#0f766e] font-mono">11.4% Avg Moisture</div>
+        <div class="text-[11px] text-slate-500 mt-1">Acceptable limit: &le; 12.0% (FAQ Norms)</div>
+      </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="proc-toast" class="hidden mb-6 p-4 rounded-xl border flex items-center gap-3 transition-all duration-300">
+      <div id="toast-icon" class="w-8 h-8 rounded-lg flex items-center justify-center text-sm flex-shrink-0"></div>
+      <div class="flex-1">
+        <div id="toast-title" class="text-xs font-bold"></div>
+        <div id="toast-desc" class="text-xs"></div>
+      </div>
+      <button type="button" onclick="document.getElementById('proc-toast').classList.add('hidden')"
+        class="text-slate-400 hover:text-slate-600 text-xs font-bold">
+        &times;
+      </button>
+    </div>
+
+    <!-- Main Grid: Queue of Admitted Farmers vs Weighbridge Terminal -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+      <!-- Left Column: Admitted Vehicles List -->
+      <div class="lg:col-span-6 space-y-4">
+        <div class="card p-5 bg-white border-slate-200 shadow-xs">
+          <div class="flex items-center justify-between mb-3">
+            <div>
+              <h2 class="text-sm font-bold text-slate-900">Vehicles in Yard / Intake Queue</h2>
+              <p class="text-xs text-slate-500">Farmers verified at gate ready for weighment or in progress</p>
+            </div>
+            <button type="button" id="refresh-intake-btn"
+              class="text-xs text-[#0f766e] font-semibold hover:underline flex items-center gap-1">
+              Refresh
+            </button>
+          </div>
+
+          <div id="intake-list-container" class="space-y-2.5">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column: Weighbridge & Procurement Intake Operations Desk -->
+      <div class="lg:col-span-6">
+        <div class="card p-6 bg-white border-slate-200 shadow-xs sticky top-24">
+          <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-4">
+            <h3 class="text-sm font-bold text-slate-900">Procurement Terminal (तौल व खरीद नियंत्रण)</h3>
+            <span id="intake-stage-badge" class="text-[10px] font-bold px-2 py-0.5 rounded bg-slate-100 text-slate-600">
+              Select Farmer
+            </span>
+          </div>
+
+          <!-- Empty Selection State -->
+          <div id="intake-empty-state" class="py-12 text-center text-slate-400 text-xs">
+            <svg class="w-12 h-12 mx-auto text-slate-300 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3">
+              </path>
+            </svg>
+            Select a farmer from the yard queue on the left to capture electronic weights and execute procurement.
+          </div>
+
+          <!-- Active Operations Content -->
+          <div id="intake-desk-content" class="hidden space-y-4 text-xs">
+
+            <!-- Farmer Summary Header -->
+            <div class="p-3 bg-slate-50 rounded-xl border border-slate-200">
+              <div class="flex justify-between items-start">
+                <div>
+                  <div class="text-sm font-bold text-slate-900" id="desk-farmer-name">-</div>
+                  <div class="text-slate-500 font-mono mt-0.5" id="desk-farmer-phone">-</div>
+                </div>
+                <div class="text-right">
+                  <div class="font-mono font-bold text-[#0f766e] text-xs" id="desk-token-id">-</div>
+                  <div class="font-mono text-[10px] text-slate-400" id="desk-booking-id">-</div>
+                </div>
+              </div>
+              <div class="mt-2 pt-2 border-t border-slate-200 flex items-center justify-between text-[11px]">
+                <span class="text-slate-600 font-medium" id="desk-commodity">-</span>
+                <span class="text-slate-500" id="desk-slot">-</span>
+              </div>
+            </div>
+
+            <!-- Weighbridge Scales Readout (Simulated Mock) -->
+            <div class="p-4 bg-slate-900 text-white rounded-xl shadow-xs">
+              <div class="flex items-center justify-between mb-3 text-[11px] text-slate-400">
+                <span class="uppercase tracking-wider font-mono font-semibold">Scale Terminal #1</span>
+                <span class="bg-slate-800 text-teal-400 px-2 py-0.5 rounded text-[10px] font-mono">DEMO SCALE</span>
+              </div>
+              <div class="grid grid-cols-3 gap-2 text-center">
+                <div class="p-2 bg-slate-800/80 rounded-lg">
+                  <div class="text-[10px] text-slate-400 uppercase">Gross Wt (भरा)</div>
+                  <div class="text-sm font-bold font-mono text-white mt-1">6,450 kg</div>
+                </div>
+                <div class="p-2 bg-slate-800/80 rounded-lg">
+                  <div class="text-[10px] text-slate-400 uppercase">Tare Wt (खाली)</div>
+                  <div class="text-sm font-bold font-mono text-white mt-1">2,150 kg</div>
+                </div>
+                <div class="p-2 bg-emerald-950 border border-emerald-500/30 rounded-lg">
+                  <div class="text-[10px] text-emerald-300 uppercase font-bold">Net Wt (कुल उपज)</div>
+                  <div class="text-sm font-bold font-mono text-emerald-400 mt-1">43.00 Qtl</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Quality Analysis Station -->
+            <div class="grid grid-cols-2 gap-3">
+              <div class="p-2.5 bg-slate-50 rounded-lg border border-slate-200">
+                <div class="text-[10px] text-slate-500">Moisture Content (नमी)</div>
+                <div class="font-bold text-slate-900 text-xs mt-0.5 flex items-center gap-1.5">
+                  <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                  11.6% <span class="text-[10px] font-normal text-emerald-700">(Passed)</span>
+                </div>
+              </div>
+              <div class="p-2.5 bg-slate-50 rounded-lg border border-slate-200">
+                <div class="text-[10px] text-slate-500">Foreign Matter (विदेशी तत्व)</div>
+                <div class="font-bold text-slate-900 text-xs mt-0.5 flex items-center gap-1.5">
+                  <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                  0.4% <span class="text-[10px] font-normal text-emerald-700">(Grade A)</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Action Controls -->
+            <div class="space-y-2 pt-2">
+              <div id="btn-start-container">
+                <button type="button" id="desk-start-proc-btn"
+                  class="w-full btn bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold py-2.5 flex items-center justify-center gap-2 shadow-xs transition-colors rounded-lg">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z">
+                    </path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                  </svg>
+                  <span>Start Procurement Intake (खरीद प्रक्रिया शुरू करें)</span>
+                </button>
+              </div>
+
+              <div id="btn-complete-container">
+                <button type="button" id="desk-complete-proc-btn"
+                  class="w-full btn btn-primary text-xs font-bold py-3 flex items-center justify-center gap-2 shadow-xs">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                  </svg>
+                  <span>Complete Procurement & Issue MSP Receipt (खरीद पूर्ण करें)</span>
+                </button>
+              </div>
+
+              <div id="already-completed-notice"
+                class="hidden p-3 bg-emerald-50 border border-emerald-200 rounded-xl text-emerald-900 text-xs">
+                <div class="font-bold flex items-center gap-1.5 text-emerald-800">
+                  &check; Electronic Procurement Receipt Issued (खरीद रसीद जारी)
+                </div>
+                <div class="mt-1 text-[11px] text-emerald-700 leading-relaxed">
+                  Net 43.00 Quintals recorded. Digital MSP purchase acknowledgment transmitted to farmer portal and DBT
+                  treasury.
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-white border-t border-slate-200 py-4 mt-8 text-center text-xs text-slate-500">
+    <div class="container mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
+      <div>KisanSetu • Smart Procurement & Queue Intelligence Platform</div>
+      <div class="text-[11px] text-slate-400 font-mono">Operator Desk (Weighbridge Terminal) • v1.0.0 (Phase D)</div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="../js/utils.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="operator.js"></script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      // 1. Enforce Operator Route Protection
+      const operatorUser = window.KisanAuth.requireAuth('operator', 'login.html');
+      if (!operatorUser) return;
+
+      // Update header
+      const userNameEl = document.getElementById('header-user-name');
+      if (userNameEl) {
+        userNameEl.textContent = operatorUser.name || "Demo Operator";
+      }
+
+      // Logout handler
+      document.getElementById('logout-btn')?.addEventListener('click', () => {
+        window.KisanAuth.logout('login.html');
+      });
+
+      let selectedBookingId = null;
+
+      // Render Vehicles in yard
+      function renderIntakeList() {
+        const queue = window.KisanOperator.getOperatorQueue();
+        const container = document.getElementById('intake-list-container');
+
+        // Show items that are checked in or in progress or completed
+        const eligible = queue.filter(item => item.arrivalStatus === 'checked_in');
+
+        if (eligible.length === 0) {
+          container.innerHTML = `
+            <div class="p-6 text-center text-slate-400 text-xs bg-slate-50 rounded-xl border border-dashed border-slate-200">
+              No checked-in vehicles in the yard yet. Perform Gate Verification first.
+            </div>
+          `;
+          return;
+        }
+
+        container.innerHTML = eligible.map(item => {
+          const isSelected = item.bookingId === selectedBookingId;
+          const isCompleted = (item.status || "").includes("खरीद पूर्ण");
+          const isInProgress = (item.status || "").includes("खरीद प्रक्रिया में");
+
+          let statusTag = '';
+          if (isCompleted) {
+            statusTag = `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-200">Completed</span>`;
+          } else if (isInProgress) {
+            statusTag = `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-800 border border-amber-200">In Progress</span>`;
+          } else if (item.queuePosition <= 1) {
+            statusTag = `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-blue-100 text-blue-800 border border-blue-200">Turn Next</span>`;
+          } else {
+            statusTag = `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-100 text-slate-700">Queue Pos #${item.queuePosition}</span>`;
+          }
+
+          return `
+            <div class="p-3.5 rounded-xl border transition-all cursor-pointer ${isSelected ? 'bg-teal-50/60 border-[#0f766e] ring-1 ring-[#0f766e]' : 'bg-white border-slate-200 hover:border-slate-300 hover:bg-slate-50/50'
+            }" onclick="selectIntakeBooking('${item.bookingId}')">
+              <div class="flex items-center justify-between">
+                <div>
+                  <div class="font-bold text-slate-900 text-xs">${item.farmerName}</div>
+                  <div class="text-[11px] text-slate-500 font-mono mt-0.5">${item.tokenId || item.bookingId} • ${item.commodity}</div>
+                </div>
+                <div class="text-right">
+                  ${statusTag}
+                  <div class="text-[10px] text-slate-400 mt-1">${item.timeSlot}</div>
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      // Select Booking to inspect
+      window.selectIntakeBooking = function (bookingId) {
+        selectedBookingId = bookingId;
+        const queue = window.KisanOperator.getOperatorQueue();
+        const item = queue.find(q => q.bookingId === bookingId);
+
+        if (!item) return;
+
+        document.getElementById('intake-empty-state').classList.add('hidden');
+        document.getElementById('intake-desk-content').classList.remove('hidden');
+
+        document.getElementById('desk-farmer-name').textContent = item.farmerName;
+        document.getElementById('desk-farmer-phone').textContent = item.phone || "98765 43210";
+        document.getElementById('desk-token-id').textContent = item.tokenId || "KS-TKN-xxxx";
+        document.getElementById('desk-booking-id').textContent = item.bookingId;
+        document.getElementById('desk-commodity').textContent = `Crop: ${item.commodity}`;
+        document.getElementById('desk-slot').textContent = `Slot: ${item.timeSlot}`;
+
+        const isCompleted = (item.status || "").includes("खरीद पूर्ण");
+        const isInProgress = (item.status || "").includes("खरीद प्रक्रिया में");
+
+        const stageBadge = document.getElementById('intake-stage-badge');
+        const startBtnContainer = document.getElementById('btn-start-container');
+        const completeBtnContainer = document.getElementById('btn-complete-container');
+        const completedNotice = document.getElementById('already-completed-notice');
+
+        if (isCompleted) {
+          stageBadge.className = "text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 border border-emerald-200";
+          stageBadge.textContent = "Procurement Completed";
+          startBtnContainer.classList.add('hidden');
+          completeBtnContainer.classList.add('hidden');
+          completedNotice.classList.remove('hidden');
+        } else if (isInProgress) {
+          stageBadge.className = "text-[10px] font-bold px-2 py-0.5 rounded bg-amber-100 text-amber-800 border border-amber-200";
+          stageBadge.textContent = "Intake in Progress";
+          startBtnContainer.classList.add('hidden');
+          completeBtnContainer.classList.remove('hidden');
+          completedNotice.classList.add('hidden');
+        } else {
+          stageBadge.className = "text-[10px] font-bold px-2 py-0.5 rounded bg-blue-100 text-blue-800 border border-blue-200";
+          stageBadge.textContent = "Yard Queue Waiting";
+          startBtnContainer.classList.remove('hidden');
+          completeBtnContainer.classList.add('hidden');
+          completedNotice.classList.add('hidden');
+        }
+
+        renderIntakeList();
+      };
+
+      // Toast Notification helper
+      function showToast(type, title, desc) {
+        const toast = document.getElementById('proc-toast');
+        const icon = document.getElementById('toast-icon');
+        const titleEl = document.getElementById('toast-title');
+        const descEl = document.getElementById('toast-desc');
+
+        if (type === 'success') {
+          toast.className = "mb-6 p-4 rounded-xl border bg-emerald-50 border-emerald-200 text-emerald-900 flex items-center gap-3";
+          icon.className = "w-8 h-8 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center text-sm font-bold flex-shrink-0";
+          icon.innerHTML = "&check;";
+        } else {
+          toast.className = "mb-6 p-4 rounded-xl border bg-blue-50 border-blue-200 text-blue-900 flex items-center gap-3";
+          icon.className = "w-8 h-8 rounded-lg bg-blue-100 text-blue-700 flex items-center justify-center text-sm font-bold flex-shrink-0";
+          icon.innerHTML = "&igrave;";
+        }
+
+        titleEl.textContent = title;
+        descEl.textContent = desc;
+        toast.classList.remove('hidden');
+      }
+
+      // Start Procurement Action
+      document.getElementById('desk-start-proc-btn').addEventListener('click', () => {
+        if (!selectedBookingId) return;
+
+        window.KisanOperator.startProcurement(selectedBookingId);
+        showToast('info', 'Procurement Intake Started (खरीद प्रक्रिया शुरू)',
+          `Vehicle directed to Weighbridge Lane #1. Quality analysis logged.`);
+        selectIntakeBooking(selectedBookingId);
+      });
+
+      // Complete Procurement Action
+      document.getElementById('desk-complete-proc-btn').addEventListener('click', () => {
+        if (!selectedBookingId) return;
+
+        const res = window.KisanOperator.completeProcurement(selectedBookingId);
+        if (res.success) {
+          showToast('success', 'Procurement Finalized & MSP Issued (खरीद पूर्ण)',
+            res.message || `Procurement intake finalized for booking ${selectedBookingId}. Electronic receipt dispatched.`);
+          selectIntakeBooking(selectedBookingId);
+        }
+      });
+
+      // Refresh Button
+      document.getElementById('refresh-intake-btn').addEventListener('click', () => {
+        renderIntakeList();
+        if (selectedBookingId) selectIntakeBooking(selectedBookingId);
+      });
+
+      // Initial Render
+      renderIntakeList();
+      const initialQueue = window.KisanOperator.getOperatorQueue();
+      const firstEligible = initialQueue.find(q => q.arrivalStatus === 'checked_in');
+      if (firstEligible) {
+        selectIntakeBooking(firstEligible.bookingId);
+      }
+    });
+  </script>
+</body>
+
+</html>

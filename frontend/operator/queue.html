@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Queue Management | Operator Desk — KisanSetu</title>
+
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Core Design System -->
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body class="bg-[#f8fafc] text-[#0f172a] min-h-screen flex flex-col justify-between antialiased">
+
+  <!-- Authenticated Operator Header & Navigation -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-xs">
+    <div class="container mx-auto px-4">
+      <div class="flex items-center justify-between py-3 border-b border-slate-100">
+        <!-- Brand -->
+        <div class="flex items-center gap-3">
+          <a href="dashboard.html"
+            class="w-9 h-9 rounded-lg bg-[#0f766e] text-white flex items-center justify-center font-bold text-sm shadow-xs">
+            K
+          </a>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-base font-bold text-slate-900 tracking-tight">KisanSetu</span>
+              <span class="text-xs text-slate-400">| Operator Desk</span>
+            </div>
+            <div class="text-[11px] font-semibold text-[#0f766e] -mt-0.5" id="facility-badge">
+              Karnal Central Procurement Center
+            </div>
+          </div>
+        </div>
+
+        <!-- User Info & Logout -->
+        <div class="flex items-center gap-3">
+          <div class="text-right hidden sm:block">
+            <div class="text-xs font-semibold text-slate-900" id="header-user-name">Loading...</div>
+            <div class="text-[11px] text-teal-700 font-medium">Facility Operator</div>
+          </div>
+          <button type="button" id="logout-btn" class="btn btn-outline btn-sm text-xs py-1.5 px-3">
+            Logout
+          </button>
+        </div>
+      </div>
+
+      <!-- Navigation Tabs -->
+      <nav class="flex items-center gap-1 sm:gap-2 overflow-x-auto py-2 text-xs font-semibold">
+        <a href="dashboard.html"
+          class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors">
+          Dashboard Overview
+        </a>
+        <a href="queue.html" class="px-3 py-1.5 rounded-lg bg-teal-50 text-[#0f766e] border border-teal-200">
+          Queue Management
+        </a>
+        <a href="gate-verification.html"
+          class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors">
+          Gate Verification
+        </a>
+        <a href="procurement.html"
+          class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors">
+          Procurement Operations
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content Container -->
+  <main class="container mx-auto py-6 sm:py-8 px-4 flex-1">
+
+    <!-- Header Card -->
+    <div class="card p-6 bg-white border-slate-200 shadow-xs mb-6">
+      <div class="flex flex-wrap items-start justify-between gap-4">
+        <div>
+          <div class="flex items-center gap-2 mb-1.5">
+            <span class="text-xs font-bold text-teal-800 bg-teal-50 px-2 py-0.5 rounded border border-teal-200">
+              Live Yard Monitor
+            </span>
+            <span class="text-[10px] text-blue-700 bg-blue-50 px-2 py-0.5 rounded border border-blue-200 font-semibold">
+              डेमो डेटा • Demo Data
+            </span>
+          </div>
+          <h1 class="text-2xl font-bold text-slate-900 tracking-tight">
+            Live Queue Management (लाइव कतार प्रबंधन)
+          </h1>
+          <p class="text-xs sm:text-sm text-slate-500 mt-1">
+            Track arriving tractor-trolleys, manage gate check-ins, advance queue positions, and direct vehicles to
+            active weighbridges.
+          </p>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <button type="button" id="refresh-queue-btn"
+            class="btn btn-outline btn-sm text-xs font-semibold py-2 px-3 flex items-center gap-1.5">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15">
+              </path>
+            </svg>
+            Refresh Queue
+          </button>
+        </div>
+      </div>
+
+      <!-- Filter Tabs Bar -->
+      <div class="flex flex-wrap items-center gap-1.5 mt-6 pt-4 border-t border-slate-100 text-xs">
+        <button type="button" class="filter-tab-btn px-3 py-1.5 rounded-md font-semibold bg-slate-900 text-white"
+          data-filter="all">
+          All Entries (<span id="count-all">0</span>)
+        </button>
+        <button type="button"
+          class="filter-tab-btn px-3 py-1.5 rounded-md font-medium text-slate-600 hover:bg-slate-100"
+          data-filter="arrived">
+          Arrived / Gate Check (<span id="count-arrived">0</span>)
+        </button>
+        <button type="button"
+          class="filter-tab-btn px-3 py-1.5 rounded-md font-medium text-slate-600 hover:bg-slate-100"
+          data-filter="in_queue">
+          In Yard Queue (<span id="count-in-queue">0</span>)
+        </button>
+        <button type="button"
+          class="filter-tab-btn px-3 py-1.5 rounded-md font-medium text-slate-600 hover:bg-slate-100"
+          data-filter="in_progress">
+          In Progress (<span id="count-in-progress">0</span>)
+        </button>
+        <button type="button"
+          class="filter-tab-btn px-3 py-1.5 rounded-md font-medium text-slate-600 hover:bg-slate-100"
+          data-filter="completed">
+          Completed (<span id="count-completed">0</span>)
+        </button>
+      </div>
+    </div>
+
+    <!-- Alert / Toast Banner Container -->
+    <div id="action-toast"
+      class="hidden mb-4 p-3.5 rounded-lg bg-emerald-50 border border-emerald-300 text-emerald-900 text-xs font-semibold flex items-center justify-between shadow-xs">
+      <span id="toast-message">Queue state updated successfully.</span>
+      <button type="button" onclick="document.getElementById('action-toast').classList.add('hidden')"
+        class="text-emerald-700 font-bold">&times;</button>
+    </div>
+
+    <!-- Queue Table Card -->
+    <div class="card bg-white border-slate-200 shadow-xs overflow-hidden">
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse text-xs">
+          <thead>
+            <tr class="bg-slate-50 border-b border-slate-200 text-slate-500 uppercase tracking-wider text-[10px]">
+              <th class="py-3 px-4 font-bold">Queue Pos</th>
+              <th class="py-3 px-4 font-bold">Token & Booking ID</th>
+              <th class="py-3 px-4 font-bold">Farmer</th>
+              <th class="py-3 px-4 font-bold">Commodity & Slot</th>
+              <th class="py-3 px-4 font-bold">Arrival Status</th>
+              <th class="py-3 px-4 font-bold">Current Status</th>
+              <th class="py-3 px-4 font-bold">Wait Time</th>
+              <th class="py-3 px-4 font-bold text-right">Operator Action</th>
+            </tr>
+          </thead>
+          <tbody id="queue-table-body" class="divide-y divide-slate-100">
+            <!-- Populated dynamically by operator.js -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Empty Table Fallback -->
+      <div id="empty-queue-message" class="hidden p-8 text-center text-xs text-slate-400">
+        No vehicle queue entries match the selected filter.
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Simple Footer -->
+  <footer class="py-4 text-center text-xs text-slate-400 border-t border-slate-200 bg-white">
+    KisanSetu &copy; 2026 • SIH Innovation Project • Operator Desk
+  </footer>
+
+  <!-- Scripts -->
+  <script src="../js/utils.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="operator.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // 1. Enforce Operator route protection
+      const user = window.KisanAuth.requireAuth('operator', 'login.html');
+      if (!user) return;
+
+      // 2. Header user details
+      const operatorName = user.name || "Demo Operator";
+      document.getElementById('header-user-name').textContent = operatorName;
+      if (user.centerName) {
+        document.getElementById('facility-badge').textContent = user.centerName;
+      }
+
+      // 3. Logout handler
+      document.getElementById('logout-btn').addEventListener('click', () => {
+        window.KisanAuth.logout('login.html');
+      });
+
+      let currentFilter = 'all';
+
+      // 4. Render Queue Function
+      function renderQueue() {
+        if (!window.KisanOperator) return;
+        const allItems = window.KisanOperator.getOperatorQueue();
+
+        // Update counts
+        document.getElementById('count-all').textContent = allItems.length;
+        document.getElementById('count-arrived').textContent = allItems.filter(i => i.arrivalStatus === 'arrived').length;
+        document.getElementById('count-in-queue').textContent = allItems.filter(i => i.arrivalStatus === 'checked_in' && i.queuePosition > 0).length;
+        document.getElementById('count-in-progress').textContent = allItems.filter(i => (i.status || "").includes("खरीद प्रक्रिया में") || (i.queuePosition === 0 && !(i.status || "").includes("खरीद पूर्ण"))).length;
+        document.getElementById('count-completed').textContent = allItems.filter(i => (i.status || "").includes("खरीद पूर्ण")).length;
+
+        // Filter items
+        const filtered = allItems.filter(item => {
+          const isCompleted = (item.status || "").includes("खरीद पूर्ण");
+          const isInProgress = (item.status || "").includes("खरीद प्रक्रिया में") || (item.queuePosition === 0 && !isCompleted);
+
+          if (currentFilter === 'all') return true;
+          if (currentFilter === 'arrived') return item.arrivalStatus === 'arrived';
+          if (currentFilter === 'in_queue') return item.arrivalStatus === 'checked_in' && item.queuePosition > 0 && !isCompleted;
+          if (currentFilter === 'in_progress') return isInProgress;
+          if (currentFilter === 'completed') return isCompleted;
+          return true;
+        });
+
+        const tbody = document.getElementById('queue-table-body');
+        const emptyMsg = document.getElementById('empty-queue-message');
+
+        if (filtered.length === 0) {
+          tbody.innerHTML = '';
+          emptyMsg.classList.remove('hidden');
+          return;
+        }
+
+        emptyMsg.classList.add('hidden');
+        tbody.innerHTML = filtered.map(item => {
+          const isCompleted = (item.status || "").includes("खरीद पूर्ण");
+          const isInProgress = (item.status || "").includes("खरीद प्रक्रिया में");
+
+          // Status Badge styling
+          let statusBadge = `<span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-semibold bg-blue-50 text-blue-700 border border-blue-200">${item.status || 'Confirmed'}</span>`;
+          if (isCompleted) {
+            statusBadge = `<span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-semibold bg-purple-50 text-purple-700 border border-purple-200">खरीद पूर्ण (Completed)</span>`;
+          } else if (isInProgress) {
+            statusBadge = `<span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-semibold bg-emerald-50 text-emerald-800 border border-emerald-300">तौल प्रक्रियाधीन</span>`;
+          } else if (item.arrivalStatus === "checked_in") {
+            statusBadge = `<span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-semibold bg-teal-50 text-teal-800 border border-teal-200">कतार में</span>`;
+          } else if (item.arrivalStatus === "arrived") {
+            statusBadge = `<span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-semibold bg-amber-50 text-amber-800 border border-amber-200">गेट पर उपस्थित</span>`;
+          }
+
+          // Arrival Badge
+          let arrivalBadge = `<span class="text-[10px] font-medium text-slate-400">Not Arrived</span>`;
+          if (item.arrivalStatus === "arrived") {
+            arrivalBadge = `<span class="text-[10px] font-semibold text-amber-700 bg-amber-50 px-1.5 py-0.5 rounded border border-amber-200">Arrived (गेट पर)</span>`;
+          } else if (item.arrivalStatus === "checked_in") {
+            arrivalBadge = `<span class="text-[10px] font-semibold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200">Checked-In ✔</span>`;
+          }
+
+          // Action Button Construction
+          let actionBtnHtml = '';
+          if (isCompleted) {
+            actionBtnHtml = `<span class="text-[11px] font-semibold text-purple-700">✓ Completed</span>`;
+          } else if (isInProgress) {
+            actionBtnHtml = `
+              <button type="button" class="btn btn-primary btn-sm text-[11px] py-1 px-2.5 btn-complete-proc" data-booking-id="${item.bookingId}">
+                Complete Procurement
+              </button>
+            `;
+          } else if (item.queuePosition === 0 && item.arrivalStatus === "checked_in") {
+            actionBtnHtml = `
+              <button type="button" class="btn btn-primary btn-sm text-[11px] py-1 px-2.5 bg-emerald-600 hover:bg-emerald-700 btn-start-proc" data-booking-id="${item.bookingId}">
+                Start Procurement
+              </button>
+            `;
+          } else if (item.arrivalStatus === "checked_in" && item.queuePosition > 0) {
+            actionBtnHtml = `
+              <button type="button" class="btn btn-outline btn-sm text-[11px] py-1 px-2.5 text-teal-700 border-teal-300 hover:bg-teal-50 btn-advance-queue" data-booking-id="${item.bookingId}">
+                Advance Queue (${item.queuePosition} &rarr;)
+              </button>
+            `;
+          } else if (item.arrivalStatus === "arrived") {
+            actionBtnHtml = `
+              <button type="button" class="btn btn-primary btn-sm text-[11px] py-1 px-2.5 bg-amber-600 hover:bg-amber-700 border-amber-600 btn-verify-gate" data-booking-id="${item.bookingId}">
+                Gate Verify
+              </button>
+            `;
+          } else {
+            actionBtnHtml = `<span class="text-[10px] text-slate-400 italic">Awaiting Arrival</span>`;
+          }
+
+          const highlightClass = item.isLiveFarmer ? "bg-teal-50/40 font-medium" : "";
+
+          return `
+            <tr class="hover:bg-slate-50 transition-colors ${highlightClass}">
+              <td class="py-3 px-4 font-mono font-bold text-sm text-slate-900">
+                ${item.queuePosition > 0 ? '#' + item.queuePosition : (isCompleted ? '-' : '<span class="text-emerald-700 font-bold">NEXT</span>')}
+              </td>
+              <td class="py-3 px-4">
+                <span class="font-mono font-bold text-slate-900 block">${item.tokenId}</span>
+                <span class="font-mono text-[10px] text-slate-400">${item.bookingId}</span>
+              </td>
+              <td class="py-3 px-4">
+                <span class="font-bold text-slate-900 block">${item.farmerName}</span>
+                <span class="text-[10px] text-slate-400">${item.phone || '-'}</span>
+              </td>
+              <td class="py-3 px-4">
+                <span class="text-slate-800 font-medium block">${item.commodity}</span>
+                <span class="text-[10px] text-slate-500">${item.timeSlot}</span>
+              </td>
+              <td class="py-3 px-4">${arrivalBadge}</td>
+              <td class="py-3 px-4">${statusBadge}</td>
+              <td class="py-3 px-4 font-mono text-slate-600">
+                ${item.estimatedWaitMinutes > 0 ? '~' + item.estimatedWaitMinutes + ' min' : (isCompleted ? '-' : '0 min')}
+              </td>
+              <td class="py-3 px-4 text-right">
+                ${actionBtnHtml}
+              </td>
+            </tr>
+          `;
+        }).join('');
+
+        // Wire event listeners to dynamic action buttons
+        document.querySelectorAll('.btn-verify-gate').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const bId = btn.getAttribute('data-booking-id');
+            const res = window.KisanOperator.verifyGate(bId);
+            showToast(res.message || "Gate check-in completed.");
+            renderQueue();
+          });
+        });
+
+        document.querySelectorAll('.btn-advance-queue').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const bId = btn.getAttribute('data-booking-id');
+            window.KisanOperator.advanceQueue(bId);
+            showToast(`Queue position advanced for booking ${bId}.`);
+            renderQueue();
+          });
+        });
+
+        document.querySelectorAll('.btn-start-proc').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const bId = btn.getAttribute('data-booking-id');
+            window.KisanOperator.startProcurement(bId);
+            showToast(`Weighment & procurement intake started for ${bId}.`);
+            renderQueue();
+          });
+        });
+
+        document.querySelectorAll('.btn-complete-proc').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const bId = btn.getAttribute('data-booking-id');
+            window.KisanOperator.completeProcurement(bId);
+            showToast(`Procurement successfully completed for ${bId}. Receipt issued.`);
+            renderQueue();
+          });
+        });
+      }
+
+      function showToast(msg) {
+        const toast = document.getElementById('action-toast');
+        document.getElementById('toast-message').textContent = msg;
+        toast.classList.remove('hidden');
+        setTimeout(() => {
+          toast.classList.add('hidden');
+        }, 4000);
+      }
+
+      // Filter tab switcher
+      document.querySelectorAll('.filter-tab-btn').forEach(tab => {
+        tab.addEventListener('click', () => {
+          document.querySelectorAll('.filter-tab-btn').forEach(t => {
+            t.classList.remove('bg-slate-900', 'text-white');
+            t.classList.add('font-medium', 'text-slate-600');
+          });
+          tab.classList.remove('font-medium', 'text-slate-600');
+          tab.classList.add('bg-slate-900', 'text-white');
+          currentFilter = tab.getAttribute('data-filter');
+          renderQueue();
+        });
+      });
+
+      document.getElementById('refresh-queue-btn').addEventListener('click', () => {
+        renderQueue();
+        showToast("Queue entries refreshed from storage.");
+      });
+
+      // Initial Render
+      renderQueue();
+    });
+  </script>
+</body>
+
+</html>

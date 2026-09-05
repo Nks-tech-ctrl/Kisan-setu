@@ -20,148 +20,265 @@
 
 <body class="bg-[#f8fafc] text-[#0f172a] min-h-screen flex flex-col justify-between antialiased">
 
-  <!-- Authenticated Header -->
-  <header class="bg-white border-b border-slate-200 py-3.5 px-4 sticky top-0 z-40">
-    <div class="container mx-auto flex flex-wrap items-center justify-between gap-3">
-      <div class="flex items-center gap-3">
-        <a href="../index.html"
-          class="w-8 h-8 rounded-lg bg-[#0f766e] text-white flex items-center justify-center font-bold text-sm">
-          K
-        </a>
-        <div>
-          <span class="text-base font-bold text-slate-900 tracking-tight">KisanSetu</span>
-          <span class="text-xs text-slate-400 ml-1">| Operator Desk</span>
+  <!-- Authenticated Operator Header & Navigation -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-xs">
+    <div class="container mx-auto px-4">
+      <div class="flex items-center justify-between py-3 border-b border-slate-100">
+        <!-- Brand -->
+        <div class="flex items-center gap-3">
+          <a href="dashboard.html"
+            class="w-9 h-9 rounded-lg bg-[#0f766e] text-white flex items-center justify-center font-bold text-sm shadow-xs">
+            K
+          </a>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-base font-bold text-slate-900 tracking-tight">KisanSetu</span>
+              <span class="text-xs text-slate-400">| Operator Desk</span>
+            </div>
+            <div class="text-[11px] font-semibold text-[#0f766e] -mt-0.5" id="facility-badge">
+              Karnal Central Procurement Center
+            </div>
+          </div>
+        </div>
+
+        <!-- User Info & Logout -->
+        <div class="flex items-center gap-3">
+          <div class="text-right hidden sm:block">
+            <div class="text-xs font-semibold text-slate-900" id="header-user-name">Loading...</div>
+            <div class="text-[11px] text-teal-700 font-medium">Facility Operator</div>
+          </div>
+          <button type="button" id="logout-btn" class="btn btn-outline btn-sm text-xs py-1.5 px-3">
+            Logout
+          </button>
         </div>
       </div>
 
-      <div class="flex items-center gap-3">
-        <div class="text-right hidden sm:block">
-          <div class="text-xs font-semibold text-slate-900" id="header-user-name">Loading...</div>
-          <div class="text-[11px] text-teal-700 font-medium">Role: Procurement Operator</div>
-        </div>
-        <span class="badge badge-info text-[11px]">Facility Desk Active</span>
-        <button type="button" id="logout-btn" class="btn btn-outline btn-sm text-xs py-1.5 px-3">
-          Logout
-        </button>
-      </div>
+      <!-- Navigation Tabs -->
+      <nav class="flex items-center gap-1 sm:gap-2 overflow-x-auto py-2 text-xs font-semibold">
+        <a href="dashboard.html" class="px-3 py-1.5 rounded-lg bg-teal-50 text-[#0f766e] border border-teal-200">
+          Dashboard Overview
+        </a>
+        <a href="queue.html"
+          class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors">
+          Queue Management
+        </a>
+        <a href="gate-verification.html"
+          class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors">
+          Gate Verification
+        </a>
+        <a href="procurement.html"
+          class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors">
+          Procurement Operations
+        </a>
+      </nav>
     </div>
   </header>
 
-  <!-- Main Dashboard View -->
-  <main class="container mx-auto py-8 px-4 flex-1">
+  <!-- Main Dashboard Content -->
+  <main class="container mx-auto py-6 sm:py-8 px-4 flex-1">
 
-    <!-- Welcome Banner -->
-    <div class="card bg-white border-slate-200 p-6 mb-6">
-      <div class="flex flex-wrap items-center justify-between gap-4">
+    <!-- Welcome & Facility Status Banner -->
+    <div class="card bg-white border-slate-200 p-6 shadow-xs mb-6">
+      <div class="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <div
-            class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-teal-50 text-teal-800 border border-teal-200 text-[11px] font-semibold mb-2">
-            <span>●</span> Facility Operator Terminal (Phase 1 Baseline)
+          <div class="flex items-center gap-2 mb-1.5">
+            <span
+              class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-teal-50 text-[#0f766e] border border-teal-200 text-[11px] font-semibold">
+              <span class="w-1.5 h-1.5 rounded-full bg-[#0f766e]"></span>
+              Facility Terminal Active
+            </span>
+            <span
+              class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-semibold bg-blue-50 text-blue-700 border border-blue-200">
+              डेमो डेटा • Demo Data
+            </span>
           </div>
           <h1 class="text-2xl sm:text-3xl font-bold text-slate-900" id="welcome-user-title">
             Welcome, Operator
           </h1>
           <p class="text-xs sm:text-sm text-slate-500 mt-1">
-            Manage gate intake, scan digital tokens, record weighbridge metrics, and process agricultural procurement.
+            Real-time yard intake monitoring, gate verification, weighbridge queue management, and crop procurement
+            intake.
           </p>
         </div>
 
-        <div class="flex flex-col sm:flex-row gap-3">
-          <div class="metric-box bg-slate-50 py-2 px-3.5">
-            <span class="text-[11px] text-slate-500">Assigned Facility</span>
-            <span class="text-xs font-bold text-teal-800 mt-0.5" id="center-display">Karnal Central (Demo)</span>
+        <div class="grid grid-cols-2 gap-3 w-full sm:w-auto text-xs">
+          <div class="p-3 bg-slate-50 rounded-lg border border-slate-200">
+            <span class="text-[10px] uppercase font-bold text-slate-400 block">Assigned Center</span>
+            <span class="font-bold text-slate-800 block mt-0.5" id="center-display">Karnal Central</span>
           </div>
-          <div class="metric-box bg-slate-50 py-2 px-3.5">
-            <span class="text-[11px] text-slate-500">Assigned Role</span>
-            <span class="text-xs font-bold text-slate-800 mt-0.5">Procurement Operator</span>
+          <div class="p-3 bg-slate-50 rounded-lg border border-slate-200">
+            <span class="text-[10px] uppercase font-bold text-slate-400 block">Operating Shift</span>
+            <span class="font-bold text-[#0f766e] block mt-0.5">09:00 AM – 05:00 PM</span>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Quick Modules -->
+    <!-- Section: 6 Operational Metrics -->
     <div class="mb-8">
-      <h2 class="text-xs font-bold uppercase tracking-wider text-slate-600 mb-3">Facility Operational Modules</h2>
+      <div class="flex items-center justify-between mb-3">
+        <h2 class="text-xs font-bold uppercase tracking-wider text-slate-600 flex items-center gap-2">
+          <span>📊</span> Today's Operational Queue Metrics (दैनिक परिचालन स्थिति)
+        </h2>
+        <span class="text-[11px] text-blue-700 bg-blue-50 px-2 py-0.5 rounded border border-blue-200 font-semibold">
+          डेमो डेटा • Demo Data
+        </span>
+      </div>
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
 
-        <!-- Module 1 -->
-        <div class="card p-5 hover:border-teal-500 transition-colors flex flex-col justify-between">
-          <div>
-            <div class="w-9 h-9 rounded-lg bg-teal-50 text-teal-700 flex items-center justify-center mb-3">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4">
-                </path>
-              </svg>
-            </div>
-            <h3 class="text-sm font-bold text-slate-900">Assigned Center</h3>
-            <p class="text-xs text-slate-500 mt-1 leading-relaxed">
-              Configure center daily capacity quotas, shift slots, and active weighbridge lanes.
-            </p>
+        <!-- Metric 1: Today's Bookings -->
+        <div class="card p-4 bg-white border-slate-200 shadow-xs">
+          <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">
+            Today's Bookings
+          </span>
+          <div class="text-2xl sm:text-3xl font-mono font-black text-slate-900 my-1" id="metric-today-bookings">
+            0
           </div>
-          <div class="mt-4 pt-3 border-t border-slate-100 text-xs text-slate-400 font-medium">
-            Placeholder (Phase 4)
-          </div>
+          <span class="text-[10px] text-slate-500 font-medium">कुल स्लॉट बुकिंग</span>
         </div>
 
-        <!-- Module 2 -->
-        <div class="card p-5 hover:border-teal-500 transition-colors flex flex-col justify-between">
-          <div>
-            <div class="w-9 h-9 rounded-lg bg-teal-50 text-teal-700 flex items-center justify-center mb-3">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-              </svg>
-            </div>
-            <h3 class="text-sm font-bold text-slate-900">Queue Management</h3>
-            <p class="text-xs text-slate-500 mt-1 leading-relaxed">
-              Monitor arriving tractor-trolleys and adjust active line speed in real-time.
-            </p>
+        <!-- Metric 2: Arrived Farmers -->
+        <div class="card p-4 bg-white border-slate-200 shadow-xs">
+          <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">
+            Arrived Farmers
+          </span>
+          <div class="text-2xl sm:text-3xl font-mono font-black text-teal-700 my-1" id="metric-arrived">
+            0
           </div>
-          <div class="mt-4 pt-3 border-t border-slate-100 text-xs text-slate-400 font-medium">
-            Placeholder (Phase 4)
-          </div>
+          <span class="text-[10px] text-slate-500 font-medium">केंद्र पर उपस्थित</span>
         </div>
 
-        <!-- Module 3 -->
-        <div class="card p-5 hover:border-teal-500 transition-colors flex flex-col justify-between">
+        <!-- Metric 3: Pending Gate Verification -->
+        <div class="card p-4 bg-white border-slate-200 shadow-xs border-l-4 border-l-amber-500">
+          <span class="text-[10px] font-bold uppercase tracking-wider text-amber-700 block">
+            Pending Gate Check
+          </span>
+          <div class="text-2xl sm:text-3xl font-mono font-black text-amber-600 my-1" id="metric-pending-gate">
+            0
+          </div>
+          <span class="text-[10px] text-slate-500 font-medium">सत्यापन प्रतीक्षित</span>
+        </div>
+
+        <!-- Metric 4: Waiting in Queue -->
+        <div class="card p-4 bg-white border-slate-200 shadow-xs">
+          <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">
+            In Yard Queue
+          </span>
+          <div class="text-2xl sm:text-3xl font-mono font-black text-blue-700 my-1" id="metric-in-queue">
+            0
+          </div>
+          <span class="text-[10px] text-slate-500 font-medium">कतार में प्रतीक्षारत</span>
+        </div>
+
+        <!-- Metric 5: Procurement In Progress -->
+        <div class="card p-4 bg-white border-slate-200 shadow-xs border-l-4 border-l-emerald-500">
+          <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-700 block">
+            In Progress
+          </span>
+          <div class="text-2xl sm:text-3xl font-mono font-black text-[#0f766e] my-1" id="metric-in-progress">
+            0
+          </div>
+          <span class="text-[10px] text-slate-500 font-medium">तौल व खरीद प्रगति</span>
+        </div>
+
+        <!-- Metric 6: Completed Procurement -->
+        <div class="card p-4 bg-white border-slate-200 shadow-xs">
+          <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">
+            Completed
+          </span>
+          <div class="text-2xl sm:text-3xl font-mono font-black text-purple-700 my-1" id="metric-completed">
+            0
+          </div>
+          <span class="text-[10px] text-slate-500 font-medium">सफलतापूर्वक पूर्ण</span>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Section: Quick Operational Desks -->
+    <div class="mb-8">
+      <h2 class="text-xs font-bold uppercase tracking-wider text-slate-600 mb-3">
+        Facility Operational Desks (परिचालन डेस्क)
+      </h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+
+        <!-- Desk 1: Gate Verification -->
+        <a href="gate-verification.html"
+          class="card p-6 bg-white border-slate-200 hover:border-teal-500 hover:shadow-sm transition-all group flex flex-col justify-between">
           <div>
-            <div class="w-9 h-9 rounded-lg bg-teal-50 text-teal-700 flex items-center justify-center mb-3">
+            <div
+              class="w-10 h-10 rounded-lg bg-teal-50 text-[#0f766e] flex items-center justify-center mb-3 group-hover:scale-105 transition-transform">
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                   d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
               </svg>
             </div>
-            <h3 class="text-sm font-bold text-slate-900">Token Verification</h3>
-            <p class="text-xs text-slate-500 mt-1 leading-relaxed">
-              Scan and validate farmer appointment tokens at the facility entry checkpoint.
+            <h3 class="text-base font-bold text-slate-900 group-hover:text-[#0f766e] transition-colors">
+              Gate Verification Desk
+            </h3>
+            <div class="text-xs text-slate-400 font-medium">गेट सत्यापन व प्रवेश डेस्क</div>
+            <p class="text-xs text-slate-500 mt-2 leading-relaxed">
+              Verify digital appointment tokens for arriving tractor-trolleys, check vehicle entry status, and activate
+              queue tokens.
             </p>
           </div>
-          <div class="mt-4 pt-3 border-t border-slate-100 text-xs text-slate-400 font-medium">
-            Placeholder (Phase 4)
+          <div class="mt-4 pt-3 border-t border-slate-100 text-xs font-semibold text-[#0f766e] flex items-center gap-1">
+            Open Gate Terminal &rarr;
           </div>
-        </div>
+        </a>
 
-        <!-- Module 4 -->
-        <div class="card p-5 hover:border-teal-500 transition-colors flex flex-col justify-between">
+        <!-- Desk 2: Queue Management -->
+        <a href="queue.html"
+          class="card p-6 bg-white border-slate-200 hover:border-teal-500 hover:shadow-sm transition-all group flex flex-col justify-between">
           <div>
-            <div class="w-9 h-9 rounded-lg bg-teal-50 text-teal-700 flex items-center justify-center mb-3">
+            <div
+              class="w-10 h-10 rounded-lg bg-blue-50 text-blue-700 flex items-center justify-center mb-3 group-hover:scale-105 transition-transform">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+            </div>
+            <h3 class="text-base font-bold text-slate-900 group-hover:text-blue-700 transition-colors">
+              Live Queue Management
+            </h3>
+            <div class="text-xs text-slate-400 font-medium">लाइव कतार प्रबंधन</div>
+            <p class="text-xs text-slate-500 mt-2 leading-relaxed">
+              Monitor arriving vehicles in yard lanes, review estimated waiting times, advance queue positions, and
+              track delays.
+            </p>
+          </div>
+          <div class="mt-4 pt-3 border-t border-slate-100 text-xs font-semibold text-blue-700 flex items-center gap-1">
+            Open Queue Board &rarr;
+          </div>
+        </a>
+
+        <!-- Desk 3: Procurement Processing -->
+        <a href="procurement.html"
+          class="card p-6 bg-white border-slate-200 hover:border-teal-500 hover:shadow-sm transition-all group flex flex-col justify-between">
+          <div>
+            <div
+              class="w-10 h-10 rounded-lg bg-emerald-50 text-[#15803d] flex items-center justify-center mb-3 group-hover:scale-105 transition-transform">
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                   d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
                 </path>
               </svg>
             </div>
-            <h3 class="text-sm font-bold text-slate-900">Procurement Processing</h3>
-            <p class="text-xs text-slate-500 mt-1 leading-relaxed">
-              Log quality/moisture grades, record tare/gross weights, and issue digital receipts.
+            <h3 class="text-base font-bold text-slate-900 group-hover:text-[#15803d] transition-colors">
+              Procurement & Weighment
+            </h3>
+            <div class="text-xs text-slate-400 font-medium">तौल एवं खरीद प्रक्रिया</div>
+            <p class="text-xs text-slate-500 mt-2 leading-relaxed">
+              Record weighbridge tare/gross metrics, verify grain quality parameters, and complete official procurement
+              receipts.
             </p>
           </div>
-          <div class="mt-4 pt-3 border-t border-slate-100 text-xs text-slate-400 font-medium">
-            Placeholder (Phase 4)
+          <div class="mt-4 pt-3 border-t border-slate-100 text-xs font-semibold text-[#15803d] flex items-center gap-1">
+            Open Procurement Desk &rarr;
           </div>
-        </div>
+        </a>
 
       </div>
     </div>
@@ -170,30 +287,48 @@
 
   <!-- Simple Footer -->
   <footer class="py-4 text-center text-xs text-slate-400 border-t border-slate-200 bg-white">
-    KisanSetu &copy; 2026 • SIH Innovation Project
+    KisanSetu &copy; 2026 • SIH Innovation Project • Procurement Desk Terminal
   </footer>
 
   <!-- Scripts -->
   <script src="../js/utils.js"></script>
   <script src="../js/auth.js"></script>
+  <script src="operator.js"></script>
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      // Enforce Operator route protection
+      // 1. Enforce Operator route protection
       const user = window.KisanAuth.requireAuth('operator', 'login.html');
       if (!user) return;
 
-      // Populate user info
-      document.getElementById('header-user-name').textContent = user.name || "Demo Operator";
-      document.getElementById('welcome-user-title').textContent = `Welcome, ${user.name || "Operator"}`;
+      // 2. Populate operator credentials
+      const operatorName = user.name || "Demo Operator";
+      document.getElementById('header-user-name').textContent = operatorName;
+      document.getElementById('welcome-user-title').textContent = `Welcome, ${operatorName}`;
       if (user.centerName) {
         document.getElementById('center-display').textContent = user.centerName;
+        document.getElementById('facility-badge').textContent = user.centerName;
       }
 
-      // Logout handler
+      // 3. Logout handler
       document.getElementById('logout-btn').addEventListener('click', () => {
         window.KisanAuth.logout('login.html');
       });
+
+      // 4. Populate dynamic operational metrics
+      function updateDashboardMetrics() {
+        if (!window.KisanOperator) return;
+        const metrics = window.KisanOperator.getDashboardMetrics();
+
+        document.getElementById('metric-today-bookings').textContent = metrics.todayBookings;
+        document.getElementById('metric-arrived').textContent = metrics.arrivedFarmers;
+        document.getElementById('metric-pending-gate').textContent = metrics.pendingGateVerification;
+        document.getElementById('metric-in-queue').textContent = metrics.waitingInQueue;
+        document.getElementById('metric-in-progress').textContent = metrics.inProgress;
+        document.getElementById('metric-completed').textContent = metrics.completed;
+      }
+
+      updateDashboardMetrics();
     });
   </script>
 </body>
