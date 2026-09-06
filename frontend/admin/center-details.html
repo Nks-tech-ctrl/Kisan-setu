@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Center Details | District Admin — KisanSetu</title>
+
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Core Design System -->
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body class="bg-[#f8fafc] text-[#0f172a] min-h-screen flex flex-col justify-between antialiased">
+
+  <!-- Authenticated Header & Navigation -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-xs">
+    <div class="container mx-auto px-4">
+      <div class="flex items-center justify-between py-3 border-b border-slate-100">
+        <!-- Brand -->
+        <div class="flex items-center gap-3">
+          <a href="dashboard.html"
+            class="w-9 h-9 rounded-lg bg-amber-600 text-white flex items-center justify-center font-bold text-sm shadow-xs">
+            K
+          </a>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-base font-bold text-slate-900 tracking-tight">KisanSetu</span>
+              <span class="text-xs text-slate-400">| District Oversight Console</span>
+            </div>
+            <div class="text-[11px] font-semibold text-amber-800 -mt-0.5" id="district-badge">
+              Karnal Administrative District
+            </div>
+          </div>
+        </div>
+
+        <!-- User Info & Logout -->
+        <div class="flex items-center gap-3">
+          <div class="text-right hidden sm:block">
+            <div class="text-xs font-semibold text-slate-900" id="header-user-name">Loading...</div>
+            <div class="text-[11px] text-amber-700 font-medium">District Administrator</div>
+          </div>
+          <button type="button" id="logout-btn" class="btn btn-outline btn-sm text-xs py-1.5 px-3">
+            Logout
+          </button>
+        </div>
+      </div>
+
+      <!-- Unified 8-Tab Navigation -->
+      <nav class="flex items-center gap-1 sm:gap-2 overflow-x-auto py-2 text-xs font-semibold">
+        <a href="dashboard.html"
+          class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors">
+          Dashboard
+        </a>
+        <a href="centers.html" class="px-3 py-1.5 rounded-lg bg-amber-50 text-amber-900 border border-amber-200">
+          Centers
+        </a>
+        <a href="queue-monitor.html"
+          class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors">
+          Queue Monitor
+        </a>
+        <a href="procurement.html"
+          class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors">
+          Procurement
+        </a>
+        <a href="analytics.html"
+          class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors">
+          Analytics
+        </a>
+        <a href="alerts.html"
+          class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors">
+          Alerts
+        </a>
+        <a href="reports.html"
+          class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors">
+          Reports
+        </a>
+        <a href="operator-activity.html"
+          class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors">
+          Operator Activity
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content Container -->
+  <main class="container mx-auto py-6 sm:py-8 px-4 flex-1">
+
+    <!-- Not Found State (Graceful Fallback) -->
+    <div id="not-found-container"
+      class="hidden card p-8 sm:p-12 bg-white border-slate-200 text-center max-w-lg mx-auto my-12 shadow-xs">
+      <div
+        class="w-14 h-14 rounded-full bg-amber-50 text-amber-600 flex items-center justify-center mx-auto mb-4 text-xl font-bold">
+        !
+      </div>
+      <h1 class="text-lg font-bold text-slate-900 mb-2">Procurement Center Not Found</h1>
+      <p class="text-xs sm:text-sm text-slate-500 mb-6 leading-relaxed">
+        The procurement center ID specified in the request could not be located in the district directory.
+      </p>
+      <a href="centers.html" class="btn btn-primary text-xs py-2 px-5 font-semibold inline-flex items-center gap-1.5">
+        &larr; Return to Centers Directory
+      </a>
+    </div>
+
+    <!-- Active Details View -->
+    <div id="details-container" class="space-y-6">
+
+      <!-- Breadcrumbs & Header -->
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <div class="flex items-center gap-2 text-xs">
+          <a href="centers.html" class="text-amber-800 font-semibold hover:underline">&larr; Centers Directory</a>
+          <span class="text-slate-300">/</span>
+          <span class="text-slate-500 font-mono" id="crumb-center-id">Loading...</span>
+        </div>
+        <span class="text-[10px] text-blue-700 bg-blue-50 px-2 py-0.5 rounded border border-blue-200 font-semibold">
+          डेमो डेटा • Demo Data
+        </span>
+      </div>
+
+      <!-- Notification Toast -->
+      <div id="config-toast"
+        class="hidden p-4 rounded-xl border bg-emerald-50 border-emerald-200 text-emerald-900 text-xs font-semibold flex items-center justify-between">
+        <span id="toast-msg">Configuration saved.</span>
+        <button type="button" onclick="document.getElementById('config-toast').classList.add('hidden')"
+          class="text-slate-400 hover:text-slate-600">&times;</button>
+      </div>
+
+      <!-- Facility Overview Card -->
+      <div class="card p-6 bg-white border-slate-200 shadow-xs">
+        <div class="flex flex-wrap items-start justify-between gap-4">
+          <div>
+            <div class="flex items-center gap-2 mb-2">
+              <span class="text-xs font-mono font-bold px-2 py-0.5 rounded bg-slate-100 text-slate-700"
+                id="center-id-badge">
+                CTR-HR-XX
+              </span>
+              <span class="text-xs font-bold px-2 py-0.5 rounded border" id="center-status-badge">
+                ACTIVE
+              </span>
+              <span class="text-xs font-bold px-2 py-0.5 rounded border" id="center-load-badge">
+                Normal Load
+              </span>
+            </div>
+            <h1 class="text-2xl font-bold text-slate-900 tracking-tight" id="center-name">
+              Loading Center Name...
+            </h1>
+            <p class="text-xs sm:text-sm text-slate-500 mt-1 flex items-center gap-1.5" id="center-address">
+              <span>📍</span> Loading location...
+            </p>
+          </div>
+
+          <div class="text-right">
+            <span class="text-[10px] uppercase font-bold text-slate-400 block">Daily Intake Limit</span>
+            <div class="text-xl font-mono font-bold text-slate-900 mt-0.5" id="center-capacity">
+              0 MT / day
+            </div>
+            <span class="text-[11px] text-slate-500 font-mono" id="center-shift">
+              09:00 AM – 05:00 PM
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Administrative Operational Controls Card -->
+      <div class="card p-6 bg-white border-amber-200 shadow-xs border">
+        <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-4">
+          <div>
+            <h2 class="text-sm font-bold text-slate-900">Administrative Operational Controls (प्रशासनिक नियंत्रण)</h2>
+            <p class="text-xs text-slate-500">Configure center operational availability and booking limits</p>
+          </div>
+          <span class="text-[10px] text-amber-800 bg-amber-50 px-2 py-0.5 rounded border border-amber-200 font-mono"
+            id="last-updated-badge">
+            Last Updated: Default
+          </span>
+        </div>
+
+        <form id="admin-control-form" class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Operational Status</label>
+            <select id="ctrl-op-status"
+              class="w-full px-3 py-2 border border-slate-300 rounded-lg font-semibold bg-slate-50 focus:bg-white text-xs">
+              <option value="ACTIVE">ACTIVE (सक्रिय)</option>
+              <option value="PAUSED">PAUSED (अस्थायी रोक)</option>
+              <option value="MAINTENANCE">MAINTENANCE (मरम्मत / रखरखाव)</option>
+              <option value="CLOSED">CLOSED (पूर्णतः बंद)</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Slot Booking Availability</label>
+            <div class="flex items-center gap-2 p-2 bg-slate-50 rounded-lg border border-slate-200">
+              <input type="checkbox" id="ctrl-accepting-bookings" class="w-4 h-4 text-amber-600 rounded">
+              <span class="text-xs font-semibold text-slate-800">Accepting Farmer Bookings</span>
+            </div>
+          </div>
+
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Daily Capacity Limit (MT/day)</label>
+            <input type="number" id="ctrl-capacity" min="50" max="2000" step="50"
+              class="w-full px-3 py-2 border border-slate-300 rounded-lg font-mono bg-slate-50 focus:bg-white text-xs">
+          </div>
+
+          <div class="sm:col-span-3 flex items-center justify-between pt-3 border-t border-slate-100">
+            <span class="text-[11px] text-slate-500">
+              Changes update administrative configuration without altering live weighbridge transactions.
+            </span>
+            <button type="submit"
+              class="btn btn-primary btn-sm text-xs py-2 px-5 font-bold bg-amber-600 hover:bg-amber-700 text-white border-amber-600">
+              Update Center Configuration
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Live Center Operational Metrics Grid -->
+      <div class="grid grid-cols-2 sm:grid-cols-5 gap-4">
+        <div class="card p-4 bg-white border-slate-200 shadow-xs text-center">
+          <span class="text-[10px] uppercase font-bold text-slate-400 block">Today's Bookings</span>
+          <div class="text-2xl font-mono font-bold text-slate-900 my-1" id="stat-bookings">0</div>
+          <span class="text-[11px] text-slate-500">Scheduled</span>
+        </div>
+
+        <div class="card p-4 bg-white border-slate-200 shadow-xs text-center">
+          <span class="text-[10px] uppercase font-bold text-slate-400 block">Farmers Arrived</span>
+          <div class="text-2xl font-mono font-bold text-amber-600 my-1" id="stat-arrivals">0</div>
+          <span class="text-[11px] text-slate-500">At yard gate</span>
+        </div>
+
+        <div class="card p-4 bg-white border-slate-200 shadow-xs text-center">
+          <span class="text-[10px] uppercase font-bold text-slate-400 block">Current Queue</span>
+          <div class="text-2xl font-mono font-bold text-blue-600 my-1" id="stat-queue">0</div>
+          <span class="text-[11px] text-slate-500">Waiting in yard</span>
+        </div>
+
+        <div class="card p-4 bg-white border-slate-200 shadow-xs text-center">
+          <span class="text-[10px] uppercase font-bold text-slate-400 block">In Progress</span>
+          <div class="text-2xl font-mono font-bold text-[#0f766e] my-1" id="stat-in-progress">0</div>
+          <span class="text-[11px] text-slate-500">On weighbridge</span>
+        </div>
+
+        <div class="card p-4 bg-white border-slate-200 shadow-xs text-center col-span-2 sm:col-span-1">
+          <span class="text-[10px] uppercase font-bold text-slate-400 block">Completed</span>
+          <div class="text-2xl font-mono font-bold text-[#15803d] my-1" id="stat-completed">0</div>
+          <span class="text-[11px] text-slate-500">Receipts issued</span>
+        </div>
+      </div>
+
+      <!-- Facility Details & Commodities Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+        <!-- Accepted Commodities -->
+        <div class="card p-6 bg-white border-slate-200 shadow-xs">
+          <h2 class="text-sm font-bold text-slate-900 mb-3 flex items-center gap-2">
+            <span>🌾</span> Accepted Commodities (स्वीकृत फसलें)
+          </h2>
+          <div class="flex flex-wrap gap-2" id="commodities-container">
+            <!-- Dynamically populated -->
+          </div>
+          <p class="text-xs text-slate-500 mt-4 leading-relaxed">
+            Standard MSP procurement applies subject to moisture compliance (&le; 12.0% FAQ grade).
+          </p>
+        </div>
+
+        <!-- Available Infrastructure -->
+        <div class="card p-6 bg-white border-slate-200 shadow-xs">
+          <h2 class="text-sm font-bold text-slate-900 mb-3 flex items-center gap-2">
+            <span>🏗️</span> Facility Infrastructure & Services (उपलब्ध सुविधाएं)
+          </h2>
+          <div class="flex flex-wrap gap-2" id="facilities-container">
+            <!-- Dynamically populated -->
+          </div>
+          <p class="text-xs text-slate-500 mt-4 leading-relaxed">
+            All weighbridge instruments are electronically calibrated under district legal metrology oversight.
+          </p>
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-white border-t border-slate-200 py-4 mt-8 text-center text-xs text-slate-500">
+    <div class="container mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
+      <div>KisanSetu • Smart Procurement & Queue Intelligence Platform</div>
+      <div class="text-[11px] text-slate-400 font-mono">District Oversight Console • v2.0.0 (Phase E.2)</div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="../js/mock-data.js"></script>
+  <script src="../js/utils.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="admin.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // 1. Enforce District Admin route protection
+      const user = window.KisanAuth.requireAuth('district_admin', 'login.html');
+      if (!user) return;
+
+      const userNameEl = document.getElementById('header-user-name');
+      if (userNameEl) userNameEl.textContent = user.name || "Demo District Admin";
+      if (user.district) {
+        document.getElementById('district-badge').textContent = `${user.district} Administrative District`;
+      }
+
+      document.getElementById('logout-btn')?.addEventListener('click', () => {
+        window.KisanAuth.logout('login.html');
+      });
+
+      // 2. Read query parameter id
+      const params = new URLSearchParams(window.location.search);
+      const centerId = params.get('id');
+
+      const notFoundContainer = document.getElementById('not-found-container');
+      const detailsContainer = document.getElementById('details-container');
+
+      if (!centerId) {
+        detailsContainer.classList.add('hidden');
+        notFoundContainer.classList.remove('hidden');
+        return;
+      }
+
+      const center = window.KisanAdmin.getCenterById(centerId);
+      if (!center) {
+        detailsContainer.classList.add('hidden');
+        notFoundContainer.classList.remove('hidden');
+        return;
+      }
+
+      // 3. Render View Elements
+      function refreshView() {
+        const config = window.KisanAdmin.getCenterConfig(center.id);
+        const metrics = window.KisanAdmin.getCenterMetrics(center.id);
+
+        document.getElementById('crumb-center-id').textContent = center.id;
+        document.getElementById('center-id-badge').textContent = center.id;
+        document.getElementById('center-name').textContent = center.name;
+        document.getElementById('center-address').innerHTML = `<span>📍</span> ${center.address || (center.district + ', ' + center.state)}`;
+        document.getElementById('center-capacity').textContent = `${config.capacity} MT / day`;
+        document.getElementById('center-shift').textContent = center.operatingHours || "09:00 AM – 05:00 PM";
+
+        // Status Badge
+        const statusBadge = document.getElementById('center-status-badge');
+        statusBadge.textContent = config.operationalStatus;
+        if (config.operationalStatus === 'PAUSED') statusBadge.className = "text-xs font-bold px-2 py-0.5 rounded border bg-amber-50 text-amber-800 border-amber-200";
+        else if (config.operationalStatus === 'MAINTENANCE') statusBadge.className = "text-xs font-bold px-2 py-0.5 rounded border bg-blue-50 text-blue-800 border-blue-200";
+        else if (config.operationalStatus === 'CLOSED') statusBadge.className = "text-xs font-bold px-2 py-0.5 rounded border bg-rose-50 text-rose-800 border-rose-200";
+        else statusBadge.className = "text-xs font-bold px-2 py-0.5 rounded border bg-emerald-50 text-emerald-800 border-emerald-200";
+
+        // Load Badge
+        const loadBadge = document.getElementById('center-load-badge');
+        if (center.loadStatus === 'medium') {
+          loadBadge.className = "text-xs font-bold px-2 py-0.5 rounded border bg-amber-50 text-amber-800 border-amber-200";
+          loadBadge.textContent = "Moderate Load";
+        } else if (center.loadStatus === 'high') {
+          loadBadge.className = "text-xs font-bold px-2 py-0.5 rounded border bg-rose-50 text-rose-800 border-rose-200";
+          loadBadge.textContent = "Heavy Congestion";
+        } else {
+          loadBadge.className = "text-xs font-bold px-2 py-0.5 rounded border bg-emerald-50 text-emerald-800 border-emerald-200";
+          loadBadge.textContent = "Normal Load";
+        }
+
+        // Form controls
+        document.getElementById('ctrl-op-status').value = config.operationalStatus;
+        document.getElementById('ctrl-accepting-bookings').checked = config.acceptingBookings;
+        document.getElementById('ctrl-capacity').value = config.capacity;
+        document.getElementById('last-updated-badge').textContent = config.lastUpdated
+          ? `Updated: ${new Date(config.lastUpdated).toLocaleTimeString()}`
+          : "Default Settings";
+
+        // Operational Metrics
+        document.getElementById('stat-bookings').textContent = metrics.todayBookings;
+        document.getElementById('stat-arrivals').textContent = metrics.arrivedFarmers;
+        document.getElementById('stat-queue').textContent = metrics.currentQueue;
+        document.getElementById('stat-in-progress').textContent = metrics.inProgress;
+        document.getElementById('stat-completed').textContent = metrics.completed;
+
+        // Commodities
+        const commList = center.commodities || [center.commodity];
+        document.getElementById('commodities-container').innerHTML = commList.map(c => `
+          <span class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200">
+            ${c}
+          </span>
+        `).join('');
+
+        // Facilities
+        const facList = center.facilities || ["डिजिटल टोकन", "इलेक्ट्रॉनिक कांटा", "हेल्पडेस्क"];
+        document.getElementById('facilities-container').innerHTML = facList.map(f => `
+          <span class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-100 text-slate-700 border border-slate-200">
+            &check; ${f}
+          </span>
+        `).join('');
+      }
+
+      // Auto-toggle accepting bookings when unavailable status selected
+      document.getElementById('ctrl-op-status')?.addEventListener('change', (e) => {
+        const val = e.target.value;
+        if (val === 'MAINTENANCE' || val === 'PAUSED' || val === 'CLOSED') {
+          document.getElementById('ctrl-accepting-bookings').checked = false;
+        }
+      });
+
+      // Handle Control Form submit
+      document.getElementById('admin-control-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const operationalStatus = document.getElementById('ctrl-op-status').value;
+        const acceptingBookings = document.getElementById('ctrl-accepting-bookings').checked;
+        const capacity = parseInt(document.getElementById('ctrl-capacity').value, 10);
+
+        if (!confirm(`Confirm administrative status update for ${center.name}?`)) {
+          return;
+        }
+
+        const res = window.KisanAdmin.updateCenterConfig(center.id, {
+          operationalStatus,
+          acceptingBookings,
+          capacity
+        });
+
+        if (res.success) {
+          const toast = document.getElementById('config-toast');
+          document.getElementById('toast-msg').textContent = `Configuration saved for ${center.id} (${operationalStatus}).`;
+          toast.classList.remove('hidden');
+          setTimeout(() => toast.classList.add('hidden'), 4000);
+          refreshView();
+        }
+      });
+
+      refreshView();
+    });
+  </script>
+</body>
+
+</html>

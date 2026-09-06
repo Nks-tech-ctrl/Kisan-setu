@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>District Analytics | District Admin — KisanSetu</title>
+
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Core Design System -->
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body class="bg-[#f8fafc] text-[#0f172a] min-h-screen flex flex-col justify-between antialiased">
+
+  <!-- Authenticated Header & Navigation -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-xs">
+    <div class="container mx-auto px-4">
+      <div class="flex items-center justify-between py-3 border-b border-slate-100">
+        <!-- Brand -->
+        <div class="flex items-center gap-3">
+          <a href="dashboard.html"
+            class="w-9 h-9 rounded-lg bg-amber-600 text-white flex items-center justify-center font-bold text-sm shadow-xs">
+            K
+          </a>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-base font-bold text-slate-900 tracking-tight">KisanSetu</span>
+              <span class="text-xs text-slate-400">| District Oversight Console</span>
+            </div>
+            <div class="text-[11px] font-semibold text-amber-800 -mt-0.5" id="district-badge">
+              Karnal Administrative District
+            </div>
+          </div>
+        </div>
+
+        <!-- User Info & Logout -->
+        <div class="flex items-center gap-3">
+          <div class="text-right hidden sm:block">
+            <div class="text-xs font-semibold text-slate-900" id="header-user-name">Loading...</div>
+            <div class="text-[11px] text-amber-700 font-medium">District Administrator</div>
+          </div>
+          <button type="button" id="logout-btn" class="btn btn-outline btn-sm text-xs py-1.5 px-3">
+            Logout
+          </button>
+        </div>
+      </div>
+
+      <!-- Unified 8-Tab Navigation -->
+      <nav class="flex items-center gap-1 sm:gap-2 overflow-x-auto py-2 text-xs font-semibold">
+        <a href="dashboard.html"
+          class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors">
+          Dashboard
+        </a>
+        <a href="centers.html"
+          class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors">
+          Centers
+        </a>
+        <a href="queue-monitor.html"
+          class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors">
+          Queue Monitor
+        </a>
+        <a href="procurement.html"
+          class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors">
+          Procurement
+        </a>
+        <a href="analytics.html" class="px-3 py-1.5 rounded-lg bg-amber-50 text-amber-900 border border-amber-200">
+          Analytics
+        </a>
+        <a href="alerts.html"
+          class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors">
+          Alerts
+        </a>
+        <a href="reports.html"
+          class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors">
+          Reports
+        </a>
+        <a href="operator-activity.html"
+          class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors">
+          Operator Activity
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content Container -->
+  <main class="container mx-auto py-6 sm:py-8 px-4 flex-1 space-y-6">
+
+    <!-- Header Card -->
+    <div class="card p-6 bg-white border-slate-200 shadow-xs">
+      <div class="flex flex-wrap items-start justify-between gap-4">
+        <div>
+          <div class="flex items-center gap-2 mb-1.5">
+            <span class="text-xs font-bold text-amber-800 bg-amber-50 px-2 py-0.5 rounded border border-amber-200">
+              District Decision Support (जिला विश्लेषण कंसोल)
+            </span>
+            <span class="text-[10px] text-blue-700 bg-blue-50 px-2 py-0.5 rounded border border-blue-200 font-semibold">
+              डेमो डेटा • Demo Data
+            </span>
+          </div>
+          <h1 class="text-2xl font-bold text-slate-900 tracking-tight">
+            District Operational Analytics & Bottlenecks (जिला परिचालन विश्लेषण)
+          </h1>
+          <p class="text-xs sm:text-sm text-slate-500 mt-1">
+            Evaluate yard queue trends, weighbridge completion rates, capacity saturation, and center-by-center workload
+            distribution.
+          </p>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <a href="reports.html"
+            class="btn btn-outline btn-sm text-xs font-semibold py-2 px-3 flex items-center gap-1.5">
+            Export CSV Reports &rarr;
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4 Core Domain Analytics Pillars -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+
+      <!-- 1. Booking Analytics -->
+      <div class="card p-5 bg-white border-slate-200 shadow-xs">
+        <div class="flex items-center justify-between mb-3">
+          <h2 class="text-xs font-bold text-slate-900 uppercase">Booking Funnel</h2>
+          <span class="text-xs font-mono font-bold text-slate-800" id="stat-total-bk">0</span>
+        </div>
+        <div class="space-y-2 text-xs">
+          <div class="flex justify-between text-slate-600">
+            <span>Arrived at Gate:</span>
+            <span class="font-bold text-amber-600 font-mono" id="stat-arrived-bk">0</span>
+          </div>
+          <div class="flex justify-between text-slate-600">
+            <span>Pending Arrival:</span>
+            <span class="font-mono text-slate-700" id="stat-pending-bk">0</span>
+          </div>
+          <div class="w-full bg-slate-100 rounded-full h-2 mt-2 overflow-hidden">
+            <div id="bar-arrival-rate" class="bg-amber-500 h-2 rounded-full" style="width: 50%"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. Queue Analytics -->
+      <div class="card p-5 bg-white border-slate-200 shadow-xs">
+        <div class="flex items-center justify-between mb-3">
+          <h2 class="text-xs font-bold text-slate-900 uppercase">Queue & Wait</h2>
+          <span class="text-xs font-mono font-bold text-blue-600" id="stat-active-q">0 In Yard</span>
+        </div>
+        <div class="space-y-2 text-xs">
+          <div class="flex justify-between text-slate-600">
+            <span>Avg Yard Wait:</span>
+            <span class="font-bold text-slate-900 font-mono" id="stat-avg-wait">~0 min</span>
+          </div>
+          <div class="flex justify-between text-slate-600">
+            <span>Bottleneck Yard:</span>
+            <span class="font-bold text-rose-700 truncate max-w-[120px]" id="stat-peak-center">-</span>
+          </div>
+          <div class="w-full bg-slate-100 rounded-full h-2 mt-2 overflow-hidden">
+            <div id="bar-queue-pressure" class="bg-blue-600 h-2 rounded-full" style="width: 60%"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. Procurement Analytics -->
+      <div class="card p-5 bg-white border-slate-200 shadow-xs">
+        <div class="flex items-center justify-between mb-3">
+          <h2 class="text-xs font-bold text-slate-900 uppercase">Procurement Intake</h2>
+          <span class="text-xs font-mono font-bold text-emerald-700" id="stat-comp-rate">0% Done</span>
+        </div>
+        <div class="space-y-2 text-xs">
+          <div class="flex justify-between text-slate-600">
+            <span>On Scales (In Progress):</span>
+            <span class="font-mono font-bold text-[#0f766e]" id="stat-inp-count">0</span>
+          </div>
+          <div class="flex justify-between text-slate-600">
+            <span>Receipts Dispatched:</span>
+            <span class="font-mono font-bold text-emerald-700" id="stat-comp-count">0</span>
+          </div>
+          <div class="w-full bg-slate-100 rounded-full h-2 mt-2 overflow-hidden">
+            <div id="bar-comp-rate" class="bg-emerald-600 h-2 rounded-full" style="width: 70%"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. Capacity Analytics -->
+      <div class="card p-5 bg-white border-slate-200 shadow-xs">
+        <div class="flex items-center justify-between mb-3">
+          <h2 class="text-xs font-bold text-slate-900 uppercase">Capacity Load</h2>
+          <span class="text-xs font-mono font-bold text-amber-700" id="stat-peak-util">0% Peak</span>
+        </div>
+        <div class="space-y-2 text-xs">
+          <div class="flex justify-between text-slate-600">
+            <span>Highest Loaded:</span>
+            <span class="font-bold text-slate-900 truncate max-w-[120px]" id="stat-util-center">-</span>
+          </div>
+          <div class="flex justify-between text-slate-600">
+            <span>District Status:</span>
+            <span class="font-semibold text-emerald-700">Balanced</span>
+          </div>
+          <div class="w-full bg-slate-100 rounded-full h-2 mt-2 overflow-hidden">
+            <div id="bar-peak-util" class="bg-amber-600 h-2 rounded-full" style="width: 50%"></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Center Comparative Performance Section -->
+    <div class="card p-6 bg-white border-slate-200 shadow-xs">
+      <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+        <div>
+          <h2 class="text-sm font-bold text-slate-900">Center Performance Comparison</h2>
+          <p class="text-xs text-slate-500">Cross-facility workload and throughput analysis</p>
+        </div>
+
+        <!-- Sorting Selector -->
+        <div class="flex items-center gap-2 text-xs">
+          <span class="font-semibold text-slate-600">Sort by:</span>
+          <select id="sort-selector"
+            class="px-2.5 py-1 bg-slate-50 border border-slate-300 rounded-lg text-xs font-medium focus:ring-1 focus:ring-amber-500">
+            <option value="queue">Highest Queue First</option>
+            <option value="utilization">Highest Capacity Utilization</option>
+            <option value="bookings">Most Bookings</option>
+            <option value="completed">Most Completed</option>
+            <option value="name">Center Name (A–Z)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-xs border-collapse">
+          <thead>
+            <tr
+              class="border-b border-slate-200 bg-slate-50 text-slate-500 font-semibold uppercase tracking-wider text-[10px]">
+              <th class="py-2.5 px-3">Center</th>
+              <th class="py-2.5 px-3">Status</th>
+              <th class="py-2.5 px-3 text-center">Bookings</th>
+              <th class="py-2.5 px-3 text-center">Arrivals</th>
+              <th class="py-2.5 px-3 text-center">Yard Queue</th>
+              <th class="py-2.5 px-3 text-center">In Progress</th>
+              <th class="py-2.5 px-3 text-center">Completed</th>
+              <th class="py-2.5 px-3 text-right">Daily Cap</th>
+              <th class="py-2.5 px-3 text-right">Utilization</th>
+            </tr>
+          </thead>
+          <tbody id="comparison-tbody" class="divide-y divide-slate-100 text-slate-700">
+            <!-- Dynamically populated -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Operator Performance Summary Section -->
+    <div class="card p-6 bg-white border-slate-200 shadow-xs">
+      <div class="flex items-center justify-between mb-4">
+        <div>
+          <h2 class="text-sm font-bold text-slate-900">Operator Duty & Action Summary (ऑपरेटर गतिविधि विश्लेषण)</h2>
+          <p class="text-xs text-slate-500">Overview of operational events processed across centers</p>
+        </div>
+        <a href="operator-activity.html" class="text-xs font-semibold text-amber-800 hover:underline">
+          View Detailed Audit Log &rarr;
+        </a>
+      </div>
+
+      <div class="grid grid-cols-2 sm:grid-cols-5 gap-3 text-center text-xs">
+        <div class="p-3 bg-slate-50 rounded-xl border border-slate-200">
+          <span class="text-[10px] uppercase font-bold text-slate-400 block">Gate Checks</span>
+          <span class="text-lg font-mono font-bold text-slate-900 mt-1 block" id="act-gate-count">0</span>
+        </div>
+        <div class="p-3 bg-slate-50 rounded-xl border border-slate-200">
+          <span class="text-[10px] uppercase font-bold text-slate-400 block">Queue Advances</span>
+          <span class="text-lg font-mono font-bold text-blue-600 mt-1 block" id="act-queue-count">0</span>
+        </div>
+        <div class="p-3 bg-slate-50 rounded-xl border border-slate-200">
+          <span class="text-[10px] uppercase font-bold text-slate-400 block">Intake Starts</span>
+          <span class="text-lg font-mono font-bold text-[#0f766e] mt-1 block" id="act-start-count">0</span>
+        </div>
+        <div class="p-3 bg-slate-50 rounded-xl border border-slate-200">
+          <span class="text-[10px] uppercase font-bold text-slate-400 block">Completions</span>
+          <span class="text-lg font-mono font-bold text-emerald-700 mt-1 block" id="act-comp-count">0</span>
+        </div>
+        <div class="p-3 bg-amber-50 rounded-xl border border-amber-200 col-span-2 sm:col-span-1">
+          <span class="text-[10px] uppercase font-bold text-amber-800 block">Total Actions</span>
+          <span class="text-lg font-mono font-bold text-amber-900 mt-1 block" id="act-total-count">0</span>
+        </div>
+      </div>
+      <div class="mt-3 text-[11px] text-slate-400 font-mono">
+        * Simulated operational metrics for prototype evaluation only.
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-white border-t border-slate-200 py-4 mt-8 text-center text-xs text-slate-500">
+    <div class="container mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
+      <div>KisanSetu • Smart Procurement & Queue Intelligence Platform</div>
+      <div class="text-[11px] text-slate-400 font-mono">District Oversight Console • v2.0.0 (Phase E.2)</div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="../js/mock-data.js"></script>
+  <script src="../js/utils.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="admin.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // 1. Route Guard
+      const user = window.KisanAuth.requireAuth('district_admin', 'login.html');
+      if (!user) return;
+
+      const userNameEl = document.getElementById('header-user-name');
+      if (userNameEl) userNameEl.textContent = user.name || "Demo District Admin";
+      if (user.district) {
+        document.getElementById('district-badge').textContent = `${user.district} Administrative District`;
+      }
+
+      document.getElementById('logout-btn')?.addEventListener('click', () => {
+        window.KisanAuth.logout('login.html');
+      });
+
+      // 2. Render Analytics Cards
+      function renderAnalytics() {
+        const a = window.KisanAdmin.getDistrictAnalytics();
+
+        document.getElementById('stat-total-bk').textContent = `${a.totalBookings} Total`;
+        document.getElementById('stat-arrived-bk').textContent = a.arrivedCount;
+        document.getElementById('stat-pending-bk').textContent = a.pendingArrival;
+        const arrivalRate = a.totalBookings > 0 ? Math.round((a.arrivedCount / a.totalBookings) * 100) : 0;
+        document.getElementById('bar-arrival-rate').style.width = `${arrivalRate}%`;
+
+        document.getElementById('stat-active-q').textContent = `${a.activeQueue} In Yard`;
+        document.getElementById('stat-avg-wait').textContent = `~${a.avgWaitMinutes} min`;
+        document.getElementById('stat-peak-center').textContent = `${a.highestQueueCenter} (${a.highestQueueCount})`;
+        document.getElementById('bar-queue-pressure').style.width = `${Math.min(100, a.highestQueueCount * 4)}%`;
+
+        document.getElementById('stat-comp-rate').textContent = `${a.completionRatePercent}% Done`;
+        document.getElementById('stat-inp-count').textContent = a.inProgress;
+        document.getElementById('stat-comp-count').textContent = a.completed;
+        document.getElementById('bar-comp-rate').style.width = `${a.completionRatePercent}%`;
+
+        document.getElementById('stat-peak-util').textContent = `${a.highestUtilPercent}% Peak`;
+        document.getElementById('stat-util-center').textContent = a.highestUtilCenter;
+        document.getElementById('bar-peak-util').style.width = `${a.highestUtilPercent}%`;
+
+        // Operator activities summary
+        const activities = window.KisanAdmin.getOperatorActivities();
+        let gateCount = 0, qCount = 0, startCount = 0, compCount = 0;
+        activities.forEach(act => {
+          if (act.action === 'gate_verified') gateCount++;
+          if (act.action === 'queue_advanced') qCount++;
+          if (act.action === 'procurement_started') startCount++;
+          if (act.action === 'procurement_completed') compCount++;
+        });
+        document.getElementById('act-gate-count').textContent = gateCount;
+        document.getElementById('act-queue-count').textContent = qCount;
+        document.getElementById('act-start-count').textContent = startCount;
+        document.getElementById('act-comp-count').textContent = compCount;
+        document.getElementById('act-total-count').textContent = activities.length;
+      }
+
+      // 3. Render Comparison Table
+      function renderComparison() {
+        const sortBy = document.getElementById('sort-selector').value;
+        const rows = window.KisanAdmin.getCenterPerformanceComparison(sortBy);
+        const tbody = document.getElementById('comparison-tbody');
+
+        tbody.innerHTML = rows.map(r => {
+          let utilColor = "text-emerald-700 bg-emerald-50 border-emerald-200";
+          if (r.utilization >= 70) utilColor = "text-amber-800 bg-amber-50 border-amber-200";
+          if (r.utilization >= 90) utilColor = "text-rose-800 bg-rose-50 border-rose-200";
+
+          return `
+            <tr class="hover:bg-slate-50/70 transition-colors">
+              <td class="py-2.5 px-3 font-semibold text-slate-900">
+                ${r.name}
+                <span class="block text-[10px] text-slate-400 font-mono font-normal">${r.centerId} • ${r.district}</span>
+              </td>
+              <td class="py-2.5 px-3">
+                <span class="px-2 py-0.5 rounded text-[10px] font-bold border ${r.status === 'ACTIVE' ? 'bg-emerald-50 text-emerald-800 border-emerald-200' : 'bg-amber-50 text-amber-800 border-amber-200'
+            }">
+                  ${r.status}
+                </span>
+              </td>
+              <td class="py-2.5 px-3 text-center font-mono">${r.bookings}</td>
+              <td class="py-2.5 px-3 text-center font-mono text-amber-600 font-bold">${r.arrivals}</td>
+              <td class="py-2.5 px-3 text-center font-mono text-blue-600 font-bold">${r.queue}</td>
+              <td class="py-2.5 px-3 text-center font-mono text-[#0f766e]">${r.inProgress}</td>
+              <td class="py-2.5 px-3 text-center font-mono text-emerald-700 font-bold">${r.completed}</td>
+              <td class="py-2.5 px-3 text-right font-mono text-slate-700">${r.capacity} MT</td>
+              <td class="py-2.5 px-3 text-right">
+                <span class="px-2 py-0.5 rounded text-[10px] font-bold border font-mono ${utilColor}">
+                  ${r.utilization}%
+                </span>
+              </td>
+            </tr>
+          `;
+        }).join('');
+      }
+
+      document.getElementById('sort-selector').addEventListener('change', renderComparison);
+
+      renderAnalytics();
+      renderComparison();
+    });
+  </script>
+</body>
+
+</html>

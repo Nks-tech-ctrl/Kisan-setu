@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Procurement Oversight | District Admin — KisanSetu</title>
+
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Core Design System -->
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body class="bg-[#f8fafc] text-[#0f172a] min-h-screen flex flex-col justify-between antialiased">
+
+  <!-- Authenticated Header & Navigation -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-xs">
+    <div class="container mx-auto px-4">
+      <div class="flex items-center justify-between py-3 border-b border-slate-100">
+        <!-- Brand -->
+        <div class="flex items-center gap-3">
+          <a href="dashboard.html"
+            class="w-9 h-9 rounded-lg bg-amber-600 text-white flex items-center justify-center font-bold text-sm shadow-xs">
+            K
+          </a>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-base font-bold text-slate-900 tracking-tight">KisanSetu</span>
+              <span class="text-xs text-slate-400">| District Oversight Console</span>
+            </div>
+            <div class="text-[11px] font-semibold text-amber-800 -mt-0.5" id="district-badge">
+              Karnal Administrative District
+            </div>
+          </div>
+        </div>
+
+        <!-- User Info & Logout -->
+        <div class="flex items-center gap-3">
+          <div class="text-right hidden sm:block">
+            <div class="text-xs font-semibold text-slate-900" id="header-user-name">Loading...</div>
+            <div class="text-[11px] text-amber-700 font-medium">District Administrator</div>
+          </div>
+          <button type="button" id="logout-btn" class="btn btn-outline btn-sm text-xs py-1.5 px-3">
+            Logout
+          </button>
+        </div>
+      </div>
+
+      <!-- Unified 8-Tab Navigation -->
+      <nav class="flex items-center gap-1 sm:gap-2 overflow-x-auto py-2 text-xs font-semibold">
+        <a href="dashboard.html"
+          class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors">
+          Dashboard
+        </a>
+        <a href="centers.html"
+          class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors">
+          Centers
+        </a>
+        <a href="queue-monitor.html"
+          class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors">
+          Queue Monitor
+        </a>
+        <a href="procurement.html" class="px-3 py-1.5 rounded-lg bg-amber-50 text-amber-900 border border-amber-200">
+          Procurement
+        </a>
+        <a href="analytics.html"
+          class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors">
+          Analytics
+        </a>
+        <a href="alerts.html"
+          class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors">
+          Alerts
+        </a>
+        <a href="reports.html"
+          class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors">
+          Reports
+        </a>
+        <a href="operator-activity.html"
+          class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors">
+          Operator Activity
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content Container -->
+  <main class="container mx-auto py-6 sm:py-8 px-4 flex-1">
+
+    <!-- Header Card -->
+    <div class="card p-6 bg-white border-slate-200 shadow-xs mb-6">
+      <div class="flex flex-wrap items-start justify-between gap-4">
+        <div>
+          <div class="flex items-center gap-2 mb-1.5">
+            <span class="text-xs font-bold text-amber-800 bg-amber-50 px-2 py-0.5 rounded border border-amber-200">
+              Procurement Oversight (खरीद एवं तौल रिकॉर्ड)
+            </span>
+            <span class="text-[10px] text-blue-700 bg-blue-50 px-2 py-0.5 rounded border border-blue-200 font-semibold">
+              डेमो डेटा • Demo Data
+            </span>
+          </div>
+          <h1 class="text-2xl font-bold text-slate-900 tracking-tight">
+            District Crop Procurement & Weighment Oversight (जिला खरीद एवं तौल निगरानी)
+          </h1>
+          <p class="text-xs sm:text-sm text-slate-500 mt-1">
+            Audit weighbridge gross and tare captures, moisture analysis, net purchase quintals, and DBT payment
+            clearance across centers.
+          </p>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <button type="button" id="refresh-proc-btn"
+            class="btn btn-outline btn-sm text-xs font-semibold py-2 px-3 flex items-center gap-1.5">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15">
+              </path>
+            </svg>
+            Refresh Records
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Summary Statistics Banner -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+      <div class="card p-4 bg-white border-slate-200 shadow-xs">
+        <span class="text-[10px] uppercase font-bold text-slate-400 block">Total Procurement Tonnage</span>
+        <div class="text-xl font-mono font-bold text-slate-900 mt-1" id="stat-total-tonnage">
+          137.00 Qtl
+        </div>
+        <span class="text-[11px] text-slate-500">Combined net crop intake</span>
+      </div>
+
+      <div class="card p-4 bg-white border-slate-200 shadow-xs">
+        <span class="text-[10px] uppercase font-bold text-slate-400 block">Avg Grain Moisture</span>
+        <div class="text-xl font-mono font-bold text-[#0f766e] mt-1" id="stat-avg-moisture">
+          11.6%
+        </div>
+        <span class="text-[11px] text-slate-500">FAQ limit compliance: &le; 12.0%</span>
+      </div>
+
+      <div class="card p-4 bg-white border-slate-200 shadow-xs">
+        <span class="text-[10px] uppercase font-bold text-slate-400 block">Total Farmers Serviced</span>
+        <div class="text-xl font-mono font-bold text-[#15803d] mt-1" id="stat-farmers-serviced">
+          0 Farmers
+        </div>
+        <span class="text-[11px] text-slate-500">Completed + active weighment</span>
+      </div>
+    </div>
+
+    <!-- Search & Filter Controls -->
+    <div class="card p-4 bg-white border-slate-200 shadow-xs mb-6">
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <div class="flex flex-wrap items-center gap-2 flex-1">
+          <div class="relative w-full sm:w-64">
+            <input type="text" id="proc-search" placeholder="Search Farmer, Token, Booking..."
+              class="w-full text-xs py-2 pl-8 pr-3 border border-slate-200 rounded-lg focus:outline-none focus:border-amber-500">
+            <svg class="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-2.5" fill="none" stroke="currentColor"
+              viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+            </svg>
+          </div>
+          <select id="proc-center-filter"
+            class="text-xs py-2 px-3 border border-slate-200 rounded-lg focus:outline-none focus:border-amber-500 bg-white">
+            <option value="all">All District Centers</option>
+          </select>
+          <select id="proc-crop-filter"
+            class="text-xs py-2 px-3 border border-slate-200 rounded-lg focus:outline-none focus:border-amber-500 bg-white">
+            <option value="all">All Commodities</option>
+            <option value="wheat">Wheat (गेहूं)</option>
+            <option value="paddy">Paddy (धान)</option>
+            <option value="mustard">Mustard (सरसों)</option>
+            <option value="cotton">Cotton (कपास)</option>
+          </select>
+        </div>
+        <div class="text-[11px] text-slate-400 font-mono hidden sm:block">
+          Records Filtered: <span id="record-count" class="font-bold text-slate-700">0</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Procurement Records Table Card -->
+    <div class="card bg-white border-slate-200 shadow-xs overflow-hidden mb-8">
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-xs border-collapse">
+          <thead>
+            <tr
+              class="border-b border-slate-200 bg-slate-50 text-slate-500 font-semibold uppercase tracking-wider text-[10px]">
+              <th class="py-3 px-4">Center</th>
+              <th class="py-3 px-4">Token / Booking ID</th>
+              <th class="py-3 px-4">Farmer</th>
+              <th class="py-3 px-4">Crop</th>
+              <th class="py-3 px-4 text-right">Gross Weight</th>
+              <th class="py-3 px-4 text-right">Tare Weight</th>
+              <th class="py-3 px-4 text-right">Net Quantity</th>
+              <th class="py-3 px-4 text-center">Moisture</th>
+              <th class="py-3 px-4">Procurement Status</th>
+              <th class="py-3 px-4">Date / Time</th>
+            </tr>
+          </thead>
+          <tbody id="procurement-tbody" class="divide-y divide-slate-100 text-slate-700">
+            <!-- Dynamically populated -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Empty State Container -->
+      <div id="proc-empty-state" class="hidden p-8 text-center text-slate-400 text-xs">
+        No procurement records logged for the current shift.
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-white border-t border-slate-200 py-4 mt-8 text-center text-xs text-slate-500">
+    <div class="container mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
+      <div>KisanSetu • Smart Procurement & Queue Intelligence Platform</div>
+      <div class="text-[11px] text-slate-400 font-mono">District Oversight Console • v1.0.0 (Phase E)</div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="../js/mock-data.js"></script>
+  <script src="../js/utils.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="admin.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // 1. Enforce District Admin route protection
+      const user = window.KisanAuth.requireAuth('district_admin', 'login.html');
+      if (!user) return;
+
+      // Header user name
+      const userNameEl = document.getElementById('header-user-name');
+      if (userNameEl) userNameEl.textContent = user.name || "Demo District Admin";
+      if (user.district) {
+        document.getElementById('district-badge').textContent = `${user.district} Administrative District`;
+      }
+
+      // Logout handler
+      document.getElementById('logout-btn')?.addEventListener('click', () => {
+        window.KisanAuth.logout('login.html');
+      });
+
+      let searchQuery = '';
+      let selectedCenter = 'all';
+      let selectedCrop = 'all';
+
+      // Populate center dropdown
+      const centerFilterEl = document.getElementById('proc-center-filter');
+      const allCenters = window.KisanAdmin.getCenters();
+      allCenters.forEach(c => {
+        const opt = document.createElement('option');
+        opt.value = c.id;
+        opt.textContent = `${c.name} (${c.id})`;
+        centerFilterEl.appendChild(opt);
+      });
+
+      // 2. Render Procurement Table
+      function renderProcurement() {
+        const records = window.KisanAdmin.getProcurementOverview();
+        const tbody = document.getElementById('procurement-tbody');
+        const emptyState = document.getElementById('proc-empty-state');
+
+        // Apply filters
+        const filtered = records.filter(rec => {
+          if (selectedCenter !== 'all' && String(rec.centerId).trim().toUpperCase() !== String(selectedCenter).trim().toUpperCase()) {
+            return false;
+          }
+          if (selectedCrop !== 'all') {
+            const cropStr = (rec.commodity || "").toLowerCase();
+            if (!cropStr.includes(selectedCrop.toLowerCase())) return false;
+          }
+          if (searchQuery) {
+            const q = searchQuery.toLowerCase();
+            const matchesId = (rec.tokenId || "").toLowerCase().includes(q) || (rec.bookingId || "").toLowerCase().includes(q);
+            const matchesFarmer = (rec.farmerName || "").toLowerCase().includes(q);
+            const matchesCommodity = (rec.commodity || "").toLowerCase().includes(q);
+            if (!matchesId && !matchesFarmer && !matchesCommodity) return false;
+          }
+          return true;
+        });
+
+        // Dynamic Statistics update
+        let totalQtl = 0;
+        let moistureSum = 0;
+        let moistureCount = 0;
+
+        filtered.forEach(rec => {
+          const qtlMatch = (rec.netQuantity || "").match(/([\d.]+)/);
+          if (qtlMatch) {
+            totalQtl += parseFloat(qtlMatch[1]);
+          }
+          const moistMatch = (rec.moisture || "").match(/([\d.]+)/);
+          if (moistMatch) {
+            moistureSum += parseFloat(moistMatch[1]);
+            moistureCount++;
+          }
+        });
+
+        const avgMoist = moistureCount > 0 ? (moistureSum / moistureCount).toFixed(1) : "0.0";
+
+        document.getElementById('stat-total-tonnage').textContent = `${totalQtl.toFixed(2)} Qtl`;
+        document.getElementById('stat-avg-moisture').textContent = `${avgMoist}%`;
+        document.getElementById('stat-farmers-serviced').textContent = `${filtered.length} Farmers`;
+        document.getElementById('record-count').textContent = filtered.length;
+
+        if (filtered.length === 0) {
+          tbody.innerHTML = '';
+          emptyState.classList.remove('hidden');
+          return;
+        }
+
+        emptyState.classList.add('hidden');
+        tbody.innerHTML = filtered.map(rec => {
+          const isCompleted = rec.status.includes('पूर्ण');
+
+          let statusBadge = isCompleted
+            ? `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-200">&check; खरीद पूर्ण (Completed)</span>`
+            : `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-800 border border-amber-200">खरीद प्रक्रिया में (In Progress)</span>`;
+
+          return `
+            <tr class="hover:bg-slate-50/70 transition-colors">
+              <td class="py-3 px-4">
+                <div class="font-bold text-slate-900">${rec.centerName || rec.centerId}</div>
+                <div class="text-[10px] font-mono text-slate-400">${rec.centerId}</div>
+              </td>
+              <td class="py-3 px-4 font-mono font-bold text-[#0f766e]">
+                <div>${rec.tokenId || rec.bookingId}</div>
+                <div class="text-[10px] text-slate-400 font-normal">${rec.bookingId}</div>
+              </td>
+              <td class="py-3 px-4">
+                <div class="font-semibold text-slate-900">${rec.farmerName}</div>
+                ${rec.isLiveFarmer ? '<span class="text-[9px] px-1.5 py-0.2 rounded bg-teal-50 text-teal-800 border border-teal-200 font-bold">Live Session</span>' : ''}
+              </td>
+              <td class="py-3 px-4 font-medium text-slate-800">${rec.commodity}</td>
+              <td class="py-3 px-4 text-right font-mono text-slate-700">${rec.grossWeight}</td>
+              <td class="py-3 px-4 text-right font-mono text-slate-700">${rec.tareWeight}</td>
+              <td class="py-3 px-4 text-right font-mono font-bold text-[#0f766e]">${rec.netQuantity}</td>
+              <td class="py-3 px-4 text-center font-mono text-slate-700">
+                <span class="inline-flex items-center gap-1">
+                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                  ${rec.moisture}
+                </span>
+              </td>
+              <td class="py-3 px-4">${statusBadge}</td>
+              <td class="py-3 px-4 text-[11px] text-slate-500 font-mono">${rec.dateTime}</td>
+            </tr>
+          `;
+        }).join('');
+      }
+
+      // Event Listeners
+      document.getElementById('proc-search')?.addEventListener('input', (e) => {
+        searchQuery = e.target.value.trim();
+        renderProcurement();
+      });
+
+      document.getElementById('proc-center-filter')?.addEventListener('change', (e) => {
+        selectedCenter = e.target.value;
+        renderProcurement();
+      });
+
+      document.getElementById('proc-crop-filter')?.addEventListener('change', (e) => {
+        selectedCrop = e.target.value;
+        renderProcurement();
+      });
+
+      document.getElementById('refresh-proc-btn')?.addEventListener('click', () => {
+        renderProcurement();
+      });
+
+      // Initial Render
+      renderProcurement();
+    });
+  </script>
+</body>
+
+</html>

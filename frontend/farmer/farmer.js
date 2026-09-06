@@ -70,10 +70,44 @@
     },
 
     /**
+     * Check center availability using shared KisanUtils logic
+     */
+    isCenterAcceptingBookings(centerId) {
+      if (window.KisanUtils && typeof window.KisanUtils.isCenterAcceptingBookings === "function") {
+        return window.KisanUtils.isCenterAcceptingBookings(centerId);
+      }
+      return true;
+    },
+
+    /**
+     * Get center availability UI mapping using shared KisanUtils logic
+     */
+    getCenterAvailability(centerId) {
+      if (window.KisanUtils && typeof window.KisanUtils.getCenterAvailability === "function") {
+        return window.KisanUtils.getCenterAvailability(centerId);
+      }
+      return {
+        isAvailable: true,
+        status: "active",
+        acceptingBookings: true,
+        reason: "",
+        labelHindi: "बुकिंग उपलब्ध",
+        labelEnglish: "Booking Available",
+        badgeClass: "bg-emerald-50 text-emerald-800 border-emerald-200"
+      };
+    },
+
+    /**
      * Save a confirmed booking to active state and booking history
      */
     saveBooking(bookingData) {
       try {
+        // 0. Enforce center booking availability check
+        if (bookingData && bookingData.centerId && this.isCenterAcceptingBookings && !this.isCenterAcceptingBookings(bookingData.centerId)) {
+          console.warn("KisanSetu: Cannot save booking for center with unavailable status.", bookingData.centerId);
+          return false;
+        }
+
         // 1. Ensure token number is deterministically assigned
         if (!bookingData.tokenId) {
           bookingData.tokenId = this.generateTokenNumber(bookingData);
@@ -497,26 +531,51 @@
      * @param {boolean} isCompact whether card is on dashboard (true) or centers directory (false)
      */
     renderCenterCard(center, isCompact = false) {
+      const isAvailable = this.isCenterAcceptingBookings(center.id);
+      const avail = this.getCenterAvailability(center.id);
       const loadBadge = this.getLoadBadge(center.loadStatus);
       const commodity = center.commodity || "विविध फसलें (Multiple Crops)";
 
-      const buttonHtml = isCompact
-        ? `<a href="center-details.html?id=${encodeURIComponent(center.id)}" class="btn btn-outline btn-sm w-full text-xs font-semibold py-2 text-center text-[#15803d] hover:bg-emerald-50 flex items-center justify-center gap-1">
+      const badgeHeader = isAvailable
+        ? loadBadge
+        : `<div class="flex items-center gap-1.5">
+             <span class="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded border ${avail.badgeClass}">
+               ⚠️ ${avail.reason || avail.labelEnglish}
+             </span>
+             ${loadBadge}
+           </div>`;
+
+      const unavailableNotice = isAvailable ? '' : `
+        <div class="mt-3 p-3 rounded-lg bg-amber-50 border border-amber-200 text-center">
+          <div class="text-xs font-bold text-amber-900 flex items-center justify-center gap-1">
+            <span>⚠️</span> <span>बुकिंग बंद है</span>
+          </div>
+          <div class="text-[11px] font-semibold text-amber-800">Booking Unavailable</div>
+          <div class="text-[10px] text-slate-500 mt-1">Center details can still be viewed.</div>
+        </div>
+      `;
+
+      const buttonHtml = !isAvailable
+        ? `<a href="center-details.html?id=${encodeURIComponent(center.id)}" class="btn btn-outline btn-sm w-full text-xs font-semibold py-2 text-center text-slate-700 hover:bg-slate-50 flex items-center justify-center gap-1">
              विवरण देखें (View Details) &rarr;
            </a>`
-        : `<a href="center-details.html?id=${encodeURIComponent(center.id)}" class="btn btn-primary btn-sm w-full text-xs font-semibold py-2 text-center flex items-center justify-center gap-1">
-             केंद्र देखें (View Center) &rarr;
-           </a>`;
+        : (isCompact
+          ? `<a href="center-details.html?id=${encodeURIComponent(center.id)}" class="btn btn-outline btn-sm w-full text-xs font-semibold py-2 text-center text-[#15803d] hover:bg-emerald-50 flex items-center justify-center gap-1">
+                 विवरण देखें (View Details) &rarr;
+               </a>`
+          : `<a href="center-details.html?id=${encodeURIComponent(center.id)}" class="btn btn-primary btn-sm w-full text-xs font-semibold py-2 text-center flex items-center justify-center gap-1">
+                 केंद्र देखें (View Center) &rarr;
+               </a>`);
 
       return `
-        <div class="card p-5 bg-white border border-slate-200 hover:border-emerald-500 transition-all flex flex-col justify-between shadow-xs">
+        <div class="card p-5 bg-white border ${!isAvailable ? 'border-amber-300' : 'border-slate-200 hover:border-emerald-500'} transition-all flex flex-col justify-between shadow-xs">
           <div>
             <!-- Card Header: Title & Load Badge -->
             <div class="flex flex-wrap items-start justify-between gap-2 mb-2">
               <span class="text-[10px] font-mono font-semibold px-2 py-0.5 bg-slate-100 text-slate-600 rounded">
                 ${center.id}
               </span>
-              ${loadBadge}
+              ${badgeHeader}
             </div>
 
             <h3 class="text-base font-bold text-slate-900 leading-snug">
@@ -530,6 +589,8 @@
               </svg>
               <span>${center.district}, ${center.state}</span>
             </p>
+
+            ${unavailableNotice}
 
             <!-- Commodity Tag -->
             <div class="mt-3 pt-3 border-t border-slate-100 flex items-center justify-between text-xs">

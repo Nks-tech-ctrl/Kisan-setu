@@ -20,182 +20,493 @@
 
 <body class="bg-[#f8fafc] text-[#0f172a] min-h-screen flex flex-col justify-between antialiased">
 
-  <!-- Authenticated Header -->
-  <header class="bg-white border-b border-slate-200 py-3.5 px-4 sticky top-0 z-40">
-    <div class="container mx-auto flex flex-wrap items-center justify-between gap-3">
-      <div class="flex items-center gap-3">
-        <a href="../index.html"
-          class="w-8 h-8 rounded-lg bg-amber-600 text-white flex items-center justify-center font-bold text-sm">
-          K
-        </a>
-        <div>
-          <span class="text-base font-bold text-slate-900 tracking-tight">KisanSetu</span>
-          <span class="text-xs text-slate-400 ml-1">| District Admin</span>
+  <!-- Authenticated Header & Navigation -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-xs">
+    <div class="container mx-auto px-4">
+      <div class="flex items-center justify-between py-3 border-b border-slate-100">
+        <!-- Brand -->
+        <div class="flex items-center gap-3">
+          <a href="dashboard.html"
+            class="w-9 h-9 rounded-lg bg-amber-600 text-white flex items-center justify-center font-bold text-sm shadow-xs">
+            K
+          </a>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-base font-bold text-slate-900 tracking-tight">KisanSetu</span>
+              <span class="text-xs text-slate-400">| District Oversight Console</span>
+            </div>
+            <div class="text-[11px] font-semibold text-amber-800 -mt-0.5" id="district-badge">
+              Karnal Administrative District
+            </div>
+          </div>
+        </div>
+
+        <!-- User Info & Logout -->
+        <div class="flex items-center gap-3">
+          <div class="text-right hidden sm:block">
+            <div class="text-xs font-semibold text-slate-900" id="header-user-name">Loading...</div>
+            <div class="text-[11px] text-amber-700 font-medium">District Administrator</div>
+          </div>
+          <button type="button" id="logout-btn" class="btn btn-outline btn-sm text-xs py-1.5 px-3">
+            Logout
+          </button>
         </div>
       </div>
 
-      <div class="flex items-center gap-3">
-        <div class="text-right hidden sm:block">
-          <div class="text-xs font-semibold text-slate-900" id="header-user-name">Loading...</div>
-          <div class="text-[11px] text-amber-700 font-medium">Role: District Admin</div>
-        </div>
-        <span class="badge badge-warning text-[11px]">District Oversight Active</span>
-        <button type="button" id="logout-btn" class="btn btn-outline btn-sm text-xs py-1.5 px-3">
-          Logout
-        </button>
-      </div>
+      <!-- Unified 8-Tab Navigation -->
+      <nav class="flex items-center gap-1 sm:gap-2 overflow-x-auto py-2 text-xs font-semibold">
+        <a href="dashboard.html" class="px-3 py-1.5 rounded-lg bg-amber-50 text-amber-900 border border-amber-200">
+          Dashboard
+        </a>
+        <a href="centers.html"
+          class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors">
+          Centers
+        </a>
+        <a href="queue-monitor.html"
+          class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors">
+          Queue Monitor
+        </a>
+        <a href="procurement.html"
+          class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors">
+          Procurement
+        </a>
+        <a href="analytics.html"
+          class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors">
+          Analytics
+        </a>
+        <a href="alerts.html"
+          class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors">
+          Alerts
+        </a>
+        <a href="reports.html"
+          class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors">
+          Reports
+        </a>
+        <a href="operator-activity.html"
+          class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors">
+          Operator Activity
+        </a>
+      </nav>
     </div>
   </header>
 
   <!-- Main Dashboard View -->
-  <main class="container mx-auto py-8 px-4 flex-1">
+  <main class="container mx-auto py-6 sm:py-8 px-4 flex-1 space-y-6">
 
-    <!-- Welcome Banner -->
-    <div class="card bg-white border-slate-200 p-6 mb-6">
-      <div class="flex flex-wrap items-center justify-between gap-4">
+    <!-- Welcome Banner & District Status -->
+    <div class="card bg-white border-slate-200 p-6 shadow-xs">
+      <div class="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <div
-            class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-amber-50 text-amber-800 border border-amber-200 text-[11px] font-semibold mb-2">
-            <span>●</span> District Command Console (Phase 1 Baseline)
+          <div class="flex items-center gap-2 mb-1.5">
+            <span
+              class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-50 text-amber-800 border border-amber-200 text-[11px] font-semibold">
+              <span class="w-1.5 h-1.5 rounded-full bg-amber-600"></span>
+              District Oversight Active (Decision Support Mode)
+            </span>
+            <span
+              class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-semibold bg-blue-50 text-blue-700 border border-blue-200">
+              डेमो डेटा • Demo Data
+            </span>
           </div>
           <h1 class="text-2xl sm:text-3xl font-bold text-slate-900" id="welcome-user-title">
             Welcome, District Admin
           </h1>
           <p class="text-xs sm:text-sm text-slate-500 mt-1">
-            Oversee procurement centers across the administrative district, track queue throughput, and balance incoming
-            vehicle volume.
+            Real-time district oversight console. Monitor yard congestion, manage procurement availability, audit
+            bottlenecks, and review operator logs.
           </p>
         </div>
 
-        <div class="flex flex-col sm:flex-row gap-3">
-          <div class="metric-box bg-slate-50 py-2 px-3.5">
-            <span class="text-[11px] text-slate-500">Jurisdiction</span>
-            <span class="text-xs font-bold text-slate-800 mt-0.5" id="district-display">Karnal District</span>
+        <div class="grid grid-cols-2 gap-3 w-full sm:w-auto text-xs">
+          <div class="p-3 bg-slate-50 rounded-lg border border-slate-200">
+            <span class="text-[10px] uppercase font-bold text-slate-400 block">Jurisdiction</span>
+            <span class="font-bold text-slate-800 block mt-0.5" id="district-display">Karnal District</span>
           </div>
-          <div class="metric-box bg-slate-50 py-2 px-3.5">
-            <span class="text-[11px] text-slate-500">Assigned Role</span>
-            <span class="text-xs font-bold text-slate-800 mt-0.5">District Admin</span>
+          <div class="p-3 bg-slate-50 rounded-lg border border-slate-200">
+            <span class="text-[10px] uppercase font-bold text-slate-400 block">Console Mode</span>
+            <span class="font-bold text-amber-700 block mt-0.5">Administrative & Oversight</span>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Quick Modules -->
-    <div class="mb-8">
-      <h2 class="text-xs font-bold uppercase tracking-wider text-slate-600 mb-3">District Administrative Modules</h2>
+    <!-- Critical Alerts Callout Banner -->
+    <div id="critical-alerts-box" class="hidden card p-4 bg-amber-50/80 border-amber-200 shadow-xs">
+      <div class="flex items-start justify-between gap-3">
+        <div class="flex items-center gap-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-rose-600 animate-pulse"></span>
+          <span class="text-xs font-bold text-slate-900" id="critical-alerts-title">Operational Attention Needed</span>
+        </div>
+        <a href="alerts.html" class="text-xs font-bold text-amber-800 hover:underline">
+          Review Alerts Board &rarr;
+        </a>
+      </div>
+      <div class="mt-2 text-xs text-slate-700" id="critical-alerts-desc">
+        <!-- Dynamically injected -->
+      </div>
+    </div>
+
+    <!-- 6 Operational Overview Metrics -->
+    <div>
+      <div class="flex items-center justify-between mb-3">
+        <h2 class="text-xs font-bold uppercase tracking-wider text-slate-600 flex items-center gap-2">
+          <span>📊</span> District Operational Overview (जिला स्तरीय परिचालन स्थिति)
+        </h2>
+        <span class="text-[11px] text-blue-700 bg-blue-50 px-2 py-0.5 rounded border border-blue-200 font-semibold">
+          डेमो डेटा • Demo Data
+        </span>
+      </div>
+
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
+
+        <!-- Metric 1: Total Centers -->
+        <div class="card p-4 bg-white border-slate-200 shadow-xs">
+          <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">Total Centers</span>
+          <div class="text-2xl sm:text-3xl font-mono font-black text-slate-900 my-1" id="metric-total-centers">0</div>
+          <span class="text-[11px] text-slate-500 block">Configured</span>
+        </div>
+
+        <!-- Metric 2: Today's Bookings -->
+        <div class="card p-4 bg-white border-slate-200 shadow-xs">
+          <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">Today's Bookings</span>
+          <div class="text-2xl sm:text-3xl font-mono font-black text-slate-900 my-1" id="metric-today-bookings">0</div>
+          <span class="text-[11px] text-slate-500 block">Scheduled slots</span>
+        </div>
+
+        <!-- Metric 3: Farmers Arrived -->
+        <div class="card p-4 bg-white border-slate-200 shadow-xs">
+          <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">Farmers Arrived</span>
+          <div class="text-2xl sm:text-3xl font-mono font-black text-amber-600 my-1" id="metric-arrived-farmers">0</div>
+          <span class="text-[11px] text-slate-500 block">At gate barrier</span>
+        </div>
+
+        <!-- Metric 4: Active Queue -->
+        <div class="card p-4 bg-white border-slate-200 shadow-xs">
+          <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">Active Queue</span>
+          <div class="text-2xl sm:text-3xl font-mono font-black text-blue-600 my-1" id="metric-active-queue">0</div>
+          <span class="text-[11px] text-slate-500 block">Vehicles in yard</span>
+        </div>
+
+        <!-- Metric 5: Procurement In Progress -->
+        <div class="card p-4 bg-white border-slate-200 shadow-xs">
+          <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">In Progress</span>
+          <div class="text-2xl sm:text-3xl font-mono font-black text-[#0f766e] my-1" id="metric-in-progress">0</div>
+          <span class="text-[11px] text-slate-500 block">On weighbridge</span>
+        </div>
+
+        <!-- Metric 6: Completed Today -->
+        <div class="card p-4 bg-white border-slate-200 shadow-xs">
+          <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">Completed</span>
+          <div class="text-2xl sm:text-3xl font-mono font-black text-[#15803d] my-1" id="metric-completed">0</div>
+          <span class="text-[11px] text-slate-500 block">Receipts issued</span>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Center Health & Operational Bottlenecks Section -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+      <!-- Center Health Card -->
+      <div class="card p-6 bg-white border-slate-200 shadow-xs">
+        <h2 class="text-sm font-bold text-slate-900 mb-3 flex items-center gap-2">
+          <span>🏥</span> District Center Health Status (केंद्र स्वास्थ्य स्थिति)
+        </h2>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
+          <div class="p-3 bg-emerald-50 rounded-xl border border-emerald-200">
+            <span class="text-[10px] font-bold uppercase text-emerald-800 block">Active</span>
+            <span class="text-xl font-mono font-bold text-emerald-900 mt-1 block" id="health-active-count">0</span>
+          </div>
+          <div class="p-3 bg-amber-50 rounded-xl border border-amber-200">
+            <span class="text-[10px] font-bold uppercase text-amber-800 block">Paused</span>
+            <span class="text-xl font-mono font-bold text-amber-900 mt-1 block" id="health-paused-count">0</span>
+          </div>
+          <div class="p-3 bg-blue-50 rounded-xl border border-blue-200">
+            <span class="text-[10px] font-bold uppercase text-blue-800 block">Maint.</span>
+            <span class="text-xl font-mono font-bold text-blue-900 mt-1 block" id="health-maint-count">0</span>
+          </div>
+          <div class="p-3 bg-rose-50 rounded-xl border border-rose-200">
+            <span class="text-[10px] font-bold uppercase text-rose-800 block">High Load</span>
+            <span class="text-xl font-mono font-bold text-rose-900 mt-1 block" id="health-highload-count">0</span>
+          </div>
+        </div>
+        <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
+          <span class="text-slate-500">Center configuration controls:</span>
+          <a href="centers.html" class="text-amber-800 font-semibold hover:underline">Manage Centers &rarr;</a>
+        </div>
+      </div>
+
+      <!-- Operational Bottlenecks Card -->
+      <div class="card p-6 bg-white border-slate-200 shadow-xs">
+        <h2 class="text-sm font-bold text-slate-900 mb-3 flex items-center gap-2">
+          <span>⚠️</span> Bottleneck Detection (अवरोध निगरानी)
+        </h2>
+        <div class="space-y-2.5 text-xs">
+          <div class="p-2.5 bg-slate-50 rounded-lg flex items-center justify-between">
+            <span class="text-slate-600 font-medium">Peak Queue Yard:</span>
+            <span class="font-bold text-slate-900 font-mono" id="bottleneck-peak-queue">-</span>
+          </div>
+          <div class="p-2.5 bg-slate-50 rounded-lg flex items-center justify-between">
+            <span class="text-slate-600 font-medium">Average Waiting Time:</span>
+            <span class="font-bold text-amber-700 font-mono" id="bottleneck-avg-wait">-</span>
+          </div>
+          <div class="p-2.5 bg-slate-50 rounded-lg flex items-center justify-between">
+            <span class="text-slate-600 font-medium">Highest Capacity Load:</span>
+            <span class="font-bold text-rose-700 font-mono" id="bottleneck-peak-util">-</span>
+          </div>
+        </div>
+        <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
+          <span class="text-slate-500">Detailed bottleneck graphs:</span>
+          <a href="analytics.html" class="text-amber-800 font-semibold hover:underline">Open Analytics &rarr;</a>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Monitoring Modules / Quick Shortcuts -->
+    <div>
+      <h2 class="text-xs font-bold uppercase tracking-wider text-slate-600 mb-3">
+        Administrative Oversight Desks (प्रशासनिक निगरानी डेस्क)
+      </h2>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
 
-        <!-- Module 1 -->
-        <div class="card p-5 hover:border-amber-500 transition-colors flex flex-col justify-between">
+        <!-- Desk 1: Centers Overview -->
+        <a href="centers.html"
+          class="card p-5 bg-white border-slate-200 hover:border-amber-500 hover:shadow-xs transition-all group flex flex-col justify-between">
           <div>
-            <div class="w-9 h-9 rounded-lg bg-amber-50 text-amber-700 flex items-center justify-center mb-3">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4">
-                </path>
-              </svg>
+            <div
+              class="w-8 h-8 rounded-lg bg-amber-50 text-amber-700 flex items-center justify-center mb-2.5 group-hover:scale-105 transition-transform text-sm font-bold">
+              🏢
             </div>
-            <h3 class="text-sm font-bold text-slate-900">Procurement Centers</h3>
-            <p class="text-xs text-slate-500 mt-1 leading-relaxed">
-              District directory of active procurement facilities and daily capacity quotas.
-            </p>
+            <h3 class="text-sm font-bold text-slate-900 group-hover:text-amber-700 transition-colors">
+              Centers & Capacities
+            </h3>
+            <p class="text-xs text-slate-500 mt-1">Directory, operating status toggles, and daily intake quotas.</p>
           </div>
-          <div class="mt-4 pt-3 border-t border-slate-100 text-xs text-slate-400 font-medium">
-            Placeholder (Phase 5)
-          </div>
-        </div>
+          <div class="mt-3 pt-2.5 border-t border-slate-100 text-[11px] font-semibold text-amber-700">Open Directory
+            &rarr;</div>
+        </a>
 
-        <!-- Module 2 -->
-        <div class="card p-5 hover:border-amber-500 transition-colors flex flex-col justify-between">
+        <!-- Desk 2: Live Queue Monitor -->
+        <a href="queue-monitor.html"
+          class="card p-5 bg-white border-slate-200 hover:border-blue-500 hover:shadow-xs transition-all group flex flex-col justify-between">
           <div>
-            <div class="w-9 h-9 rounded-lg bg-amber-50 text-amber-700 flex items-center justify-center mb-3">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z">
-                </path>
-              </svg>
+            <div
+              class="w-8 h-8 rounded-lg bg-blue-50 text-blue-700 flex items-center justify-center mb-2.5 group-hover:scale-105 transition-transform text-sm font-bold">
+              🚜
             </div>
-            <h3 class="text-sm font-bold text-slate-900">Operator Monitoring</h3>
-            <p class="text-xs text-slate-500 mt-1 leading-relaxed">
-              Track weighbridge velocity, inspection turnaround, and operator duty logs.
-            </p>
+            <h3 class="text-sm font-bold text-slate-900 group-hover:text-blue-700 transition-colors">
+              Queue Monitor
+            </h3>
+            <p class="text-xs text-slate-500 mt-1">Track vehicle yard congestion, wait times, and gate checks.</p>
           </div>
-          <div class="mt-4 pt-3 border-t border-slate-100 text-xs text-slate-400 font-medium">
-            Placeholder (Phase 5)
+          <div class="mt-3 pt-2.5 border-t border-slate-100 text-[11px] font-semibold text-blue-700">Open Queue &rarr;
           </div>
-        </div>
+        </a>
 
-        <!-- Module 3 -->
-        <div class="card p-5 hover:border-amber-500 transition-colors flex flex-col justify-between">
+        <!-- Desk 3: District Analytics -->
+        <a href="analytics.html"
+          class="card p-5 bg-white border-slate-200 hover:border-teal-500 hover:shadow-xs transition-all group flex flex-col justify-between">
           <div>
-            <div class="w-9 h-9 rounded-lg bg-amber-50 text-amber-700 flex items-center justify-center mb-3">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z">
-                </path>
-              </svg>
+            <div
+              class="w-8 h-8 rounded-lg bg-teal-50 text-[#0f766e] flex items-center justify-center mb-2.5 group-hover:scale-105 transition-transform text-sm font-bold">
+              📈
             </div>
-            <h3 class="text-sm font-bold text-slate-900">Queue Monitoring</h3>
-            <p class="text-xs text-slate-500 mt-1 leading-relaxed">
-              Live district heatmap of vehicle queue levels and inter-center load balancing alerts.
-            </p>
+            <h3 class="text-sm font-bold text-slate-900 group-hover:text-[#0f766e] transition-colors">
+              District Analytics
+            </h3>
+            <p class="text-xs text-slate-500 mt-1">Capacity utilization, completion rates, and center comparison.</p>
           </div>
-          <div class="mt-4 pt-3 border-t border-slate-100 text-xs text-slate-400 font-medium">
-            Placeholder (Phase 5)
-          </div>
-        </div>
+          <div class="mt-3 pt-2.5 border-t border-slate-100 text-[11px] font-semibold text-[#0f766e]">Open Analytics
+            &rarr;</div>
+        </a>
 
-        <!-- Module 4 -->
-        <div class="card p-5 hover:border-amber-500 transition-colors flex flex-col justify-between">
+        <!-- Desk 4: Reports & Exports -->
+        <a href="reports.html"
+          class="card p-5 bg-white border-slate-200 hover:border-emerald-500 hover:shadow-xs transition-all group flex flex-col justify-between">
           <div>
-            <div class="w-9 h-9 rounded-lg bg-amber-50 text-amber-700 flex items-center justify-center mb-3">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M16 8v8m-4-5v5m-4-2v2m-2 4h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-              </svg>
+            <div
+              class="w-8 h-8 rounded-lg bg-emerald-50 text-[#15803d] flex items-center justify-center mb-2.5 group-hover:scale-105 transition-transform text-sm font-bold">
+              📄
             </div>
-            <h3 class="text-sm font-bold text-slate-900">District Analytics</h3>
-            <p class="text-xs text-slate-500 mt-1 leading-relaxed">
-              Total procurement tonnage vs seasonal MSP target and moisture grade distributions.
-            </p>
+            <h3 class="text-sm font-bold text-slate-900 group-hover:text-[#15803d] transition-colors">
+              District Reports
+            </h3>
+            <p class="text-xs text-slate-500 mt-1">Operations summaries and browser CSV data export.</p>
           </div>
-          <div class="mt-4 pt-3 border-t border-slate-100 text-xs text-slate-400 font-medium">
-            Placeholder (Phase 5)
-          </div>
-        </div>
+          <div class="mt-3 pt-2.5 border-t border-slate-100 text-[11px] font-semibold text-[#15803d]">Export Reports
+            &rarr;</div>
+        </a>
 
+      </div>
+    </div>
+
+    <!-- District Centers Overview Table -->
+    <div class="card p-6 bg-white border-slate-200 shadow-xs mb-8">
+      <div class="flex items-center justify-between mb-4">
+        <div>
+          <h2 class="text-sm font-bold text-slate-900">District Center Status Summary</h2>
+          <p class="text-xs text-slate-500">Live operational snapshot across procurement facilities</p>
+        </div>
+        <a href="centers.html" class="text-xs text-amber-700 font-semibold hover:underline">
+          View All Centers &rarr;
+        </a>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-xs border-collapse">
+          <thead>
+            <tr class="border-b border-slate-200 text-slate-500 font-semibold uppercase tracking-wider text-[10px]">
+              <th class="py-2.5 px-3">Center Name</th>
+              <th class="py-2.5 px-3">District / State</th>
+              <th class="py-2.5 px-3">Operating Shift</th>
+              <th class="py-2.5 px-3 text-center">Status</th>
+              <th class="py-2.5 px-3 text-center">Daily Capacity</th>
+              <th class="py-2.5 px-3 text-center">Queue Load</th>
+              <th class="py-2.5 px-3 text-right">Action</th>
+            </tr>
+          </thead>
+          <tbody id="centers-summary-tbody" class="divide-y divide-slate-100 text-slate-700">
+            <!-- Dynamically populated -->
+          </tbody>
+        </table>
       </div>
     </div>
 
   </main>
 
-  <!-- Simple Footer -->
-  <footer class="py-4 text-center text-xs text-slate-400 border-t border-slate-200 bg-white">
-    KisanSetu &copy; 2026 • SIH Innovation Project
+  <!-- Footer -->
+  <footer class="bg-white border-t border-slate-200 py-4 mt-8 text-center text-xs text-slate-500">
+    <div class="container mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
+      <div>KisanSetu • Smart Procurement & Queue Intelligence Platform</div>
+      <div class="text-[11px] text-slate-400 font-mono">District Oversight Console • v2.0.0 (Phase E.2)</div>
+    </div>
   </footer>
 
   <!-- Scripts -->
+  <script src="../js/mock-data.js"></script>
   <script src="../js/utils.js"></script>
   <script src="../js/auth.js"></script>
+  <script src="admin.js"></script>
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      // Enforce District Admin route protection
+      // 1. Enforce District Admin route protection
       const user = window.KisanAuth.requireAuth('district_admin', 'login.html');
       if (!user) return;
 
-      // Populate user info
       document.getElementById('header-user-name').textContent = user.name || "Demo District Admin";
       document.getElementById('welcome-user-title').textContent = `Welcome, ${user.name || "District Admin"}`;
       if (user.district) {
         document.getElementById('district-display').textContent = user.district;
+        document.getElementById('district-badge').textContent = `${user.district} Administrative District`;
       }
 
-      // Logout handler
-      document.getElementById('logout-btn').addEventListener('click', () => {
+      document.getElementById('logout-btn')?.addEventListener('click', () => {
         window.KisanAuth.logout('login.html');
       });
+
+      // 2. Metrics & Analytics
+      const metrics = window.KisanAdmin.getDashboardMetrics();
+      const analytics = window.KisanAdmin.getDistrictAnalytics();
+
+      document.getElementById('metric-total-centers').textContent = metrics.totalCenters;
+      document.getElementById('metric-today-bookings').textContent = metrics.todayBookings;
+      document.getElementById('metric-arrived-farmers').textContent = metrics.arrivedFarmers;
+      document.getElementById('metric-active-queue').textContent = metrics.activeQueue;
+      document.getElementById('metric-in-progress').textContent = metrics.inProgress;
+      document.getElementById('metric-completed').textContent = metrics.completed;
+
+      // Bottleneck metrics
+      document.getElementById('bottleneck-peak-queue').textContent = `${analytics.highestQueueCenter} (${analytics.highestQueueCount} Vehicles)`;
+      document.getElementById('bottleneck-avg-wait').textContent = `~${analytics.avgWaitMinutes} Minutes`;
+      document.getElementById('bottleneck-peak-util').textContent = `${analytics.highestUtilCenter} (${analytics.highestUtilPercent}%)`;
+
+      // 3. Alerts Check
+      const alerts = window.KisanAdmin.getAlerts();
+      const activeAlerts = alerts.filter(a => a.status === 'active');
+      const alertsBox = document.getElementById('critical-alerts-box');
+
+      if (activeAlerts.length > 0) {
+        alertsBox.classList.remove('hidden');
+        document.getElementById('critical-alerts-title').textContent = `${activeAlerts.length} Operational Alert(s) Detected`;
+        document.getElementById('critical-alerts-desc').textContent = `${activeAlerts[0].title}: ${activeAlerts[0].description}`;
+      }
+
+      // 4. Center Health Breakdown
+      const centers = window.KisanAdmin.getCenters();
+      let activeCount = 0;
+      let pausedCount = 0;
+      let maintCount = 0;
+      let highLoadCount = 0;
+
+      centers.forEach(c => {
+        const cfg = window.KisanAdmin.getCenterConfig(c.id);
+        const m = window.KisanAdmin.getCenterMetrics(c.id);
+
+        if (cfg.operationalStatus === 'ACTIVE') activeCount++;
+        else if (cfg.operationalStatus === 'PAUSED') pausedCount++;
+        else if (cfg.operationalStatus === 'MAINTENANCE') maintCount++;
+
+        if (m.utilizationPercent >= 80 || c.loadStatus === 'high') highLoadCount++;
+      });
+
+      document.getElementById('health-active-count').textContent = activeCount;
+      document.getElementById('health-paused-count').textContent = pausedCount;
+      document.getElementById('health-maint-count').textContent = maintCount;
+      document.getElementById('health-highload-count').textContent = highLoadCount;
+
+      // 5. Centers Summary Table
+      const tbody = document.getElementById('centers-summary-tbody');
+      tbody.innerHTML = centers.map(center => {
+        const cfg = window.KisanAdmin.getCenterConfig(center.id);
+
+        let badgeColor = "bg-emerald-50 text-emerald-800 border-emerald-200";
+        let badgeText = "Normal (कम लोड)";
+        if (center.loadStatus === 'medium') {
+          badgeColor = "bg-amber-50 text-amber-800 border-amber-200";
+          badgeText = "Moderate (मध्यम)";
+        } else if (center.loadStatus === 'high') {
+          badgeColor = "bg-rose-50 text-rose-800 border-rose-200";
+          badgeText = "Heavy (उच्च लोड)";
+        }
+
+        return `
+          <tr class="hover:bg-slate-50/70 transition-colors">
+            <td class="py-3 px-3">
+              <div class="font-bold text-slate-900">${center.name}</div>
+              <div class="text-[10px] text-slate-400 font-mono">${center.id}</div>
+            </td>
+            <td class="py-3 px-3">
+              <span class="text-slate-700">${center.district}, ${center.state}</span>
+            </td>
+            <td class="py-3 px-3 text-slate-600">
+              ${center.operatingHours.split('(')[0].trim()}
+            </td>
+            <td class="py-3 px-3 text-center">
+              <span class="px-2 py-0.5 rounded text-[10px] font-bold border ${cfg.operationalStatus === 'ACTIVE' ? 'bg-emerald-50 text-emerald-800 border-emerald-200' : 'bg-amber-50 text-amber-800 border-amber-200'
+          }">
+                ${cfg.operationalStatus}
+              </span>
+            </td>
+            <td class="py-3 px-3 text-center font-mono font-semibold text-slate-700">
+              ${cfg.capacity} MT/day
+            </td>
+            <td class="py-3 px-3 text-center">
+              <span class="px-2 py-0.5 rounded text-[10px] font-bold border ${badgeColor}">
+                ${badgeText}
+              </span>
+            </td>
+            <td class="py-3 px-3 text-right">
+              <a href="center-details.html?id=${encodeURIComponent(center.id)}" 
+                class="btn btn-outline btn-sm text-[11px] py-1 px-2.5 text-amber-800 border-amber-300 hover:bg-amber-50 font-semibold inline-block">
+                View Details
+              </a>
+            </td>
+          </tr>
+        `;
+      }).join('');
     });
   </script>
 </body>

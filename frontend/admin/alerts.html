@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Operational Alerts | District Admin — KisanSetu</title>
+
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Core Design System -->
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body class="bg-[#f8fafc] text-[#0f172a] min-h-screen flex flex-col justify-between antialiased">
+
+  <!-- Authenticated Header & Navigation -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-xs">
+    <div class="container mx-auto px-4">
+      <div class="flex items-center justify-between py-3 border-b border-slate-100">
+        <!-- Brand -->
+        <div class="flex items-center gap-3">
+          <a href="dashboard.html"
+            class="w-9 h-9 rounded-lg bg-amber-600 text-white flex items-center justify-center font-bold text-sm shadow-xs">
+            K
+          </a>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-base font-bold text-slate-900 tracking-tight">KisanSetu</span>
+              <span class="text-xs text-slate-400">| District Oversight Console</span>
+            </div>
+            <div class="text-[11px] font-semibold text-amber-800 -mt-0.5" id="district-badge">
+              Karnal Administrative District
+            </div>
+          </div>
+        </div>
+
+        <!-- User Info & Logout -->
+        <div class="flex items-center gap-3">
+          <div class="text-right hidden sm:block">
+            <div class="text-xs font-semibold text-slate-900" id="header-user-name">Loading...</div>
+            <div class="text-[11px] text-amber-700 font-medium">District Administrator</div>
+          </div>
+          <button type="button" id="logout-btn" class="btn btn-outline btn-sm text-xs py-1.5 px-3">
+            Logout
+          </button>
+        </div>
+      </div>
+
+      <!-- Unified 8-Tab Navigation -->
+      <nav class="flex items-center gap-1 sm:gap-2 overflow-x-auto py-2 text-xs font-semibold">
+        <a href="dashboard.html"
+          class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors">
+          Dashboard
+        </a>
+        <a href="centers.html"
+          class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors">
+          Centers
+        </a>
+        <a href="queue-monitor.html"
+          class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors">
+          Queue Monitor
+        </a>
+        <a href="procurement.html"
+          class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors">
+          Procurement
+        </a>
+        <a href="analytics.html"
+          class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors">
+          Analytics
+        </a>
+        <a href="alerts.html" class="px-3 py-1.5 rounded-lg bg-amber-50 text-amber-900 border border-amber-200">
+          Alerts
+        </a>
+        <a href="reports.html"
+          class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors">
+          Reports
+        </a>
+        <a href="operator-activity.html"
+          class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors">
+          Operator Activity
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content Container -->
+  <main class="container mx-auto py-6 sm:py-8 px-4 flex-1">
+
+    <!-- Header Card -->
+    <div class="card p-6 bg-white border-slate-200 shadow-xs mb-6">
+      <div class="flex flex-wrap items-start justify-between gap-4">
+        <div>
+          <div class="flex items-center gap-2 mb-1.5">
+            <span class="text-xs font-bold text-amber-800 bg-amber-50 px-2 py-0.5 rounded border border-amber-200">
+              Operational Exception Board (परिचालन चेतावनी)
+            </span>
+            <span class="text-[10px] text-blue-700 bg-blue-50 px-2 py-0.5 rounded border border-blue-200 font-semibold">
+              डेमो अलर्ट • Demo Alert
+            </span>
+          </div>
+          <h1 class="text-2xl font-bold text-slate-900 tracking-tight">
+            District Operational Alerts & Exceptions (जिला स्तरीय अलर्ट्स)
+          </h1>
+          <p class="text-xs sm:text-sm text-slate-500 mt-1">
+            Automated notifications for yard congestion, capacity saturation, long queue delays, and center availability
+            interruptions.
+          </p>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <button type="button" id="refresh-alerts-btn"
+            class="btn btn-outline btn-sm text-xs font-semibold py-2 px-3 flex items-center gap-1.5">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15">
+              </path>
+            </svg>
+            Refresh Alerts
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Alert Filters Toolbar -->
+    <div class="card p-3.5 bg-white border-slate-200 shadow-xs mb-6">
+      <div class="flex flex-wrap items-center justify-between gap-3 text-xs">
+        <div class="flex flex-wrap items-center gap-2">
+          <span class="font-bold text-slate-700">Severity:</span>
+          <button type="button" data-severity="all"
+            class="sev-filter-btn px-2.5 py-1 rounded-lg bg-slate-900 text-white font-semibold">
+            All Severities
+          </button>
+          <button type="button" data-severity="CRITICAL"
+            class="sev-filter-btn px-2.5 py-1 rounded-lg text-rose-700 hover:bg-rose-50 font-medium">
+            Critical
+          </button>
+          <button type="button" data-severity="HIGH"
+            class="sev-filter-btn px-2.5 py-1 rounded-lg text-amber-700 hover:bg-amber-50 font-medium">
+            High
+          </button>
+          <button type="button" data-severity="MEDIUM"
+            class="sev-filter-btn px-2.5 py-1 rounded-lg text-blue-700 hover:bg-blue-50 font-medium">
+            Medium
+          </button>
+          <button type="button" data-severity="LOW"
+            class="sev-filter-btn px-2.5 py-1 rounded-lg text-slate-600 hover:bg-slate-100 font-medium">
+            Low
+          </button>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <span class="font-bold text-slate-700">Status:</span>
+          <select id="alert-status-filter" class="px-2.5 py-1 bg-slate-50 border border-slate-300 rounded-lg text-xs">
+            <option value="all">All Alerts</option>
+            <option value="active">Active Only</option>
+            <option value="acknowledged">Acknowledged Only</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Alerts Container -->
+    <div id="alerts-list" class="space-y-4 mb-8">
+      <!-- Dynamically populated -->
+    </div>
+
+    <!-- Empty State -->
+    <div id="alerts-empty" class="hidden card p-12 bg-white border-slate-200 text-center text-slate-400 text-xs">
+      No operational alerts match the selected severity/status filter. All centers functioning within normal parameters.
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-white border-t border-slate-200 py-4 mt-8 text-center text-xs text-slate-500">
+    <div class="container mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
+      <div>KisanSetu • Smart Procurement & Queue Intelligence Platform</div>
+      <div class="text-[11px] text-slate-400 font-mono">District Oversight Console • v2.0.0 (Phase E.2)</div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="../js/mock-data.js"></script>
+  <script src="../js/utils.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="admin.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // 1. Enforce District Admin route protection
+      const user = window.KisanAuth.requireAuth('district_admin', 'login.html');
+      if (!user) return;
+
+      const userNameEl = document.getElementById('header-user-name');
+      if (userNameEl) userNameEl.textContent = user.name || "Demo District Admin";
+      if (user.district) {
+        document.getElementById('district-badge').textContent = `${user.district} Administrative District`;
+      }
+
+      document.getElementById('logout-btn')?.addEventListener('click', () => {
+        window.KisanAuth.logout('login.html');
+      });
+
+      let currentSeverity = 'all';
+
+      // 2. Render Alerts
+      function renderAlerts() {
+        const allAlerts = window.KisanAdmin.getAlerts();
+        const statusFilter = document.getElementById('alert-status-filter').value;
+
+        const filtered = allAlerts.filter(a => {
+          const matchSev = (currentSeverity === 'all') || (a.severity === currentSeverity);
+          const matchStatus = (statusFilter === 'all') || (a.status === statusFilter);
+          return matchSev && matchStatus;
+        });
+
+        const container = document.getElementById('alerts-list');
+        const emptyEl = document.getElementById('alerts-empty');
+
+        if (filtered.length === 0) {
+          container.innerHTML = '';
+          emptyEl.classList.remove('hidden');
+          return;
+        }
+
+        emptyEl.classList.add('hidden');
+        container.innerHTML = filtered.map(alert => {
+          let sevClass = "bg-rose-50 border-rose-200 text-rose-900";
+          let badgeClass = "bg-rose-100 text-rose-800 border-rose-200";
+
+          if (alert.severity === 'HIGH') {
+            sevClass = "bg-amber-50 border-amber-200 text-amber-900";
+            badgeClass = "bg-amber-100 text-amber-800 border-amber-200";
+          } else if (alert.severity === 'MEDIUM') {
+            sevClass = "bg-blue-50 border-blue-200 text-blue-900";
+            badgeClass = "bg-blue-100 text-blue-800 border-blue-200";
+          } else if (alert.severity === 'LOW') {
+            sevClass = "bg-slate-50 border-slate-200 text-slate-800";
+            badgeClass = "bg-slate-100 text-slate-700 border-slate-200";
+          }
+
+          const isAcked = alert.acknowledged;
+
+          return `
+            <div class="card p-5 border shadow-xs ${sevClass} ${isAcked ? 'opacity-70' : ''}">
+              <div class="flex flex-wrap items-start justify-between gap-3">
+                <div>
+                  <div class="flex items-center gap-2 mb-1.5">
+                    <span class="text-[10px] font-bold px-2 py-0.5 rounded border ${badgeClass}">
+                      ${alert.severity} SEVERITY
+                    </span>
+                    <span class="text-xs font-bold text-slate-900">${alert.centerName} (${alert.centerId})</span>
+                    <span class="text-[10px] font-mono text-slate-400">• ${alert.timestamp}</span>
+                  </div>
+                  <h3 class="text-sm font-bold mt-1">${alert.title}</h3>
+                  <p class="text-xs mt-1 leading-relaxed">${alert.description}</p>
+                  <div class="mt-2.5 p-2 bg-white/80 rounded-lg text-[11px] font-medium border border-slate-200/60">
+                    <span class="font-bold text-slate-800">Recommended Action:</span> ${alert.recommendation}
+                  </div>
+                </div>
+
+                <div class="flex flex-col sm:flex-row items-end gap-2 flex-shrink-0">
+                  ${isAcked ? `
+                    <span class="px-2.5 py-1 rounded-lg text-[11px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-200">
+                      &check; Acknowledged
+                    </span>
+                  ` : `
+                    <button type="button" onclick="handleAcknowledge('${alert.id}')"
+                      class="btn btn-outline btn-sm text-xs py-1.5 px-3 font-semibold bg-white hover:bg-slate-50 shadow-2xs">
+                      Acknowledge
+                    </button>
+                    <button type="button" onclick="handleReview('${alert.id}')"
+                      class="btn btn-primary btn-sm text-xs py-1.5 px-3 font-bold bg-slate-900 text-white">
+                      Mark Reviewed
+                    </button>
+                  `}
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      window.handleAcknowledge = function (alertId) {
+        window.KisanAdmin.acknowledgeAlert(alertId);
+        renderAlerts();
+      };
+
+      window.handleReview = function (alertId) {
+        window.KisanAdmin.markAlertReviewed(alertId);
+        renderAlerts();
+      };
+
+      // Wire severity buttons
+      document.querySelectorAll('.sev-filter-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.sev-filter-btn').forEach(b => {
+            b.className = "sev-filter-btn px-2.5 py-1 rounded-lg text-slate-600 hover:bg-slate-100 font-medium";
+          });
+          btn.className = "sev-filter-btn px-2.5 py-1 rounded-lg bg-slate-900 text-white font-semibold";
+          currentSeverity = btn.getAttribute('data-severity');
+          renderAlerts();
+        });
+      });
+
+      document.getElementById('alert-status-filter').addEventListener('change', renderAlerts);
+      document.getElementById('refresh-alerts-btn').addEventListener('click', renderAlerts);
+
+      renderAlerts();
+    });
+  </script>
+</body>
+
+</html>

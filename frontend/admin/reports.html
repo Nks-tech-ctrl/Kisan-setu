@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>District Reports & Exports | District Admin — KisanSetu</title>
+
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Core Design System -->
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body class="bg-[#f8fafc] text-[#0f172a] min-h-screen flex flex-col justify-between antialiased">
+
+  <!-- Authenticated Header & Navigation -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-xs">
+    <div class="container mx-auto px-4">
+      <div class="flex items-center justify-between py-3 border-b border-slate-100">
+        <!-- Brand -->
+        <div class="flex items-center gap-3">
+          <a href="dashboard.html"
+            class="w-9 h-9 rounded-lg bg-amber-600 text-white flex items-center justify-center font-bold text-sm shadow-xs">
+            K
+          </a>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-base font-bold text-slate-900 tracking-tight">KisanSetu</span>
+              <span class="text-xs text-slate-400">| District Oversight Console</span>
+            </div>
+            <div class="text-[11px] font-semibold text-amber-800 -mt-0.5" id="district-badge">
+              Karnal Administrative District
+            </div>
+          </div>
+        </div>
+
+        <!-- User Info & Logout -->
+        <div class="flex items-center gap-3">
+          <div class="text-right hidden sm:block">
+            <div class="text-xs font-semibold text-slate-900" id="header-user-name">Loading...</div>
+            <div class="text-[11px] text-amber-700 font-medium">District Administrator</div>
+          </div>
+          <button type="button" id="logout-btn" class="btn btn-outline btn-sm text-xs py-1.5 px-3">
+            Logout
+          </button>
+        </div>
+      </div>
+
+      <!-- Unified 8-Tab Navigation -->
+      <nav class="flex items-center gap-1 sm:gap-2 overflow-x-auto py-2 text-xs font-semibold">
+        <a href="dashboard.html"
+          class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors">
+          Dashboard
+        </a>
+        <a href="centers.html"
+          class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors">
+          Centers
+        </a>
+        <a href="queue-monitor.html"
+          class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors">
+          Queue Monitor
+        </a>
+        <a href="procurement.html"
+          class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors">
+          Procurement
+        </a>
+        <a href="analytics.html"
+          class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors">
+          Analytics
+        </a>
+        <a href="alerts.html"
+          class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors">
+          Alerts
+        </a>
+        <a href="reports.html" class="px-3 py-1.5 rounded-lg bg-amber-50 text-amber-900 border border-amber-200">
+          Reports
+        </a>
+        <a href="operator-activity.html"
+          class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors">
+          Operator Activity
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content Container -->
+  <main class="container mx-auto py-6 sm:py-8 px-4 flex-1 space-y-6">
+
+    <!-- Header Card -->
+    <div class="card p-6 bg-white border-slate-200 shadow-xs">
+      <div class="flex flex-wrap items-start justify-between gap-4">
+        <div>
+          <div class="flex items-center gap-2 mb-1.5">
+            <span class="text-xs font-bold text-amber-800 bg-amber-50 px-2 py-0.5 rounded border border-amber-200">
+              Administrative Reporting (प्रशासनिक रिपोर्ट)
+            </span>
+            <span class="text-[10px] text-blue-700 bg-blue-50 px-2 py-0.5 rounded border border-blue-200 font-semibold">
+              डेमो डेटा • Demo Data
+            </span>
+          </div>
+          <h1 class="text-2xl font-bold text-slate-900 tracking-tight">
+            District Operations & Procurement Reports (जिला रिपोर्ट व निर्यात)
+          </h1>
+          <p class="text-xs sm:text-sm text-slate-500 mt-1">
+            Generate printable operational audits, facility throughput comparisons, and export structured CSV datasets
+            for state coordination.
+          </p>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <button type="button" id="export-csv-btn"
+            class="btn btn-primary btn-sm text-xs font-bold py-2.5 px-4 bg-slate-900 text-white hover:bg-slate-800 flex items-center gap-2 shadow-xs">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+              </path>
+            </svg>
+            Export Report (CSV)
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Report Selector Tabs -->
+    <div class="card p-3.5 bg-white border-slate-200 shadow-xs">
+      <div class="flex flex-wrap items-center gap-2 text-xs">
+        <button type="button" data-report="operations"
+          class="report-tab-btn px-3 py-1.5 rounded-lg bg-amber-600 text-white font-bold transition-colors">
+          1. Daily Operations Summary
+        </button>
+        <button type="button" data-report="centers"
+          class="report-tab-btn px-3 py-1.5 rounded-lg text-slate-600 hover:bg-slate-100 font-medium transition-colors">
+          2. Center Performance Matrix
+        </button>
+        <button type="button" data-report="procurement"
+          class="report-tab-btn px-3 py-1.5 rounded-lg text-slate-600 hover:bg-slate-100 font-medium transition-colors">
+          3. Crop Procurement Ledger
+        </button>
+      </div>
+    </div>
+
+    <!-- Report View Container -->
+    <div class="card bg-white border-slate-200 shadow-xs overflow-hidden">
+      <div class="p-4 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
+        <div>
+          <h2 class="text-xs font-bold text-slate-900 uppercase tracking-wider" id="report-title">
+            Daily Operations Summary Report
+          </h2>
+          <span class="text-[11px] text-slate-500 font-mono" id="report-meta">Generated: Today (Demo Shift)</span>
+        </div>
+        <span class="text-[10px] font-mono text-slate-500 bg-white px-2 py-0.5 rounded border border-slate-200">
+          Source: KisanSetu LocalStorage State
+        </span>
+      </div>
+
+      <div class="overflow-x-auto p-4" id="report-content-container">
+        <!-- Dynamically populated table -->
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-white border-t border-slate-200 py-4 mt-8 text-center text-xs text-slate-500">
+    <div class="container mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
+      <div>KisanSetu • Smart Procurement & Queue Intelligence Platform</div>
+      <div class="text-[11px] text-slate-400 font-mono">District Oversight Console • v2.0.0 (Phase E.2)</div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="../js/mock-data.js"></script>
+  <script src="../js/utils.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="admin.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // 1. Route Guard
+      const user = window.KisanAuth.requireAuth('district_admin', 'login.html');
+      if (!user) return;
+
+      const userNameEl = document.getElementById('header-user-name');
+      if (userNameEl) userNameEl.textContent = user.name || "Demo District Admin";
+      if (user.district) {
+        document.getElementById('district-badge').textContent = `${user.district} Administrative District`;
+      }
+
+      document.getElementById('logout-btn')?.addEventListener('click', () => {
+        window.KisanAuth.logout('login.html');
+      });
+
+      let activeReport = 'operations';
+
+      // 2. Render Report
+      function renderActiveReport() {
+        const container = document.getElementById('report-content-container');
+        const titleEl = document.getElementById('report-title');
+
+        if (activeReport === 'operations') {
+          titleEl.textContent = "Daily Operations Summary Report";
+          const rows = window.KisanAdmin.getDailyOperationsReport();
+          container.innerHTML = `
+            <table class="w-full text-left text-xs border-collapse">
+              <thead>
+                <tr class="border-b border-slate-200 text-slate-500 uppercase text-[10px]">
+                  <th class="py-2.5 px-3">Operational Parameter</th>
+                  <th class="py-2.5 px-3 text-right">Audited Value</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100">
+                ${rows.map(r => `
+                  <tr class="hover:bg-slate-50/70">
+                    <td class="py-3 px-3 font-semibold text-slate-800">${r.metric}</td>
+                    <td class="py-3 px-3 text-right font-mono font-bold text-[#0f766e]">${r.value}</td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          `;
+        } else if (activeReport === 'centers') {
+          titleEl.textContent = "Center Performance Matrix Report";
+          const rows = window.KisanAdmin.getCenterPerformanceReport();
+          container.innerHTML = `
+            <table class="w-full text-left text-xs border-collapse">
+              <thead>
+                <tr class="border-b border-slate-200 text-slate-500 uppercase text-[10px]">
+                  <th class="py-2.5 px-3">Center Name</th>
+                  <th class="py-2.5 px-3">Status</th>
+                  <th class="py-2.5 px-3 text-center">Bookings</th>
+                  <th class="py-2.5 px-3 text-center">Arrivals</th>
+                  <th class="py-2.5 px-3 text-center">Yard Queue</th>
+                  <th class="py-2.5 px-3 text-center">Completed</th>
+                  <th class="py-2.5 px-3 text-right">Capacity (MT)</th>
+                  <th class="py-2.5 px-3 text-right">Utilization (%)</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100">
+                ${rows.map(r => `
+                  <tr class="hover:bg-slate-50/70">
+                    <td class="py-2.5 px-3 font-semibold text-slate-900">${r.name} <span class="text-slate-400 font-mono text-[10px]">(${r.centerId})</span></td>
+                    <td class="py-2.5 px-3"><span class="px-2 py-0.5 rounded text-[10px] font-bold border ${r.status === 'ACTIVE' ? 'bg-emerald-50 text-emerald-800 border-emerald-200' : 'bg-amber-50 text-amber-800 border-amber-200'}">${r.status}</span></td>
+                    <td class="py-2.5 px-3 text-center font-mono">${r.bookings}</td>
+                    <td class="py-2.5 px-3 text-center font-mono text-amber-600 font-bold">${r.arrivals}</td>
+                    <td class="py-2.5 px-3 text-center font-mono text-blue-600 font-bold">${r.queue}</td>
+                    <td class="py-2.5 px-3 text-center font-mono text-emerald-700 font-bold">${r.completed}</td>
+                    <td class="py-2.5 px-3 text-right font-mono">${r.capacity} MT</td>
+                    <td class="py-2.5 px-3 text-right font-mono font-bold">${r.utilization}%</td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          `;
+        } else if (activeReport === 'procurement') {
+          titleEl.textContent = "Crop Procurement Ledger Report";
+          const rows = window.KisanAdmin.getProcurementSummaryReport();
+          container.innerHTML = `
+            <table class="w-full text-left text-xs border-collapse">
+              <thead>
+                <tr class="border-b border-slate-200 text-slate-500 uppercase text-[10px]">
+                  <th class="py-2.5 px-3">Center</th>
+                  <th class="py-2.5 px-3">Token ID</th>
+                  <th class="py-2.5 px-3">Farmer</th>
+                  <th class="py-2.5 px-3">Crop</th>
+                  <th class="py-2.5 px-3 text-right">Gross Wt</th>
+                  <th class="py-2.5 px-3 text-right">Tare Wt</th>
+                  <th class="py-2.5 px-3 text-right">Net Quantity</th>
+                  <th class="py-2.5 px-3 text-center">Moisture</th>
+                  <th class="py-2.5 px-3">Status</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100">
+                ${rows.map(r => `
+                  <tr class="hover:bg-slate-50/70">
+                    <td class="py-2.5 px-3 font-semibold text-slate-900">${r.centerName}</td>
+                    <td class="py-2.5 px-3 font-mono text-[#0f766e] font-bold">${r.tokenId}</td>
+                    <td class="py-2.5 px-3 font-medium text-slate-800">${r.farmerName}</td>
+                    <td class="py-2.5 px-3">${r.commodity}</td>
+                    <td class="py-2.5 px-3 text-right font-mono">${r.grossWeight}</td>
+                    <td class="py-2.5 px-3 text-right font-mono">${r.tareWeight}</td>
+                    <td class="py-2.5 px-3 text-right font-mono font-bold text-[#0f766e]">${r.netQuantity}</td>
+                    <td class="py-2.5 px-3 text-center font-mono">${r.moisture}</td>
+                    <td class="py-2.5 px-3"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-200">${r.status}</span></td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          `;
+        }
+      }
+
+      // Tab switcher
+      document.querySelectorAll('.report-tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.report-tab-btn').forEach(b => {
+            b.className = "report-tab-btn px-3 py-1.5 rounded-lg text-slate-600 hover:bg-slate-100 font-medium transition-colors";
+          });
+          btn.className = "report-tab-btn px-3 py-1.5 rounded-lg bg-amber-600 text-white font-bold transition-colors";
+          activeReport = btn.getAttribute('data-report');
+          renderActiveReport();
+        });
+      });
+
+      // Export CSV Trigger
+      document.getElementById('export-csv-btn').addEventListener('click', () => {
+        const csvContent = window.KisanAdmin.generateCSV(activeReport);
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.setAttribute('href', url);
+        link.setAttribute('download', `kisansetu-district-report-${activeReport}-${Date.now()}.csv`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      });
+
+      renderActiveReport();
+    });
+  </script>
+</body>
+
+</html>

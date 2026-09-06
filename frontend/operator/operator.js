@@ -13,6 +13,7 @@
   const ACTIVE_BOOKING_KEY = "kisansetu_active_booking";
   const BOOKINGS_HISTORY_KEY = "kisansetu_bookings";
   const QUEUE_STATUS_KEY = "kisansetu_queue_status";
+  const OPERATOR_ACTIVITY_KEY = "kisansetu_operator_activity";
 
   // Fixed supplementary demo queue entries representing yard vehicles at Karnal / Center
   const DEFAULT_DEMO_QUEUE_ENTRIES = [
@@ -90,6 +91,37 @@
     ACTIVE_BOOKING_KEY,
     BOOKINGS_HISTORY_KEY,
     QUEUE_STATUS_KEY,
+    OPERATOR_ACTIVITY_KEY,
+
+    /**
+     * Minimal non-breaking operational audit logger for District Admin tracking
+     */
+    logActivity(action, bookingIdOrDetails, details = {}) {
+      try {
+        const raw = localStorage.getItem(OPERATOR_ACTIVITY_KEY);
+        const list = raw ? JSON.parse(raw) : [];
+        const isObj = typeof bookingIdOrDetails === 'object' && bookingIdOrDetails !== null;
+        const bookingId = isObj ? (bookingIdOrDetails.bookingId || "") : bookingIdOrDetails;
+        const info = isObj ? bookingIdOrDetails : details;
+
+        const entry = {
+          id: "ACT-" + Date.now() + "-" + Math.floor(Math.random() * 1000),
+          action: action,
+          bookingId: bookingId,
+          tokenId: info.tokenId || info.token || "",
+          farmerName: info.farmerName || "Demo Farmer",
+          centerId: info.centerId || "CTR-HR-01",
+          centerName: info.centerName || "Karnal Central Procurement Center",
+          timestamp: new Date().toISOString(),
+          role: "operator"
+        };
+        list.unshift(entry);
+        if (list.length > 50) list.length = 50;
+        localStorage.setItem(OPERATOR_ACTIVITY_KEY, JSON.stringify(list));
+      } catch (e) {
+        console.warn("KisanOperator: Unable to persist activity log.", e);
+      }
+    },
 
     /**
      * Safely read active booking from localStorage
@@ -276,6 +308,7 @@
         liveQueue.estimatedWaitMinutes = 20;
 
         this.saveQueueStatus(liveQueue);
+        this.logActivity("gate_verified", bookingId, { tokenId: liveQueue.tokenId, farmerName: liveQueue.farmerName || activeBooking.farmerName, centerId: liveQueue.centerId });
         return { success: true, message: "Gate verified successfully", queue: liveQueue };
       }
 
@@ -285,6 +318,7 @@
         demoItem.arrivalStatus = "checked_in";
         demoItem.status = "गेट सत्यापन पूर्ण (Gate Verification Complete)";
         demoItem.queuePosition = Math.min(demoItem.queuePosition, 5);
+        this.logActivity("gate_verified", bookingId, { tokenId: demoItem.tokenId, farmerName: demoItem.farmerName, centerId: demoItem.centerId });
         return { success: true, message: "Gate verified successfully", queue: demoItem };
       }
 
@@ -341,6 +375,7 @@
         liveQueue.estimatedWaitMinutes = Math.max(0, liveQueue.estimatedWaitMinutes);
 
         this.saveQueueStatus(liveQueue);
+        this.logActivity("queue_advanced", bookingId, { tokenId: liveQueue.tokenId, farmerName: liveQueue.farmerName || activeBooking.farmerName, centerId: liveQueue.centerId });
         return { success: true, queue: liveQueue };
       }
 
@@ -355,6 +390,7 @@
         } else if (demoItem.queuePosition === 0) {
           demoItem.status = "खरीद प्रक्रिया में (Procurement in Progress)";
         }
+        this.logActivity("queue_advanced", bookingId, { tokenId: demoItem.tokenId, farmerName: demoItem.farmerName, centerId: demoItem.centerId });
         return { success: true, queue: demoItem };
       }
 
@@ -384,6 +420,7 @@
         liveQueue.status = "खरीद प्रक्रिया में (Procurement in Progress)";
 
         this.saveQueueStatus(liveQueue);
+        this.logActivity("procurement_started", bookingId, { tokenId: liveQueue.tokenId, farmerName: liveQueue.farmerName || activeBooking.farmerName, centerId: liveQueue.centerId });
         return { success: true, queue: liveQueue };
       }
 
@@ -391,6 +428,7 @@
       if (demoItem) {
         demoItem.queuePosition = 0;
         demoItem.status = "खरीद प्रक्रिया में (Procurement in Progress)";
+        this.logActivity("procurement_started", bookingId, { tokenId: demoItem.tokenId, farmerName: demoItem.farmerName, centerId: demoItem.centerId });
         return { success: true, queue: demoItem };
       }
 
@@ -425,6 +463,7 @@
         liveQueue.status = "खरीद पूर्ण (Procurement Completed)";
 
         this.saveQueueStatus(liveQueue);
+        this.logActivity("procurement_completed", bookingId, { tokenId: liveQueue.tokenId, farmerName: liveQueue.farmerName || activeBooking.farmerName, centerId: liveQueue.centerId });
         return { success: true, message: "Procurement completed successfully", queue: liveQueue };
       }
 
@@ -435,6 +474,7 @@
         }
         demoItem.queuePosition = 0;
         demoItem.status = "खरीद पूर्ण (Procurement Completed)";
+        this.logActivity("procurement_completed", bookingId, { tokenId: demoItem.tokenId, farmerName: demoItem.farmerName, centerId: demoItem.centerId });
         return { success: true, message: "Procurement completed successfully", queue: demoItem };
       }
 
