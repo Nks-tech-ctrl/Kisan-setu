@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="hi">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>शिकायत एवं निवारण | Complaints & Grievance — KisanSetu</title>
+
+  <!-- Typography: Inter & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Core Design System -->
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    body {
+      background-color: #faf9f5;
+      color: #1e293b;
+    }
+    .hairline {
+      border: 1px solid #e2ded4;
+    }
+    .hairline-b {
+      border-bottom: 1px solid #e2ded4;
+    }
+    .font-mono-num {
+      font-family: 'JetBrains Mono', ui-monospace, monospace;
+    }
+  </style>
+</head>
+
+<body class="bg-[#faf9f5] text-[#1e293b] min-h-screen flex flex-col justify-between antialiased font-sans">
+
+  <!-- Authenticated Farmer Header -->
+  <header class="bg-white border-b border-[#e2ded4] py-3 px-4 sticky top-0 z-40 shadow-2xs">
+    <div class="container mx-auto flex flex-wrap items-center justify-between gap-3">
+      <!-- Brand & Portal Tag -->
+      <div class="flex items-center gap-3">
+        <a href="dashboard.html"
+          class="w-9 h-9 rounded-sm bg-[#15803d] text-white flex items-center justify-center font-bold text-sm shadow-2xs">
+          K
+        </a>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="text-base font-black text-slate-900 tracking-tight">KisanSetu</span>
+            <span class="text-xs text-slate-400">| किसान सेतु</span>
+          </div>
+          <div class="text-[11px] font-bold text-[#15803d] -mt-0.5">
+            किसान पोर्टल (Farmer Portal)
+          </div>
+        </div>
+      </div>
+
+      <!-- Navigation Links -->
+      <div class="flex items-center gap-2 sm:gap-3">
+        <a href="dashboard.html" class="btn btn-outline btn-sm text-xs font-semibold py-1.5 px-2.5 text-slate-700">
+          डैशबोर्ड
+        </a>
+        <a href="bookings.html" class="btn btn-outline btn-sm text-xs font-semibold py-1.5 px-2.5 text-slate-700">
+          मेरी बुकिंग
+        </a>
+        <a href="sales-history.html" class="btn btn-outline btn-sm text-xs font-semibold py-1.5 px-2.5 text-slate-700">
+          विक्रय इतिहास
+        </a>
+        <a href="complaints.html" class="btn btn-primary btn-sm text-xs font-bold py-1.5 px-2.5">
+          शिकायतें (Complaints)
+        </a>
+        <button type="button" id="logout-btn" class="btn btn-outline btn-sm text-xs py-1.5 px-2.5 text-slate-600">
+          लॉगआउट
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Complaints Console -->
+  <main class="container mx-auto py-6 sm:py-8 px-4 flex-1 space-y-6">
+
+    <!-- Page Title & Operational Banner -->
+    <div class="bg-white border border-[#e2ded4] rounded-sm p-5 shadow-2xs">
+      <div class="flex flex-wrap items-start justify-between gap-4">
+        <div>
+          <div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-xs bg-emerald-50 text-[#15803d] border border-emerald-200 text-[11px] font-bold mb-2">
+            <span>⚖️</span> बहुस्तरीय शिकायत निवारण प्रणाली (Grievance Redressal)
+          </div>
+          <h1 class="text-xl sm:text-2xl font-bold text-slate-900">
+            शिकायत एवं समस्या निवारण (Farmer Complaints)
+          </h1>
+          <p class="text-xs sm:text-sm text-slate-600 mt-1">
+            खरीद केंद्र, कतार, स्लॉट अथवा तौल संबंधी किसी भी समस्या की निष्पक्ष जांच व समाधान।
+          </p>
+        </div>
+
+        <button type="button" id="open-new-complaint-btn"
+          class="btn btn-primary py-2 px-4 text-xs font-bold rounded-sm shadow-2xs inline-flex items-center gap-1.5">
+          <span>+</span> नई शिकायत दर्ज करें (File Complaint)
+        </button>
+      </div>
+
+      <!-- Strict Hierarchical Policy Notice -->
+      <div class="mt-4 p-3 bg-[#fdfbee] border border-[#faeec7] rounded-xs text-xs text-[#92400e] flex items-start gap-2.5">
+        <span class="text-base leading-none">ℹ️</span>
+        <div>
+          <span class="font-bold">प्रक्रिया का नियम:</span>
+          पहले आपकी शिकायत संबंधित खरीद केंद्र ऑपरेटर द्वारा देखी जाएगी। स्थानीय स्तर पर समाधान न होने पर इसे जिला प्रशासन और आवश्यकता पड़ने पर Super Admin तक भेजा जाएगा।
+        </div>
+      </div>
+    </div>
+
+    <!-- Summary Metrics Bar -->
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+      <div class="bg-white border border-[#e2ded4] p-3.5 rounded-sm">
+        <div class="text-[11px] font-semibold text-slate-500">कुल शिकायतें (Total)</div>
+        <div class="text-2xl font-bold font-mono-num text-slate-900 mt-1" id="stat-total">0</div>
+        <div class="text-[10px] text-slate-400 mt-0.5">आपके द्वारा दर्ज</div>
+      </div>
+      <div class="bg-white border border-[#e2ded4] p-3.5 rounded-sm">
+        <div class="text-[11px] font-semibold text-amber-700">सक्रिय / प्रक्रिया में (Active)</div>
+        <div class="text-2xl font-bold font-mono-num text-amber-700 mt-1" id="stat-active">0</div>
+        <div class="text-[10px] text-slate-400 mt-0.5">जांच एवं समाधान जारी</div>
+      </div>
+      <div class="bg-white border border-[#e2ded4] p-3.5 rounded-sm">
+        <div class="text-[11px] font-semibold text-rose-700">उच्च स्तर पर (Escalated)</div>
+        <div class="text-2xl font-bold font-mono-num text-rose-700 mt-1" id="stat-escalated">0</div>
+        <div class="text-[10px] text-slate-400 mt-0.5">जिला/राज्य स्तर पर लंबित</div>
+      </div>
+      <div class="bg-white border border-[#e2ded4] p-3.5 rounded-sm">
+        <div class="text-[11px] font-semibold text-emerald-800">समाधान हुआ (Resolved)</div>
+        <div class="text-2xl font-bold font-mono-num text-emerald-800 mt-1" id="stat-resolved">0</div>
+        <div class="text-[10px] text-slate-400 mt-0.5">सफलतापूर्वक हल</div>
+      </div>
+    </div>
+
+    <!-- Complaint Filing Form Modal / Expandable Panel -->
+    <div id="complaint-form-modal" class="hidden fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4">
+      <div class="bg-white border border-[#e2ded4] rounded-sm max-w-xl w-full p-6 shadow-lg max-h-[90vh] overflow-y-auto">
+        <div class="flex items-center justify-between pb-3 border-b border-[#e2ded4] mb-4">
+          <div class="flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-[#15803d]"></span>
+            <h2 class="text-base font-bold text-slate-900">नई शिकायत दर्ज करें (File Complaint)</h2>
+          </div>
+          <button type="button" id="close-modal-btn" class="text-slate-400 hover:text-slate-700 text-lg font-bold">
+            &times;
+          </button>
+        </div>
+
+        <form id="new-complaint-form" class="space-y-4 text-xs">
+          <!-- Category Selection -->
+          <div>
+            <label class="form-label font-bold text-slate-700">शिकायत की श्रेणी (Category) *</label>
+            <select id="form-category" class="form-select border-[#d6d1c4] text-xs py-2 rounded-xs" required>
+              <option value="">-- श्रेणी चुनें (Select Category) --</option>
+              <option value="WEIGHMENT_ISSUE">5. तौल / वजन समस्या (Weighment Discrepancy)</option>
+              <option value="QUEUE_ISSUE">2. कतार / प्रतीक्षा समस्या (Queue / Delay Issue)</option>
+              <option value="BOOKING_ISSUE">3. स्लॉट / बुकिंग समस्या (Booking / Slot Issue)</option>
+              <option value="GATE_ISSUE">4. गेट सत्यापन समस्या (Gate Verification Issue)</option>
+              <option value="CENTER_ISSUE">1. केंद्र संबंधी समस्या (Center Facility Issue)</option>
+              <option value="PROCUREMENT_ISSUE">6. खरीद / भुगतान समस्या (Procurement / Payment)</option>
+              <option value="RECEIPT_ISSUE">7. रसीद समस्या (Digital Receipt Issue)</option>
+              <option value="OTHER">8. अन्य (Other)</option>
+            </select>
+          </div>
+
+          <!-- Subject -->
+          <div>
+            <label class="form-label font-bold text-slate-700">विषय (Subject) *</label>
+            <input type="text" id="form-subject" class="form-input border-[#d6d1c4] text-xs py-2 rounded-xs"
+              placeholder="उदा. तौल में 2 क्विंटल का अंतर दर्ज हुआ" required maxlength="120">
+          </div>
+
+          <!-- Priority -->
+          <div>
+            <label class="form-label font-bold text-slate-700">प्राथमिकता (Priority) *</label>
+            <div class="grid grid-cols-4 gap-2">
+              <label class="border border-[#e2ded4] p-2 rounded-xs text-center cursor-pointer hover:bg-slate-50 flex items-center justify-center gap-1">
+                <input type="radio" name="priority" value="LOW"> <span>Low</span>
+              </label>
+              <label class="border border-[#e2ded4] p-2 rounded-xs text-center cursor-pointer hover:bg-slate-50 flex items-center justify-center gap-1">
+                <input type="radio" name="priority" value="MEDIUM" checked> <span class="font-bold">Medium</span>
+              </label>
+              <label class="border border-amber-300 bg-amber-50/40 p-2 rounded-xs text-center cursor-pointer hover:bg-amber-50 flex items-center justify-center gap-1">
+                <input type="radio" name="priority" value="HIGH"> <span class="font-bold text-amber-800">High</span>
+              </label>
+              <label class="border border-rose-300 bg-rose-50/40 p-2 rounded-xs text-center cursor-pointer hover:bg-rose-50 flex items-center justify-center gap-1">
+                <input type="radio" name="priority" value="CRITICAL"> <span class="font-bold text-rose-800">Critical</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Optional Context Links -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1 border-t border-slate-100">
+            <div>
+              <label class="form-label font-semibold text-slate-600">संबंधित बुकिंग (Related Booking)</label>
+              <select id="form-booking" class="form-select border-[#d6d1c4] text-xs py-1.5 rounded-xs">
+                <option value="">-- कोई बुकिंग नहीं (None) --</option>
+              </select>
+            </div>
+            <div>
+              <label class="form-label font-semibold text-slate-600">संबंधित केंद्र (Procurement Center)</label>
+              <select id="form-center" class="form-select border-[#d6d1c4] text-xs py-1.5 rounded-xs">
+                <option value="">-- केंद्र चुनें (Optional) --</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Description -->
+          <div>
+            <label class="form-label font-bold text-slate-700">समस्या का विस्तृत विवरण (Detailed Description) *</label>
+            <textarea id="form-description" rows="4" class="form-textarea border-[#d6d1c4] text-xs py-2 rounded-xs"
+              placeholder="कृपया समस्या का समय, स्थान व स्पष्ट विवरण लिखें..." required></textarea>
+          </div>
+
+          <!-- Attachment UI Placeholder -->
+          <div>
+            <label class="form-label font-semibold text-slate-600">संलग्नक / साक्ष्य (Attachment - UI Only)</label>
+            <div class="border border-dashed border-[#d6d1c4] p-3 text-center rounded-xs bg-[#faf9f5]">
+              <span class="text-slate-400">📄 पर्ची अथवा रसीद की फोटो चुनें (वैकल्पिक)</span>
+              <input type="file" id="form-file" class="hidden">
+              <button type="button" onclick="document.getElementById('form-file').click()"
+                class="block mx-auto mt-1.5 btn btn-outline btn-sm text-[11px] py-1 px-2.5">
+                फ़ाइल चुनें (Browse)
+              </button>
+              <span id="file-chosen-label" class="text-[10px] text-slate-500 block mt-1">कोई फ़ाइल नहीं चुनी गई</span>
+            </div>
+          </div>
+
+          <div id="form-error-msg" class="text-xs text-rose-600 font-semibold hidden"></div>
+
+          <!-- Modal Action Buttons -->
+          <div class="flex items-center justify-end gap-2 pt-3 border-t border-[#e2ded4]">
+            <button type="button" id="cancel-form-btn" class="btn btn-outline btn-sm py-2 px-3 text-xs">
+              रद्द करें (Cancel)
+            </button>
+            <button type="submit" class="btn btn-primary btn-sm py-2 px-4 text-xs font-bold">
+              शिकायत दर्ज करें (Submit)
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Complaints Case List Section -->
+    <div class="bg-white border border-[#e2ded4] rounded-sm shadow-2xs">
+      <div class="p-4 border-b border-[#e2ded4] flex flex-wrap items-center justify-between gap-3">
+        <div class="flex items-center gap-2">
+          <h2 class="text-sm font-bold text-slate-900 uppercase tracking-wide">
+            मेरी दर्ज शिकायतें (My Grievance Cases)
+          </h2>
+          <span class="badge badge-info text-[10px] font-mono-num" id="complaints-count-badge">0</span>
+        </div>
+
+        <!-- Filter Buttons -->
+        <div class="flex items-center gap-1.5 overflow-x-auto text-[11px]">
+          <button type="button" class="filter-btn px-2.5 py-1 rounded-xs font-bold border border-[#15803d] bg-[#15803d] text-white" data-filter="ALL">
+            सभी (All)
+          </button>
+          <button type="button" class="filter-btn px-2.5 py-1 rounded-xs font-semibold border border-[#d6d1c4] bg-white text-slate-700 hover:bg-slate-50" data-filter="ACTIVE">
+            सक्रिय (Active)
+          </button>
+          <button type="button" class="filter-btn px-2.5 py-1 rounded-xs font-semibold border border-[#d6d1c4] bg-white text-slate-700 hover:bg-slate-50" data-filter="ESCALATED">
+            उच्च स्तर (Escalated)
+          </button>
+          <button type="button" class="filter-btn px-2.5 py-1 rounded-xs font-semibold border border-[#d6d1c4] bg-white text-slate-700 hover:bg-slate-50" data-filter="RESOLVED">
+            समाधान (Resolved)
+          </button>
+        </div>
+      </div>
+
+      <!-- Dynamic Complaints Container -->
+      <div id="complaints-list-container" class="divide-y divide-[#e2ded4]">
+        <div class="p-8 text-center text-xs text-slate-400">
+          शिकायतें लोड हो रही हैं...
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Simple Footer -->
+  <footer class="py-4 text-center text-xs text-slate-400 border-t border-[#e2ded4] bg-white">
+    KisanSetu &copy; 2026 • SIH Innovation Prototype • Grievance Redressal Mechanism
+  </footer>
+
+  <!-- Scripts: Mock Data, Utils, Auth Engine, Farmer Module, Complaints Engine -->
+  <script src="../js/mock-data.js"></script>
+  <script src="../js/utils.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="farmer.js"></script>
+  <script src="../js/complaints.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // 1. Enforce Farmer Route Protection
+      const user = window.KisanAuth.requireAuth('farmer', '../pages/login.html');
+      if (!user) return;
+
+      // 2. Logout binding
+      document.getElementById('logout-btn')?.addEventListener('click', () => {
+        window.KisanAuth.logout('../pages/login.html');
+      });
+
+      // 3. Modal controls
+      const modal = document.getElementById('complaint-form-modal');
+      const openBtn = document.getElementById('open-new-complaint-btn');
+      const closeBtn = document.getElementById('close-modal-btn');
+      const cancelBtn = document.getElementById('cancel-form-btn');
+      const form = document.getElementById('new-complaint-form');
+      const errorMsg = document.getElementById('form-error-msg');
+
+      function openModal() {
+        modal.classList.remove('hidden');
+        populateFormSelects();
+      }
+      function closeModal() {
+        modal.classList.add('hidden');
+        form.reset();
+        errorMsg.classList.add('hidden');
+      }
+
+      openBtn.addEventListener('click', openModal);
+      closeBtn.addEventListener('click', closeModal);
+      cancelBtn.addEventListener('click', closeModal);
+
+      // Check URL query for action=new
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('action') === 'new') {
+        openModal();
+      }
+
+      // Populate booking and center options
+      function populateFormSelects() {
+        const bookingSelect = document.getElementById('form-booking');
+        const centerSelect = document.getElementById('form-center');
+
+        // Bookings
+        const bookings = window.FarmerPortal.getBookings();
+        bookingSelect.innerHTML = '<option value="">-- कोई बुकिंग नहीं (None) --</option>';
+        bookings.forEach(b => {
+          bookingSelect.innerHTML += `<option value="${b.bookingId}" data-center="${b.centerId || ''}" data-token="${b.tokenId || ''}">
+            ${b.bookingId} — ${b.commodity || 'फसल'} (${b.bookingDate || ''})
+          </option>`;
+        });
+
+        // Centers
+        const centers = (window.MOCK_CENTERS) || [];
+        centerSelect.innerHTML = '<option value="">-- केंद्र चुनें (Optional) --</option>';
+        centers.forEach(c => {
+          centerSelect.innerHTML += `<option value="${c.id}">${c.name} (${c.district})</option>`;
+        });
+
+        bookingSelect.addEventListener('change', () => {
+          const selected = bookingSelect.selectedOptions[0];
+          if (selected && selected.dataset.center) {
+            centerSelect.value = selected.dataset.center;
+          }
+        });
+      }
+
+      // UI file input listener
+      const fileInput = document.getElementById('form-file');
+      const fileLabel = document.getElementById('file-chosen-label');
+      fileInput?.addEventListener('change', () => {
+        if (fileInput.files.length > 0) {
+          fileLabel.textContent = `चयनित फ़ाइल: ${fileInput.files[0].name}`;
+        }
+      });
+
+      // 4. Submit Complaint Handler
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        errorMsg.classList.add('hidden');
+
+        const category = document.getElementById('form-category').value;
+        const subject = document.getElementById('form-subject').value.trim();
+        const priority = document.querySelector('input[name="priority"]:checked')?.value || 'MEDIUM';
+        const bookingId = document.getElementById('form-booking').value || null;
+        const centerId = document.getElementById('form-center').value || null;
+        const description = document.getElementById('form-description').value.trim();
+        const fileName = fileInput.files.length > 0 ? fileInput.files[0].name : null;
+
+        const bookingSelect = document.getElementById('form-booking');
+        const selectedBooking = bookingSelect.selectedOptions[0];
+        const token = selectedBooking ? selectedBooking.dataset.token : null;
+
+        const centerSelect = document.getElementById('form-center');
+        const centerName = centerSelect.selectedOptions[0] ? centerSelect.selectedOptions[0].textContent : '';
+
+        const res = window.KisanComplaints.createComplaint({
+          category,
+          subject,
+          priority,
+          relatedBookingId: bookingId,
+          relatedCenterId: centerId,
+          relatedCenterName: centerName,
+          relatedToken: token,
+          description,
+          attachmentName: fileName
+        }, user);
+
+        if (res.success) {
+          closeModal();
+          renderComplaints();
+        } else {
+          errorMsg.textContent = res.error || 'त्रुटि: शिकायत दर्ज नहीं हो सकी।';
+          errorMsg.classList.remove('hidden');
+        }
+      });
+
+      // 5. Filter & Render Complaints List
+      let currentFilter = 'ALL';
+      document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.filter-btn').forEach(b => {
+            b.className = 'filter-btn px-2.5 py-1 rounded-xs font-semibold border border-[#d6d1c4] bg-white text-slate-700 hover:bg-slate-50';
+          });
+          btn.className = 'filter-btn px-2.5 py-1 rounded-xs font-bold border border-[#15803d] bg-[#15803d] text-white';
+          currentFilter = btn.dataset.filter;
+          renderComplaints();
+        });
+      });
+
+      function renderComplaints() {
+        const complaints = window.KisanComplaints.getFarmerComplaints(user.id);
+
+        // Update top metrics
+        const total = complaints.length;
+        const active = complaints.filter(c => ['OPEN', 'ACKNOWLEDGED', 'IN_PROGRESS'].includes(c.status)).length;
+        const escalated = complaints.filter(c => c.status === 'ESCALATED').length;
+        const resolved = complaints.filter(c => ['RESOLVED', 'CLOSED'].includes(c.status)).length;
+
+        document.getElementById('stat-total').textContent = total;
+        document.getElementById('stat-active').textContent = active;
+        document.getElementById('stat-escalated').textContent = escalated;
+        document.getElementById('stat-resolved').textContent = resolved;
+        document.getElementById('complaints-count-badge').textContent = total;
+
+        // Apply tab filter
+        const filtered = complaints.filter(c => {
+          if (currentFilter === 'ACTIVE') return ['OPEN', 'ACKNOWLEDGED', 'IN_PROGRESS'].includes(c.status);
+          if (currentFilter === 'ESCALATED') return c.status === 'ESCALATED';
+          if (currentFilter === 'RESOLVED') return ['RESOLVED', 'CLOSED'].includes(c.status);
+          return true;
+        });
+
+        const container = document.getElementById('complaints-list-container');
+        if (filtered.length === 0) {
+          container.innerHTML = `
+            <div class="p-10 text-center text-xs text-slate-500">
+              <div class="text-3xl mb-2">⚖️</div>
+              <div class="font-bold text-slate-700">कोई शिकायत नहीं मिली (No Complaints Found)</div>
+              <p class="text-slate-400 mt-1 max-w-sm mx-auto text-[11px]">
+                वर्तमान में इस फ़िल्टर के अंतर्गत आपकी कोई शिकायत दर्ज नहीं है। नई शिकायत दर्ज करने के लिए ऊपर दिए गए बटन का उपयोग करें।
+              </p>
+            </div>
+          `;
+          return;
+        }
+
+        container.innerHTML = filtered.map(c => {
+          const statusMeta = window.KisanComplaints.getStatusMeta(c.status);
+          const levelMeta = window.KisanComplaints.getLevelMeta(c.currentLevel);
+          const catLabel = window.KisanComplaints.getCategoryLabel(c.category, 'hi');
+          const createdDate = new Date(c.createdAt).toLocaleDateString('hi-IN', {
+            day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit'
+          });
+
+          // Priority badge styling
+          let priorityClass = 'bg-slate-100 text-slate-700 border-slate-200';
+          if (c.priority === 'HIGH') priorityClass = 'bg-amber-100 text-amber-900 border-amber-300 font-bold';
+          if (c.priority === 'CRITICAL') priorityClass = 'bg-rose-100 text-rose-900 border-rose-300 font-bold';
+
+          return `
+            <div class="p-4 hover:bg-[#faf9f5] transition-colors flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div class="space-y-1 flex-1">
+                <div class="flex flex-wrap items-center gap-2">
+                  <span class="font-mono-num font-bold text-xs bg-slate-100 text-slate-800 px-2 py-0.5 border border-slate-300 rounded-xs">
+                    ${c.complaintNumber}
+                  </span>
+                  <span class="badge ${statusMeta.badgeClass} text-[10px] font-bold">
+                    ● ${statusMeta.hi}
+                  </span>
+                  <span class="text-[10px] px-2 py-0.5 border rounded-xs ${priorityClass}">
+                    ${c.priority}
+                  </span>
+                  <span class="text-[10px] text-slate-400">
+                    ${createdDate}
+                  </span>
+                </div>
+
+                <h3 class="text-sm font-bold text-slate-900">
+                  ${c.subject}
+                </h3>
+
+                <div class="text-[11px] text-slate-500 flex flex-wrap items-center gap-x-4 gap-y-1">
+                  <span>श्रेणी: <strong class="text-slate-700">${catLabel}</strong></span>
+                  ${c.relatedCenterName ? `<span>केंद्र: <strong class="text-slate-700">${c.relatedCenterName}</strong></span>` : ''}
+                  ${c.relatedToken ? `<span>टोकन: <strong class="font-mono-num text-slate-700">${c.relatedToken}</strong></span>` : ''}
+                </div>
+
+                <div class="text-[11px] text-slate-600 bg-slate-50 p-2 border border-slate-200 rounded-xs mt-1.5">
+                  वर्तमान समाधान स्तर: <strong class="text-[#15803d]">${levelMeta.hi}</strong>
+                  ${c.resolution ? `<div class="mt-1 text-emerald-800 font-medium">समाधान: ${c.resolution}</div>` : ''}
+                </div>
+              </div>
+
+              <div class="shrink-0 flex sm:flex-col items-center sm:items-end gap-2 w-full sm:w-auto">
+                <a href="complaint-details.html?id=${encodeURIComponent(c.complaintNumber)}"
+                  class="btn btn-outline btn-sm text-xs py-1.5 px-3 rounded-xs border-[#d6d1c4] hover:border-[#15803d] hover:text-[#15803d] w-full sm:w-auto text-center font-semibold">
+                  विवरण व स्थिति &rarr;
+                </a>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      // Initial Render
+      renderComplaints();
+    });
+  </script>
+</body>
+
+</html>

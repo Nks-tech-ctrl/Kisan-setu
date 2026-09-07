@@ -148,6 +148,35 @@
       </div>
     </div>
 
+    <!-- Smart Recommendation Banner -->
+    <div id="smart-recommendation-banner" class="mb-6 card p-4 sm:p-5 bg-gradient-to-r from-emerald-50 via-teal-50 to-white border-emerald-300 shadow-xs hidden">
+      <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+        <div class="space-y-1">
+          <div class="flex items-center gap-2">
+            <span class="px-2.5 py-0.5 rounded-full bg-emerald-700 text-white font-bold text-[10px] tracking-wide uppercase flex items-center gap-1">
+              <span>⚡</span> स्मार्ट अनुशंसा (Smart Recommendation)
+            </span>
+            <span class="text-xs font-semibold text-emerald-800" id="smart-rec-crop-badge">सर्वोत्तम केंद्र</span>
+          </div>
+          <h3 class="text-base sm:text-lg font-bold text-slate-900" id="smart-rec-center-name">-</h3>
+          <div class="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-slate-600">
+            <span class="flex items-center gap-1 text-emerald-700 font-semibold" id="smart-rec-reason">
+              ✓ फसल स्वीकृत • ✓ न्यूनतम कतार • ✓ स्लॉट उपलब्ध
+            </span>
+            <span class="text-slate-400">•</span>
+            <span class="font-mono text-slate-700" id="smart-rec-wait">~20 मिनट प्रतीक्षा</span>
+            <span class="text-slate-400">•</span>
+            <span class="font-mono text-slate-700" id="smart-rec-queue">5 वाहन</span>
+          </div>
+        </div>
+        <div class="flex items-center gap-2.5 shrink-0">
+          <a id="smart-rec-book-btn" href="#" class="btn btn-primary btn-sm text-xs font-bold py-2 px-4 shadow-xs flex items-center gap-1">
+            <span>📅</span> तुरंत स्लॉट बुक करें (Book Slot) &rarr;
+          </a>
+        </div>
+      </div>
+    </div>
+
     <!-- Center Cards Grid Container -->
     <div id="centers-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
       <!-- Cards rendered dynamically via JavaScript -->
@@ -218,11 +247,11 @@
       const allCenters = window.FarmerPortal.getCenters();
       totalCount.textContent = allCenters.length;
 
-      // 5. Dynamically populate filters strictly from MOCK_CENTERS
+      // 5. Dynamically populate filters strictly from MOCK_COMMODITIES and MOCK_CENTERS
       function populateDynamicFilters() {
         const uniqueStates = [...new Set(allCenters.map(c => c.state).filter(Boolean))].sort();
         const uniqueDistricts = [...new Set(allCenters.map(c => c.district).filter(Boolean))].sort();
-        const uniqueCommodities = [...new Set(allCenters.map(c => c.commodity).filter(Boolean))].sort();
+        const crops = window.FarmerPortal.getCrops();
 
         uniqueStates.forEach(st => {
           const opt = document.createElement('option');
@@ -238,15 +267,56 @@
           districtFilter.appendChild(opt);
         });
 
-        uniqueCommodities.forEach(comm => {
-          const opt = document.createElement('option');
-          opt.value = comm;
-          opt.textContent = comm;
-          commodityFilter.appendChild(opt);
-        });
+        if (crops && crops.length > 0) {
+          crops.forEach(crop => {
+            const opt = document.createElement('option');
+            opt.value = crop.nameEnglish;
+            opt.textContent = `${crop.nameEnglish} (${crop.nameHindi}) — MSP ₹${crop.mspPerQuintal}/Q`;
+            commodityFilter.appendChild(opt);
+          });
+        } else {
+          const uniqueCommodities = [...new Set(allCenters.map(c => c.commodity).filter(Boolean))].sort();
+          uniqueCommodities.forEach(comm => {
+            const opt = document.createElement('option');
+            opt.value = comm;
+            opt.textContent = comm;
+            commodityFilter.appendChild(opt);
+          });
+        }
       }
 
       populateDynamicFilters();
+
+      // 5.5. Update Smart Recommendation Banner
+      function updateSmartRecommendation(selectedCommodity) {
+        const banner = document.getElementById('smart-recommendation-banner');
+        const rec = window.FarmerPortal.getSmartRecommendation(selectedCommodity);
+        if (rec && banner) {
+          banner.classList.remove('hidden');
+          const badgeEl = document.getElementById('smart-rec-crop-badge');
+          if (badgeEl) {
+            badgeEl.textContent = selectedCommodity ? `${selectedCommodity} के लिए उपयुक्त` : 'सर्वोत्तम अनुशंसित केंद्र';
+          }
+          const nameEl = document.getElementById('smart-rec-center-name');
+          if (nameEl) nameEl.textContent = rec.name;
+
+          const reasonEl = document.getElementById('smart-rec-reason');
+          if (reasonEl) reasonEl.textContent = rec.reason || "✓ फसल स्वीकृत • ✓ न्यूनतम कतार • ✓ स्लॉट उपलब्ध";
+
+          const waitEl = document.getElementById('smart-rec-wait');
+          if (waitEl) waitEl.textContent = `~${rec.estimatedWaitMinutes} मिनट प्रतीक्षा`;
+
+          const queueEl = document.getElementById('smart-rec-queue');
+          if (queueEl) queueEl.textContent = `${rec.currentQueueVehicles} वाहन कतार में`;
+
+          const bookBtn = document.getElementById('smart-rec-book-btn');
+          if (bookBtn) {
+            bookBtn.href = `booking.html?centerId=${encodeURIComponent(rec.id)}${selectedCommodity ? '&crop=' + encodeURIComponent(selectedCommodity) : ''}`;
+          }
+        } else if (banner) {
+          banner.classList.add('hidden');
+        }
+      }
 
       // 6. Filter & Render Function
       function filterAndRenderCenters() {
@@ -259,13 +329,19 @@
         clearSearchBtn.classList.toggle('hidden', query.length === 0);
 
         const filtered = allCenters.filter(center => {
-          // Search query check (name, district, state)
+          // Search query check (name, district, state, commodities)
+          const allCenterCrops = [
+            center.commodity,
+            ...(Array.isArray(center.commodities) ? center.commodities : []),
+            ...(Array.isArray(center.acceptedCrops) ? center.acceptedCrops : [])
+          ].filter(Boolean).join(' ').toLowerCase();
+
           const matchesQuery =
             !query ||
             (center.name && center.name.toLowerCase().includes(query)) ||
             (center.district && center.district.toLowerCase().includes(query)) ||
             (center.state && center.state.toLowerCase().includes(query)) ||
-            (center.commodity && center.commodity.toLowerCase().includes(query));
+            allCenterCrops.includes(query);
 
           // State filter
           const matchesState = !selectedState || center.state === selectedState;
@@ -273,13 +349,19 @@
           // District filter
           const matchesDistrict = !selectedDistrict || center.district === selectedDistrict;
 
-          // Commodity filter
-          const matchesCommodity = !selectedCommodity || center.commodity === selectedCommodity;
+          // Commodity filter: check single commodity or array of commodities/acceptedCrops
+          const matchesCommodity = !selectedCommodity ||
+            (center.commodity && center.commodity.toLowerCase() === selectedCommodity.toLowerCase()) ||
+            (Array.isArray(center.commodities) && center.commodities.some(c => c.toLowerCase() === selectedCommodity.toLowerCase())) ||
+            (Array.isArray(center.acceptedCrops) && center.acceptedCrops.some(c => c.toLowerCase() === selectedCommodity.toLowerCase()));
 
           return matchesQuery && matchesState && matchesDistrict && matchesCommodity;
         });
 
         visibleCount.textContent = filtered.length;
+
+        // Update Smart Recommendation Banner
+        updateSmartRecommendation(selectedCommodity);
 
         if (filtered.length === 0) {
           centersGrid.innerHTML = '';

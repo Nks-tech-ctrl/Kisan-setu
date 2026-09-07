@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="hi">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>मेरी बुकिंग | My Bookings — KisanSetu</title>
+
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Core Design System -->
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body class="bg-[#f8fafc] text-[#0f172a] min-h-screen flex flex-col justify-between antialiased">
+
+  <!-- Authenticated Header -->
+  <header class="bg-white border-b border-slate-200 py-3.5 px-4 sticky top-0 z-40 shadow-xs">
+    <div class="container mx-auto flex flex-wrap items-center justify-between gap-3">
+      <!-- Brand & Tag -->
+      <div class="flex items-center gap-3">
+        <a href="dashboard.html"
+          class="w-9 h-9 rounded-lg bg-[#15803d] text-white flex items-center justify-center font-bold text-sm shadow-xs">
+          K
+        </a>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="text-base font-bold text-slate-900 tracking-tight">KisanSetu</span>
+            <span class="text-xs text-slate-400">| किसान सेतु</span>
+          </div>
+          <div class="text-[11px] font-semibold text-[#15803d] -mt-0.5">
+            किसान पोर्टल (Farmer Portal)
+          </div>
+        </div>
+      </div>
+
+      <!-- Navigation & Logout -->
+      <div class="flex items-center gap-3">
+        <a href="dashboard.html"
+          class="btn btn-outline btn-sm text-xs font-semibold flex items-center gap-1.5 py-1.5 px-3">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18">
+            </path>
+          </svg>
+          डैशबोर्ड (Dashboard)
+        </a>
+
+        <a href="centers.html"
+          class="btn btn-outline btn-sm text-xs font-semibold flex items-center gap-1.5 py-1.5 px-3">
+          <span>📍</span> केंद्र खोजें (Centers)
+        </a>
+
+        <button type="button" id="logout-btn" class="btn btn-outline btn-sm text-xs py-1.5 px-3">
+          लॉगआउट (Logout)
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Container -->
+  <main class="container mx-auto py-6 sm:py-8 px-4 flex-1">
+
+    <!-- Page Title Banner -->
+    <div class="mb-6">
+      <div class="flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <div
+            class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-50 text-[#15803d] border border-emerald-200 text-[11px] font-semibold mb-2">
+            <span>📋</span> बुकिंग इतिहास (Booking History)
+          </div>
+          <h1 class="text-2xl sm:text-3xl font-bold text-slate-900">
+            मेरी बुकिंग
+          </h1>
+          <p class="text-sm text-slate-600 mt-1">
+            अपने सभी पंजीकृत खरीद स्लॉट और डिजिटल टोकन का विवरण देखें।
+          </p>
+          <p class="text-xs text-slate-400 mt-0.5">
+            View booking history, inspect token slips, track status, or cancel confirmed reservations.
+          </p>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <a href="centers.html" class="btn btn-primary btn-sm text-xs font-semibold py-2 px-4 shadow-xs flex items-center gap-1.5">
+            <span>+</span> नया स्लॉट बुक करें (New Booking)
+          </a>
+
+          <div class="bg-white border border-slate-200 rounded-lg py-2 px-3.5 shadow-xs text-xs">
+            <span class="text-slate-400 block text-[10px]">कुल रिकॉर्ड (Total)</span>
+            <span class="font-bold text-slate-900 text-sm" id="bookings-count">0</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Filter Tabs Card -->
+    <div class="card p-3 bg-white border-slate-200 mb-6 shadow-xs flex flex-wrap items-center justify-between gap-3">
+      <div class="flex flex-wrap items-center gap-1.5" id="status-filters">
+        <button type="button" data-filter="all"
+          class="filter-tab px-3 py-1.5 rounded-md text-xs font-semibold bg-emerald-50 text-[#15803d] border border-emerald-300">
+          सभी (All)
+        </button>
+        <button type="button" data-filter="CONFIRMED"
+          class="filter-tab px-3 py-1.5 rounded-md text-xs font-semibold text-slate-600 hover:bg-slate-50 border border-transparent">
+          पुष्टि हुई (Confirmed)
+        </button>
+        <button type="button" data-filter="COMPLETED"
+          class="filter-tab px-3 py-1.5 rounded-md text-xs font-semibold text-slate-600 hover:bg-slate-50 border border-transparent">
+          पूर्ण (Completed)
+        </button>
+        <button type="button" data-filter="CANCELLED"
+          class="filter-tab px-3 py-1.5 rounded-md text-xs font-semibold text-slate-600 hover:bg-slate-50 border border-transparent">
+          रद्द (Cancelled)
+        </button>
+      </div>
+
+      <div class="text-[11px] text-slate-400 flex items-center gap-1">
+        <span class="text-amber-700 bg-amber-50 px-1.5 py-0.5 rounded border border-amber-200 font-medium">
+          डेमो डेटा • Demo Data
+        </span>
+      </div>
+    </div>
+
+    <!-- Bookings Container -->
+    <div id="bookings-list" class="space-y-4">
+      <!-- Dynamically Rendered Booking Cards -->
+    </div>
+
+    <!-- Empty State Container (Hidden by default) -->
+    <div id="empty-state" class="card p-12 bg-white border-slate-200 text-center hidden my-8 shadow-xs max-w-lg mx-auto">
+      <div class="w-14 h-14 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center mx-auto mb-3">
+        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+        </svg>
+      </div>
+      <h3 class="text-base font-bold text-slate-800" id="empty-state-title">
+        कोई बुकिंग नहीं मिली
+      </h3>
+      <div class="text-xs text-slate-500 font-medium mt-0.5">
+        No Bookings Found
+      </div>
+      <p class="text-xs text-slate-400 mt-2 max-w-sm mx-auto leading-relaxed" id="empty-state-desc">
+        वर्तमान में आपके पास कोई बुकिंग रिकॉर्ड नहीं है। अपनी फसल बेचने के लिए खरीद केंद्र खोजें और स्लॉट बुक करें।
+      </p>
+      <div class="mt-5">
+        <a href="centers.html" class="btn btn-primary btn-sm text-xs font-semibold py-2 px-4 shadow-xs inline-flex items-center gap-1.5">
+          <span>📍</span> खरीद केंद्र खोजें (Find Procurement Center)
+        </a>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Cancellation Confirmation Modal -->
+  <div id="cancel-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-xl max-w-md w-full p-6 shadow-xl border border-slate-200 space-y-4">
+      <div class="flex items-start gap-3">
+        <div class="w-10 h-10 rounded-full bg-rose-50 text-rose-600 flex items-center justify-center shrink-0">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z">
+            </path>
+          </svg>
+        </div>
+        <div>
+          <h3 class="text-base font-bold text-slate-900">
+            बुकिंग रद्द करें? (Confirm Cancellation)
+          </h3>
+          <p class="text-xs text-slate-500 mt-1 leading-relaxed">
+            क्या आप यह बुकिंग रद्द करना चाहते हैं? रद्द करने के बाद यह स्लॉट खाली हो जाएगा और टोकन अमान्य हो जाएगा।
+          </p>
+        </div>
+      </div>
+
+      <div class="p-3.5 bg-slate-50 rounded-lg border border-slate-200 text-xs space-y-1.5">
+        <div class="flex justify-between">
+          <span class="text-slate-500">बुकिंग आईडी:</span>
+          <span class="font-mono font-bold text-slate-800" id="modal-booking-id">-</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-slate-500">खरीद केंद्र:</span>
+          <span class="font-medium text-slate-800" id="modal-center-name">-</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-slate-500">दिनांक व समय:</span>
+          <span class="font-medium text-slate-800" id="modal-slot-info">-</span>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-end gap-2.5 pt-2">
+        <button type="button" id="modal-keep-btn" class="btn btn-outline btn-sm text-xs font-semibold py-2 px-4 text-slate-600">
+          रद्द न करें (Keep Booking)
+        </button>
+        <button type="button" id="modal-confirm-btn" class="btn btn-primary btn-sm bg-rose-600 hover:bg-rose-700 text-white border-rose-600 text-xs font-semibold py-2 px-4 shadow-xs">
+          हां, रद्द करें (Confirm Cancel)
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notification Toast -->
+  <div id="toast"
+    class="fixed bottom-5 right-5 z-50 bg-slate-900 text-white text-xs px-4 py-3 rounded-lg shadow-lg flex items-center gap-2 border border-slate-700 hidden transition-opacity duration-300">
+    <span class="text-emerald-400">✔</span>
+    <span id="toast-message">बुकिंग सफलतापूर्वक रद्द कर दी गई। (Booking cancelled successfully)</span>
+  </div>
+
+  <!-- Footer -->
+  <footer class="py-4 text-center text-xs text-slate-400 border-t border-slate-200 bg-white">
+    KisanSetu &copy; 2026 • SIH Innovation Project
+  </footer>
+
+  <!-- Scripts -->
+  <script src="../js/mock-data.js"></script>
+  <script src="../js/utils.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="farmer.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // 1. Enforce Farmer Route Protection
+      const user = window.KisanAuth.requireAuth('farmer', '../pages/login.html');
+      if (!user) return;
+
+      // 2. Logout Handler
+      document.getElementById('logout-btn').addEventListener('click', () => {
+        window.KisanAuth.logout('../pages/login.html');
+      });
+
+      // 3. Elements
+      const bookingsList = document.getElementById('bookings-list');
+      const emptyState = document.getElementById('empty-state');
+      const bookingsCount = document.getElementById('bookings-count');
+      const filterTabs = document.querySelectorAll('.filter-tab');
+
+      // Modal Elements
+      const cancelModal = document.getElementById('cancel-modal');
+      const modalBookingId = document.getElementById('modal-booking-id');
+      const modalCenterName = document.getElementById('modal-center-name');
+      const modalSlotInfo = document.getElementById('modal-slot-info');
+      const modalKeepBtn = document.getElementById('modal-keep-btn');
+      const modalConfirmBtn = document.getElementById('modal-confirm-btn');
+      let pendingCancelId = null;
+
+      // Toast
+      const toast = document.getElementById('toast');
+      const toastMessage = document.getElementById('toast-message');
+
+      function showToast(msg) {
+        toastMessage.textContent = msg;
+        toast.classList.remove('hidden');
+        setTimeout(() => toast.classList.add('hidden'), 4000);
+      }
+
+      let activeFilter = 'all';
+
+      // 4. Render Booking Cards
+      function renderBookings() {
+        const allBookings = window.FarmerPortal.getBookings();
+        bookingsCount.textContent = allBookings.length;
+
+        const filtered = allBookings.filter(b => {
+          if (activeFilter === 'all') return true;
+          const status = window.FarmerPortal.getBookingStatus(b);
+          return status === activeFilter;
+        });
+
+        if (filtered.length === 0) {
+          bookingsList.innerHTML = '';
+          bookingsList.classList.add('hidden');
+          emptyState.classList.remove('hidden');
+
+          if (activeFilter !== 'all') {
+            document.getElementById('empty-state-title').textContent = `कोई ${activeFilter} बुकिंग नहीं मिली`;
+            document.getElementById('empty-state-desc').textContent = 'इस फ़िल्टर श्रेणी के तहत कोई बुकिंग उपलब्ध नहीं है।';
+          } else {
+            document.getElementById('empty-state-title').textContent = 'कोई बुकिंग नहीं मिली';
+            document.getElementById('empty-state-desc').textContent = 'वर्तमान में आपके पास कोई बुकिंग रिकॉर्ड नहीं है। अपनी फसल बेचने के लिए खरीद केंद्र खोजें और स्लॉट बुक करें।';
+          }
+          return;
+        }
+
+        emptyState.classList.add('hidden');
+        bookingsList.classList.remove('hidden');
+
+        bookingsList.innerHTML = filtered.map(b => {
+          const status = window.FarmerPortal.getBookingStatus(b);
+          const badge = window.FarmerPortal.getBookingStatusBadge(status);
+          const canCancel = window.FarmerPortal.canCancelBooking(b);
+          const tokenNum = b.tokenId || window.FarmerPortal.generateTokenNumber(b);
+          const createdStr = b.createdAt ? new Date(b.createdAt).toLocaleDateString('hi-IN', {
+            day: 'numeric',
+            month: 'short',
+            year: 'numeric'
+          }) : 'हाल ही में (Recent)';
+
+          const cancelActionHtml = canCancel
+            ? `<button type="button" data-action="cancel" data-id="${b.bookingId}" data-center="${b.centerName || ''}" data-slot="${b.bookingDate || ''} • ${b.timeSlot || ''}"
+                 class="btn btn-outline btn-sm text-xs font-semibold py-1.5 px-3 text-rose-700 hover:bg-rose-50 border-rose-200 flex items-center gap-1">
+                 <span>✕</span> रद्द करें (Cancel)
+               </button>`
+            : '';
+
+          return `
+            <div class="card p-5 bg-white border-slate-200 shadow-xs hover:border-slate-300 transition-all flex flex-col justify-between" id="card-${b.bookingId}">
+              <div class="flex flex-wrap items-start justify-between gap-3">
+                <!-- Left: Center & Token -->
+                <div>
+                  <div class="flex flex-wrap items-center gap-2 mb-1.5">
+                    <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold border ${badge.badgeClass}">
+                      <span class="w-1.5 h-1.5 rounded-full ${badge.dotColor}"></span>
+                      ${badge.labelHindi} (${badge.labelEnglish})
+                    </span>
+
+                    <span class="text-xs font-mono font-bold text-slate-700 bg-slate-100 px-2 py-0.5 rounded border border-slate-200">
+                      ${tokenNum}
+                    </span>
+
+                    <span class="text-[10px] text-slate-400">
+                      पंजीकृत: ${createdStr}
+                    </span>
+                  </div>
+
+                  <h3 class="text-base font-bold text-slate-900 leading-snug">
+                    ${b.centerName || 'खरीद केंद्र'}
+                  </h3>
+
+                  <p class="text-xs text-slate-500 mt-0.5">
+                    ${b.district || ''}${b.state ? ', ' + b.state : ''} • केंद्र आईडी: <span class="font-mono text-slate-600">${b.centerId || '-'}</span>
+                  </p>
+                </div>
+
+                <!-- Right: Slot Information -->
+                <div class="text-right">
+                  <span class="text-slate-400 block text-[10px] uppercase font-bold">आगमन समय स्लॉट</span>
+                  <span class="text-xs font-bold text-slate-800">${b.bookingDate || 'आज'}</span>
+                  <span class="text-xs font-semibold text-[#15803d] block">${b.timeSlot || '-'}</span>
+                </div>
+              </div>
+
+              <!-- Middle: Commodity & Details -->
+              <div class="mt-3.5 pt-3 border-t border-slate-100 grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
+                <div>
+                  <span class="text-slate-400 block text-[10px]">फसल (Crop)</span>
+                  <span class="font-semibold text-slate-800">${b.commodity || 'गेहूं (Wheat)'}</span>
+                </div>
+                <div>
+                  <span class="text-slate-400 block text-[10px]">बुकिंग आईडी</span>
+                  <span class="font-mono font-semibold text-slate-700">${b.bookingId}</span>
+                </div>
+                <div>
+                  <span class="text-slate-400 block text-[10px]">किसान का नाम</span>
+                  <span class="font-medium text-slate-700">${b.farmerName || user.name || 'Demo Farmer'}</span>
+                </div>
+                <div>
+                  <span class="text-slate-400 block text-[10px]">अंतिम अद्यतन</span>
+                  <span class="font-medium text-slate-600">
+                    ${b.cancelledAt ? 'रद्द: ' + new Date(b.cancelledAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'पुष्टि सक्रिय'}
+                  </span>
+                </div>
+              </div>
+
+              <!-- Footer Actions -->
+              <div class="mt-4 pt-3 border-t border-slate-100 flex flex-wrap items-center justify-between gap-2">
+                <div class="flex items-center gap-2">
+                  <a href="booking-details.html?id=${encodeURIComponent(b.bookingId)}"
+                    class="btn btn-outline btn-sm text-xs font-semibold py-1.5 px-3 flex items-center gap-1">
+                    विवरण देखें (View Details) &rarr;
+                  </a>
+
+                  ${status === 'CONFIRMED' || status === 'IN_QUEUE' ? `
+                    <a href="token.html" class="btn btn-outline btn-sm text-xs font-semibold py-1.5 px-2.5 text-slate-600">
+                      टोकन पर्ची (Token)
+                    </a>
+                  ` : ''}
+                </div>
+
+                <div class="flex items-center gap-2">
+                  ${cancelActionHtml}
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      // 5. Filter Tab Event Listeners
+      filterTabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+          filterTabs.forEach(t => {
+            t.className = 'filter-tab px-3 py-1.5 rounded-md text-xs font-semibold text-slate-600 hover:bg-slate-50 border border-transparent';
+          });
+          tab.className = 'filter-tab px-3 py-1.5 rounded-md text-xs font-semibold bg-emerald-50 text-[#15803d] border border-emerald-300';
+          activeFilter = tab.dataset.filter;
+          renderBookings();
+        });
+      });
+
+      // 6. Cancellation Modal Handlers
+      bookingsList.addEventListener('click', (e) => {
+        const cancelBtn = e.target.closest('button[data-action="cancel"]');
+        if (!cancelBtn) return;
+
+        pendingCancelId = cancelBtn.dataset.id;
+        modalBookingId.textContent = pendingCancelId;
+        modalCenterName.textContent = cancelBtn.dataset.center || 'खरीद केंद्र';
+        modalSlotInfo.textContent = cancelBtn.dataset.slot || '-';
+
+        cancelModal.classList.remove('hidden');
+      });
+
+      modalKeepBtn.addEventListener('click', () => {
+        cancelModal.classList.add('hidden');
+        pendingCancelId = null;
+      });
+
+      modalConfirmBtn.addEventListener('click', () => {
+        if (!pendingCancelId) return;
+
+        const res = window.FarmerPortal.cancelBooking(pendingCancelId);
+        cancelModal.classList.add('hidden');
+
+        if (res.success) {
+          showToast(`बुकिंग ${pendingCancelId} सफलतापूर्वक रद्द कर दी गई (Booking cancelled successfully)।`);
+          renderBookings();
+        } else {
+          alert(`रद्दीकरण असफल: ${res.error || 'अज्ञात त्रुटि'}`);
+        }
+        pendingCancelId = null;
+      });
+
+      // Initial Render
+      renderBookings();
+    });
+  </script>
+</body>
+
+</html>

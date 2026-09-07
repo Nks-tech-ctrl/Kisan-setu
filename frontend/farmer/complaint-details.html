@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="hi">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>शिकायत स्थिति एवं विवरण | Complaint Status — KisanSetu</title>
+
+  <!-- Typography: Inter & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Core Design System -->
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    body {
+      background-color: #faf9f5;
+      color: #1e293b;
+    }
+    .font-mono-num {
+      font-family: 'JetBrains Mono', ui-monospace, monospace;
+    }
+    .timeline-line {
+      position: absolute;
+      top: 1.25rem;
+      bottom: 0;
+      left: 1rem;
+      width: 2px;
+      background-color: #e2ded4;
+    }
+  </style>
+</head>
+
+<body class="bg-[#faf9f5] text-[#1e293b] min-h-screen flex flex-col justify-between antialiased font-sans">
+
+  <!-- Authenticated Farmer Header -->
+  <header class="bg-white border-b border-[#e2ded4] py-3 px-4 sticky top-0 z-40 shadow-2xs">
+    <div class="container mx-auto flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <a href="dashboard.html"
+          class="w-9 h-9 rounded-sm bg-[#15803d] text-white flex items-center justify-center font-bold text-sm shadow-2xs">
+          K
+        </a>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="text-base font-black text-slate-900 tracking-tight">KisanSetu</span>
+            <span class="text-xs text-slate-400">| किसान सेतु</span>
+          </div>
+          <div class="text-[11px] font-bold text-[#15803d] -mt-0.5">
+            शिकायत विवरण (Case Details)
+          </div>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2 sm:gap-3">
+        <a href="complaints.html" class="btn btn-outline btn-sm text-xs font-semibold py-1.5 px-3 text-slate-700">
+          &larr; सभी शिकायतें (Back to List)
+        </a>
+        <button type="button" id="logout-btn" class="btn btn-outline btn-sm text-xs py-1.5 px-2.5 text-slate-600">
+          लॉगआउट
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Case Detail Container -->
+  <main class="container mx-auto py-6 sm:py-8 px-4 flex-1 max-w-4xl space-y-6">
+
+    <!-- Case Not Found State (hidden by default) -->
+    <div id="case-not-found" class="hidden bg-white border border-[#e2ded4] p-10 text-center rounded-sm">
+      <div class="text-3xl mb-2">⚠️</div>
+      <h2 class="text-base font-bold text-slate-800">शिकायत नहीं मिली (Complaint Not Found)</h2>
+      <p class="text-xs text-slate-500 mt-1">
+        अनुरोधित शिकायत संख्या मान्य नहीं है अथवा आपके खाते से संबद्ध नहीं है।
+      </p>
+      <div class="mt-4">
+        <a href="complaints.html" class="btn btn-primary btn-sm text-xs font-semibold py-1.5 px-4">
+          शिकायत सूची पर जाएं
+        </a>
+      </div>
+    </div>
+
+    <!-- Case Found View -->
+    <div id="case-content" class="space-y-6">
+
+      <!-- Case Header Card -->
+      <div class="bg-white border border-[#e2ded4] rounded-sm p-6 shadow-2xs">
+        <div class="flex flex-wrap items-start justify-between gap-4 pb-4 border-b border-[#e2ded4]">
+          <div>
+            <div class="flex items-center gap-2 mb-1.5">
+              <span class="text-xs font-bold font-mono-num bg-slate-100 text-slate-800 px-2.5 py-0.5 border border-slate-300 rounded-xs" id="detail-cmp-num">
+                KSC-CMP-0000
+              </span>
+              <span class="badge text-[11px] font-bold" id="detail-status-badge">
+                ● लोड हो रहा है...
+              </span>
+              <span class="text-[11px] font-bold px-2 py-0.5 border rounded-xs" id="detail-priority-badge">
+                PRIORITY
+              </span>
+            </div>
+            <h1 class="text-xl sm:text-2xl font-bold text-slate-900" id="detail-subject">
+              शिकायत विषय लोड हो रहा है...
+            </h1>
+            <div class="text-xs text-slate-500 mt-1 flex flex-wrap items-center gap-x-4 gap-y-1">
+              <span>श्रेणी: <strong class="text-slate-800" id="detail-category">-</strong></span>
+              <span>दर्ज तिथि: <strong class="text-slate-800" id="detail-created-at">-</strong></span>
+              <span>अंतिम अपडेट: <strong class="text-slate-800" id="detail-updated-at">-</strong></span>
+            </div>
+          </div>
+
+          <!-- Current Resolution Tier Box -->
+          <div class="bg-slate-50 border border-slate-200 p-3 rounded-xs text-right shrink-0">
+            <span class="text-[10px] text-slate-400 block font-bold uppercase">वर्तमान निवारण स्तर (Handling Tier)</span>
+            <span class="text-sm font-bold text-[#15803d] block mt-0.5" id="detail-level">
+              खरीद केंद्र ऑपरेटर
+            </span>
+            <span class="text-[10px] text-slate-500 block mt-0.5" id="detail-assigned-to">
+              -
+            </span>
+          </div>
+        </div>
+
+        <!-- Description Box -->
+        <div class="mt-4 pt-2">
+          <h3 class="text-xs font-bold uppercase text-slate-500 tracking-wider mb-1.5">
+            समस्या का मूल विवरण (Complaint Description):
+          </h3>
+          <div class="p-3.5 bg-[#faf9f5] border border-[#e2ded4] rounded-xs text-xs text-slate-800 leading-relaxed" id="detail-description">
+            -
+          </div>
+        </div>
+
+        <!-- Metadata Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-4 pt-3 border-t border-slate-100 text-xs">
+          <div>
+            <span class="text-slate-400 text-[11px] block">संबंधित खरीद केंद्र:</span>
+            <strong class="text-slate-800" id="detail-center">-</strong>
+          </div>
+          <div>
+            <span class="text-slate-400 text-[11px] block">संबंधित बुकिंग आईडी:</span>
+            <strong class="font-mono-num text-slate-800" id="detail-booking">-</strong>
+          </div>
+          <div>
+            <span class="text-slate-400 text-[11px] block">टोकन संख्या:</span>
+            <strong class="font-mono-num text-slate-800" id="detail-token">-</strong>
+          </div>
+        </div>
+
+        <!-- Formal Resolution Box if Resolved -->
+        <div id="resolution-box" class="hidden mt-4 p-4 bg-emerald-50 border border-emerald-200 rounded-xs">
+          <div class="flex items-center gap-2 text-emerald-900 font-bold text-xs mb-1">
+            <span>✅</span> आधिकारिक समाधान निर्णय (Official Resolution)
+          </div>
+          <p class="text-xs text-emerald-950 font-medium" id="resolution-text">
+            -
+          </p>
+        </div>
+      </div>
+
+      <!-- Complaint Timeline & History Section (Part K) -->
+      <div class="bg-white border border-[#e2ded4] rounded-sm p-6 shadow-2xs">
+        <div class="flex items-center justify-between pb-3 border-b border-[#e2ded4] mb-6">
+          <h2 class="text-sm font-bold text-slate-900 uppercase tracking-wide flex items-center gap-2">
+            <span>⏱️</span> शिकायत प्रगति कालक्रम (Grievance Progression Timeline)
+          </h2>
+          <span class="text-[11px] text-slate-500">
+            प्रत्येक स्तर पर दर्ज की गई वास्तविक कार्यवाही
+          </span>
+        </div>
+
+        <!-- Dynamic Timeline List -->
+        <div id="timeline-container" class="relative pl-8 space-y-6">
+          <!-- Populated dynamically based on complaint.history -->
+        </div>
+      </div>
+
+      <!-- Add Clarification Note Section -->
+      <div id="add-note-card" class="bg-white border border-[#e2ded4] rounded-sm p-6 shadow-2xs">
+        <h3 class="text-xs font-bold text-slate-900 uppercase tracking-wide mb-2">
+          अतिरिक्त जानकारी / स्पष्टीकरण जोड़ें (Add Clarification / Note)
+        </h3>
+        <p class="text-xs text-slate-500 mb-3">
+          यदि आपके पास जांच अधिकारी हेतु अतिरिक्त तथ्य या जानकारी है तो यहां दर्ज करें।
+        </p>
+        <form id="add-note-form" class="space-y-3">
+          <textarea id="note-input" rows="3" class="form-textarea border-[#d6d1c4] text-xs py-2 rounded-xs"
+            placeholder="अपनी टिप्पणी या अतिरिक्त विवरण यहां लिखें..." required></textarea>
+          <div class="flex items-center justify-between">
+            <span id="note-status-msg" class="text-xs font-semibold"></span>
+            <button type="submit" class="btn btn-primary btn-sm text-xs font-bold py-1.5 px-4">
+              टिप्पणी दर्ज करें (Add Note)
+            </button>
+          </div>
+        </form>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- Simple Footer -->
+  <footer class="py-4 text-center text-xs text-slate-400 border-t border-[#e2ded4] bg-white">
+    KisanSetu &copy; 2026 • SIH Innovation Prototype • Grievance Case View
+  </footer>
+
+  <!-- Scripts: Mock Data, Utils, Auth Engine, Farmer, Complaints Engine -->
+  <script src="../js/mock-data.js"></script>
+  <script src="../js/utils.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="farmer.js"></script>
+  <script src="../js/complaints.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // 1. Enforce Farmer Route Protection
+      const user = window.KisanAuth.requireAuth('farmer', '../pages/login.html');
+      if (!user) return;
+
+      // Logout handler
+      document.getElementById('logout-btn')?.addEventListener('click', () => {
+        window.KisanAuth.logout('../pages/login.html');
+      });
+
+      // 2. Fetch Complaint from URL param ?id=...
+      const urlParams = new URLSearchParams(window.location.search);
+      const complaintId = urlParams.get('id');
+
+      if (!complaintId) {
+        showNotFound();
+        return;
+      }
+
+      const complaint = window.KisanComplaints.getComplaintById(complaintId);
+      if (!complaint || complaint.farmerId !== user.id) {
+        showNotFound();
+        return;
+      }
+
+      function showNotFound() {
+        document.getElementById('case-not-found').classList.remove('hidden');
+        document.getElementById('case-content').classList.add('hidden');
+      }
+
+      // 3. Render Case Details
+      function renderCase() {
+        const statusMeta = window.KisanComplaints.getStatusMeta(complaint.status);
+        const levelMeta = window.KisanComplaints.getLevelMeta(complaint.currentLevel);
+        const catLabel = window.KisanComplaints.getCategoryLabel(complaint.category, 'hi');
+
+        document.getElementById('detail-cmp-num').textContent = complaint.complaintNumber;
+        document.getElementById('detail-subject').textContent = complaint.subject;
+        document.getElementById('detail-category').textContent = catLabel;
+        document.getElementById('detail-description').textContent = complaint.description;
+
+        const createdDate = new Date(complaint.createdAt).toLocaleDateString('hi-IN', {
+          day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit'
+        });
+        const updatedDate = new Date(complaint.updatedAt).toLocaleDateString('hi-IN', {
+          day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit'
+        });
+
+        document.getElementById('detail-created-at').textContent = createdDate;
+        document.getElementById('detail-updated-at').textContent = updatedDate;
+        document.getElementById('detail-center').textContent = complaint.relatedCenterName || complaint.relatedCenterId || 'कोई नहीं';
+        document.getElementById('detail-booking').textContent = complaint.relatedBookingId || 'लागू नहीं';
+        document.getElementById('detail-token').textContent = complaint.relatedToken || 'लागू नहीं';
+
+        // Status Badge
+        const statusBadge = document.getElementById('detail-status-badge');
+        statusBadge.className = `badge ${statusMeta.badgeClass} text-[11px] font-bold`;
+        statusBadge.textContent = `● ${statusMeta.hi}`;
+
+        // Priority Badge
+        const pBadge = document.getElementById('detail-priority-badge');
+        pBadge.textContent = complaint.priority;
+        if (complaint.priority === 'HIGH') {
+          pBadge.className = 'text-[11px] font-bold px-2 py-0.5 border rounded-xs bg-amber-100 text-amber-900 border-amber-300';
+        } else if (complaint.priority === 'CRITICAL') {
+          pBadge.className = 'text-[11px] font-bold px-2 py-0.5 border rounded-xs bg-rose-100 text-rose-900 border-rose-300';
+        } else {
+          pBadge.className = 'text-[11px] px-2 py-0.5 border rounded-xs bg-slate-100 text-slate-700 border-slate-200';
+        }
+
+        // Level
+        document.getElementById('detail-level').textContent = levelMeta.hi;
+        document.getElementById('detail-assigned-to').textContent = `प्रभारी: ${complaint.assignedRole || 'operator'}`;
+
+        // Resolution box
+        const resBox = document.getElementById('resolution-box');
+        if (complaint.resolution) {
+          resBox.classList.remove('hidden');
+          document.getElementById('resolution-text').textContent = complaint.resolution;
+        } else {
+          resBox.classList.add('hidden');
+        }
+
+        // Disable add note if closed
+        if (complaint.status === 'CLOSED') {
+          document.getElementById('add-note-card').classList.add('hidden');
+        }
+
+        // 4. Render Step Timeline (Part K)
+        renderTimeline();
+      }
+
+      function renderTimeline() {
+        const container = document.getElementById('timeline-container');
+        if (!complaint.history || complaint.history.length === 0) {
+          container.innerHTML = '<div class="text-xs text-slate-400">कोई गतिविधि दर्ज नहीं है।</div>';
+          return;
+        }
+
+        let html = '<div class="timeline-line"></div>';
+
+        complaint.history.forEach((h, idx) => {
+          const timeStr = new Date(h.timestamp).toLocaleDateString('hi-IN', {
+            day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit'
+          });
+
+          let actionLabel = h.action;
+          let nodeColor = 'bg-[#15803d] border-[#15803d]';
+          let roleTitle = 'किसान (Farmer)';
+
+          if (h.role === 'operator') {
+            roleTitle = 'खरीद केंद्र ऑपरेटर (Operator)';
+            nodeColor = 'bg-teal-700 border-teal-700';
+          } else if (h.role === 'district_admin') {
+            roleTitle = 'जिला प्रशासन (District Admin)';
+            nodeColor = 'bg-amber-600 border-amber-600';
+          } else if (h.role === 'super_admin') {
+            roleTitle = 'Super Admin (राज्य/केंद्रीय स्तर)';
+            nodeColor = 'bg-rose-700 border-rose-700';
+          }
+
+          if (h.action === 'CREATED') actionLabel = 'शिकायत दर्ज की गई (Complaint Submitted)';
+          if (h.action === 'ACKNOWLEDGED') actionLabel = 'ऑपरेटर द्वारा संज्ञान लिया गया (Acknowledged)';
+          if (h.action === 'IN_PROGRESS') actionLabel = 'समाधान प्रक्रिया शुरू (Investigation Started)';
+          if (h.action === 'COMMENT_ADDED') actionLabel = 'टिप्पणी जोड़ी गई (Clarification / Note)';
+          if (h.action === 'ESCALATED') actionLabel = 'उच्च स्तर पर प्रेषित (Escalated to Upper Tier)';
+          if (h.action === 'RESOLVED') actionLabel = 'समाधान प्रदान किया गया (Resolved)';
+          if (h.action === 'CLOSED') actionLabel = 'शिकायत आधिकारिक रूप से बंद (Closed)';
+
+          html += `
+            <div class="relative flex items-start gap-4">
+              <!-- Node Circle -->
+              <div class="w-8 h-8 rounded-full ${nodeColor} text-white flex items-center justify-center font-bold text-xs shrink-0 z-10 shadow-xs">
+                ${idx + 1}
+              </div>
+
+              <!-- Content Box -->
+              <div class="flex-1 bg-[#faf9f5] border border-[#e2ded4] p-3.5 rounded-xs space-y-1">
+                <div class="flex flex-wrap items-center justify-between gap-1 text-[11px]">
+                  <span class="font-bold text-slate-800">${actionLabel}</span>
+                  <span class="text-slate-400 font-mono-num">${timeStr}</span>
+                </div>
+
+                <div class="text-[11px] text-slate-500">
+                  कर्ता: <strong class="text-slate-700">${h.actor || h.role}</strong> &bull; <span class="text-[#15803d] font-medium">${roleTitle}</span>
+                </div>
+
+                ${h.note ? `
+                  <div class="text-xs text-slate-700 bg-white p-2.5 border border-slate-200 rounded-xs mt-1.5 font-medium leading-relaxed">
+                    ${h.note}
+                  </div>
+                ` : ''}
+              </div>
+            </div>
+          `;
+        });
+
+        container.innerHTML = html;
+      }
+
+      renderCase();
+
+      // 5. Add Note form submit
+      const addNoteForm = document.getElementById('add-note-form');
+      const noteInput = document.getElementById('note-input');
+      const noteStatusMsg = document.getElementById('note-status-msg');
+
+      addNoteForm?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const text = noteInput.value.trim();
+        if (!text) return;
+
+        const res = window.KisanComplaints.addNote(complaint.complaintNumber, text, user);
+        if (res.success) {
+          noteStatusMsg.textContent = 'टिप्पणी सफलतापूर्वक जोड़ी गई!';
+          noteStatusMsg.className = 'text-xs text-emerald-700 font-semibold';
+          noteInput.value = '';
+          // Refresh local object
+          const updated = window.KisanComplaints.getComplaintById(complaint.complaintNumber);
+          Object.assign(complaint, updated);
+          renderCase();
+          setTimeout(() => { noteStatusMsg.textContent = ''; }, 3000);
+        } else {
+          noteStatusMsg.textContent = res.error || 'त्रुटि हुई।';
+          noteStatusMsg.className = 'text-xs text-rose-600 font-semibold';
+        }
+      });
+    });
+  </script>
+</body>
+
+</html>

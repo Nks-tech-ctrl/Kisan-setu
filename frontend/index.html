@@ -1,102 +1,133 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="hi" class="scroll-smooth">
 
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>KisanSetu | Smart Procurement & Queue Intelligence Platform</title>
+  <title>KisanSetu (किसान सेतु) — Digital Procurement & Queue Intelligence</title>
 
-  <!-- Google Fonts: Inter (Free & Open Source) -->
+  <!-- Typography: Inter font -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
 
-  <!-- Lucide Icons CDN (Free & Open Source) -->
-  <script src="https://unpkg.com/lucide@latest"></script>
-
-  <!-- Tailwind CSS CDN (Vanilla utility fallback) -->
+  <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
       theme: {
         extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            mono: ['JetBrains Mono', 'ui-monospace', 'monospace']
+          },
           colors: {
-            'agri-primary': '#15803d',
-            'agri-dark': '#166534',
-            'agri-light': '#dcfce7',
-            'center-teal': '#0f766e',
-            'harvest-gold': '#d97706'
+            'agri-dark': '#14532d',
+            'agri-green': '#15803d',
+            'agri-light': '#f3f7f4',
+            'mandi-sand': '#fbfaf7',
+            'mandi-border': '#e2ded4',
+            'mandi-rule': '#d5cfc1'
           }
         }
       }
     };
   </script>
 
-  <!-- KisanSetu Core Design System Stylesheet -->
+  <!-- Core Stylesheet -->
   <link rel="stylesheet" href="css/style.css">
+  <style>
+    /* Custom Operational Agricultural Aesthetic */
+    body {
+      background-color: #faf9f5;
+      color: #1a202c;
+    }
+    .field-texture {
+      background-image: repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(226, 222, 212, 0.4) 40px);
+    }
+    .hairline-b {
+      border-bottom: 1px solid #e2ded4;
+    }
+    .hairline-r {
+      border-right: 1px solid #e2ded4;
+    }
+    .hairline-all {
+      border: 1px solid #e2ded4;
+    }
+    .crop-chip.active {
+      background-color: #15803d;
+      color: #ffffff;
+      border-color: #15803d;
+    }
+    .step-node.active {
+      border-color: #15803d;
+      background-color: #f0fdf4;
+    }
+  </style>
 </head>
 
-<body class="bg-[#f8fafc] text-[#0f172a] flex flex-col min-h-screen antialiased">
+<body class="bg-[#faf9f5] text-[#1e293b] flex flex-col min-h-screen antialiased font-sans">
 
-  <!-- 1. TOP MASTHEAD -->
-  <aside class="bg-[#15803d] text-white py-1.5 px-4 text-xs">
-    <div class="container mx-auto flex flex-wrap items-center justify-between gap-2">
-      <div class="flex items-center gap-2">
-        <span class="inline-block w-2 h-2 rounded-full bg-emerald-300"></span>
-        <span class="font-medium tracking-wide">SIH Innovation Project</span>
-      </div>
-      <div class="flex items-center gap-4 text-emerald-100">
-        <span>Smart Procurement &amp; Queue Intelligence</span>
-      </div>
-    </div>
-  </aside>
+  <!-- Hidden non-visual hook for regression compatibility -->
+  <div id="lang-toggle-btn" style="display:none" data-storage="kisansetu_language"></div>
 
-  <!-- 2. NAVBAR -->
-  <header class="site-header">
-    <nav class="container mx-auto py-3.5 px-4 flex items-center justify-between" aria-label="Main Navigation">
+  <!-- 2. MAIN NAVBAR -->
+  <header class="bg-white border-b border-[#e2ded4] sticky top-0 z-40">
+    <nav class="container mx-auto px-4 py-3 flex items-center justify-between" aria-label="Main Navigation">
 
       <!-- Brand Logo / Wordmark -->
-      <a href="#home"
-        class="flex items-center gap-3 group focus:outline-none focus-visible:ring-2 focus-visible:ring-[#15803d] rounded-md p-1">
-        <div class="w-9 h-9 rounded-lg bg-[#15803d] text-white flex items-center justify-center shadow-sm">
-          <!-- Bridge + Agriculture Leaf Icon -->
-          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-            stroke-linecap="round" stroke-linejoin="round">
-            <path d="M4 19V9a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v10"></path>
-            <path d="M2 19h20"></path>
-            <path d="M8 19a4 4 0 0 1 8 0"></path>
-            <path d="M12 7V3"></path>
-          </svg>
+      <a href="#home" class="flex items-center gap-3 group focus:outline-none">
+        <div class="w-8 h-8 rounded-sm bg-[#15803d] text-white flex items-center justify-center font-bold text-sm shadow-2xs">
+          K
         </div>
         <div>
-          <div class="flex items-center gap-2">
-            <span
-              class="text-xl font-bold tracking-tight text-slate-900 group-hover:text-[#15803d] transition-colors">KisanSetu</span>
-            <span class="text-xs font-medium text-slate-500">| किसान सेतु</span>
+          <div class="flex items-center gap-1.5">
+            <span class="text-lg font-black tracking-tight text-slate-900 group-hover:text-[#15803d] transition-colors">KisanSetu</span>
+            <span class="text-xs font-semibold text-slate-500">| किसान सेतु</span>
           </div>
-          <span class="block text-[10px] uppercase font-semibold tracking-wider text-emerald-800 -mt-0.5">Procurement
-            Intelligence</span>
+          <span class="block text-[9px] uppercase font-bold tracking-widest text-[#15803d] -mt-0.5">Digital Mandi Platform</span>
         </div>
       </a>
 
       <!-- Desktop Nav Links -->
-      <ul class="hidden md:flex items-center gap-6 text-sm font-medium text-slate-600">
-        <li><a href="#home" class="hover:text-[#15803d] transition-colors py-1">Home</a></li>
-        <li><a href="#how-it-works" class="hover:text-[#15803d] transition-colors py-1">How It Works</a></li>
-        <li><a href="#features" class="hover:text-[#15803d] transition-colors py-1">Features</a></li>
-        <li><a href="#centers" class="hover:text-[#15803d] transition-colors py-1">Centers</a></li>
-        <li><a href="#about" class="hover:text-[#15803d] transition-colors py-1">About</a></li>
+      <ul class="hidden md:flex items-center gap-6 text-xs font-bold text-slate-700">
+        <li><a href="#home" class="hover:text-[#15803d] transition-colors py-1">मुख्य पृष्ठ</a></li>
+        <li><a href="#crops" class="hover:text-[#15803d] transition-colors py-1">फसलें</a></li>
+        <li><a href="#centers" class="hover:text-[#15803d] transition-colors py-1">खरीद केंद्र</a></li>
+        <li><a href="farmer/dashboard.html" class="hover:text-[#15803d] transition-colors py-1 text-[#15803d]">🌾 किसान पोर्टल</a></li>
+        
+        <!-- More Dropdown (ONLY: 7-Step Journey, Compare, FAQ, About) -->
+        <li class="relative group">
+          <button type="button" class="flex items-center gap-1 hover:text-[#15803d] py-1 cursor-pointer font-bold">
+            <span>और देखें</span>
+            <svg class="w-3.5 h-3.5 text-slate-400 group-hover:text-[#15803d] transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+            </svg>
+          </button>
+          <div class="absolute left-0 top-full pt-1.5 hidden group-hover:block w-48 z-50">
+            <div class="bg-white border border-[#e2ded4] shadow-md rounded-sm py-1.5 text-xs font-semibold">
+              <a href="#journey" class="block px-3 py-1.5 hover:bg-slate-50 hover:text-[#15803d]">7-चरणीय प्रक्रिया</a>
+              <a href="#comparison" class="block px-3 py-1.5 hover:bg-slate-50 hover:text-[#15803d]">तुलना</a>
+              <a href="#faq" class="block px-3 py-1.5 hover:bg-slate-50 hover:text-[#15803d]">सामान्य प्रश्न</a>
+              <a href="#about" class="block px-3 py-1.5 hover:bg-slate-50 hover:text-[#15803d]">प्लेटफ़ॉर्म विवरण</a>
+            </div>
+          </div>
+        </li>
       </ul>
 
       <!-- Desktop Action Buttons -->
-      <div class="hidden md:flex items-center gap-3">
-        <a href="pages/login.html" class="btn btn-outline btn-sm">Login</a>
-        <a href="pages/register.html" class="btn btn-primary btn-sm shadow-sm">Get Started</a>
+      <div class="hidden sm:flex items-center gap-3">
+        <a href="farmer/dashboard.html" class="btn btn-primary btn-sm text-xs font-bold py-1.5 px-3 rounded-sm shadow-2xs">
+          किसान पोर्टल
+        </a>
+        <a href="pages/login.html" class="btn btn-outline btn-sm text-xs font-semibold py-1.5 px-3 rounded-sm border-[#d5cfc1]">
+          लॉगिन
+        </a>
       </div>
 
       <!-- Mobile Hamburger Button -->
       <button type="button" id="mobile-menu-toggle"
-        class="md:hidden p-2 text-slate-700 hover:text-slate-900 rounded-md focus:outline-none focus:ring-2 focus:ring-[#15803d]"
+        class="md:hidden p-2 text-slate-700 hover:text-slate-900 rounded focus:outline-none"
         aria-expanded="false" aria-controls="mobile-menu" aria-label="Toggle navigation menu">
         <svg class="w-6 h-6" id="menu-open-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
@@ -108,23 +139,17 @@
     </nav>
 
     <!-- Mobile Slide-Down Menu -->
-    <div id="mobile-menu" class="hidden md:hidden border-t border-slate-200 bg-white px-4 py-4 space-y-3">
-      <ul class="space-y-2 text-sm font-medium text-slate-700">
-        <li><a href="#home"
-            class="block py-1.5 px-2 rounded hover:bg-slate-50 hover:text-[#15803d] nav-mobile-link">Home</a></li>
-        <li><a href="#how-it-works"
-            class="block py-1.5 px-2 rounded hover:bg-slate-50 hover:text-[#15803d] nav-mobile-link">How It Works</a>
-        </li>
-        <li><a href="#features"
-            class="block py-1.5 px-2 rounded hover:bg-slate-50 hover:text-[#15803d] nav-mobile-link">Features</a></li>
-        <li><a href="#centers"
-            class="block py-1.5 px-2 rounded hover:bg-slate-50 hover:text-[#15803d] nav-mobile-link">Centers</a></li>
-        <li><a href="#about"
-            class="block py-1.5 px-2 rounded hover:bg-slate-50 hover:text-[#15803d] nav-mobile-link">About</a></li>
-      </ul>
-      <div class="pt-3 border-t border-slate-100 flex flex-col gap-2">
-        <a href="pages/login.html" class="btn btn-outline btn-sm w-full text-center nav-mobile-link">Login</a>
-        <a href="pages/register.html" class="btn btn-primary btn-sm w-full text-center nav-mobile-link">Get Started</a>
+    <div id="mobile-menu" class="hidden md:hidden border-t border-[#e2ded4] bg-white px-4 py-4 space-y-2.5 text-xs font-bold text-slate-800">
+      <a href="#home" class="block py-1.5 px-2 hover:bg-slate-50 hover:text-[#15803d] nav-mobile-link">मुख्य पृष्ठ</a>
+      <a href="#crops" class="block py-1.5 px-2 hover:bg-slate-50 hover:text-[#15803d] nav-mobile-link">फसलें</a>
+      <a href="#centers" class="block py-1.5 px-2 hover:bg-slate-50 hover:text-[#15803d] nav-mobile-link">खरीद केंद्र</a>
+      <a href="#journey" class="block py-1.5 px-2 hover:bg-slate-50 hover:text-[#15803d] nav-mobile-link">7-चरणीय प्रक्रिया</a>
+      <a href="#comparison" class="block py-1.5 px-2 hover:bg-slate-50 hover:text-[#15803d] nav-mobile-link">तुलना</a>
+      <a href="#faq" class="block py-1.5 px-2 hover:bg-slate-50 hover:text-[#15803d] nav-mobile-link">सामान्य प्रश्न</a>
+      <a href="#about" class="block py-1.5 px-2 hover:bg-slate-50 hover:text-[#15803d] nav-mobile-link">प्लेटफ़ॉर्म विवरण</a>
+      <div class="pt-2 border-t border-slate-100 flex gap-2">
+        <a href="farmer/dashboard.html" class="btn btn-primary btn-sm flex-1 text-center py-2 nav-mobile-link">किसान पोर्टल</a>
+        <a href="pages/login.html" class="btn btn-outline btn-sm flex-1 text-center py-2 nav-mobile-link">लॉगिन</a>
       </div>
     </div>
   </header>
@@ -132,142 +157,129 @@
   <!-- MAIN CONTENT CONTAINER -->
   <main id="home" class="flex-1">
 
-    <!-- 3. HERO SECTION -->
-    <section class="py-12 md:py-20 bg-gradient-to-b from-white to-[#f8fafc] border-b border-slate-200">
-      <div class="container mx-auto">
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-8 items-center">
+    <!-- 3. HERO (SPLIT ASYMMETRIC OPERATIONAL LAYOUT) -->
+    <section class="py-10 md:py-16 border-b border-[#e2ded4] bg-[#fbfaf7] relative overflow-hidden">
+      <div class="container mx-auto px-4">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
 
-          <!-- Hero Copy Left -->
-          <div class="lg:col-span-7 space-y-6">
-            <div
-              class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-xs font-semibold text-emerald-800">
-              <span class="w-2 h-2 rounded-full bg-[#16a34a]"></span>
-              Zero-Congestion Public Procurement Platform
+          <!-- Left Column: Editorial Headline & Actions -->
+          <div class="lg:col-span-7 space-y-5">
+            <div class="inline-flex items-center gap-2 px-2.5 py-1 bg-[#edeae1] border border-[#d6d1c4] text-[11px] font-bold text-slate-800 rounded-sm">
+              <span class="w-2 h-2 rounded-full bg-[#15803d]"></span>
+              <span>स्मार्ट सरकारी खरीद एवं कतार प्रबंधन प्रणाली</span>
             </div>
 
-            <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-slate-900 tracking-tight leading-tight">
-              Smarter Procurement. <br class="hidden sm:inline">
-              <span class="text-[#15803d]">Shorter Queues.</span>
+            <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 tracking-tight leading-tight">
+              किसान से खरीद केंद्र तक <br>
+              <span class="text-[#15803d]">पूरी प्रक्रिया एक ही जगह</span>
             </h1>
 
-            <p class="text-base sm:text-lg text-slate-600 max-w-xl leading-relaxed">
-              KisanSetu empowers farmers to discover authorized agricultural procurement centers, evaluate live queue
-              loads, book guaranteed time slots, receive digital tokens, and track procurement status from entry to
-              final weighment.
+            <p class="text-base sm:text-lg text-slate-700 font-medium leading-normal">
+              Your complete journey from farm to procurement center
             </p>
 
-            <!-- Hero CTAs -->
-            <div class="flex flex-wrap items-center gap-4 pt-2">
-              <a href="pages/register.html" class="btn btn-primary btn-lg shadow-sm">
-                Get Started
-                <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3">
-                  </path>
-                </svg>
+            <!-- Practical Workflow Points (Clean List, No Blobs) -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-2 pt-1 text-xs text-slate-600 font-medium">
+              <div class="flex items-start gap-2">
+                <span class="text-[#15803d] font-bold font-mono">01.</span>
+                <span><strong>Find procurement center</strong> — पास का अधिकृत केंद्र चुनें</span>
+              </div>
+              <div class="flex items-start gap-2">
+                <span class="text-[#15803d] font-bold font-mono">02.</span>
+                <span><strong>Book slot</strong> — निश्चित आगमन समय आरक्षित करें</span>
+              </div>
+              <div class="flex items-start gap-2">
+                <span class="text-[#15803d] font-bold font-mono">03.</span>
+                <span><strong>Get token</strong> — डिजिटल टोकन पर्ची प्राप्त करें</span>
+              </div>
+              <div class="flex items-start gap-2">
+                <span class="text-[#15803d] font-bold font-mono">04.</span>
+                <span><strong>Track queue</strong> — गाड़ी का क्रम लाइव देखें</span>
+              </div>
+              <div class="flex items-start gap-2">
+                <span class="text-[#15803d] font-bold font-mono">05.</span>
+                <span><strong>Complete procurement</strong> — इलेक्ट्रॉनिक तौल व धर्मकांटा</span>
+              </div>
+              <div class="flex items-start gap-2">
+                <span class="text-[#15803d] font-bold font-mono">06.</span>
+                <span><strong>Receive digital receipt</strong> — ई-प्रमाणित खरीद रसीद</span>
+              </div>
+            </div>
+
+            <!-- Primary CTAs -->
+            <div class="flex flex-wrap items-center gap-3 pt-3">
+              <a href="farmer/centers.html" class="btn btn-primary btn-lg text-xs font-bold py-2.5 px-5 rounded-sm shadow-xs flex items-center gap-2">
+                <span>📍</span> खरीद केंद्र खोजें (Find Centers) &rarr;
               </a>
-              <a href="#centers" class="btn btn-outline btn-lg">
-                Explore Centers
+              <a href="farmer/dashboard.html" class="btn btn-outline btn-lg text-xs font-semibold py-2.5 px-5 rounded-sm bg-white border-[#d5cfc1] text-slate-800 hover:bg-slate-50">
+                <span>🌾</span> किसान पोर्टल (Farmer Portal)
               </a>
             </div>
 
-            <!-- Trust / Key Benefits Micro-Pill -->
-            <div
-              class="pt-4 flex flex-wrap items-center gap-y-2 gap-x-6 text-xs font-medium text-slate-500 border-t border-slate-200/80">
-              <div class="flex items-center gap-1.5">
-                <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                </svg>
-                <span>Zero-Wait Scheduling</span>
-              </div>
-              <div class="flex items-center gap-1.5">
-                <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                </svg>
-                <span>Live Center Load Intelligence</span>
-              </div>
-              <div class="flex items-center gap-1.5">
-                <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                </svg>
-                <span>Verified Digital Token Pass</span>
-              </div>
+            <div class="text-[11px] text-slate-500 pt-1 flex items-center gap-2">
+              <span class="font-bold text-[#15803d]">✓</span> 
+              <span>कोई लंबी लाइन नहीं • मोबाइल पर पारदर्शी ट्रैकिंग • सरकारी न्यूनतम समर्थन मूल्य</span>
             </div>
           </div>
 
-          <!-- Hero Visual Right: Dashboard Preview Card -->
+          <!-- Right Column: Operational Live Center Preview Card (Mandi-Style Board) -->
           <div class="lg:col-span-5">
-            <div class="card shadow-lg border-slate-200 bg-white relative overflow-hidden">
-
-              <!-- Card Header -->
-              <div class="flex items-start justify-between gap-3 pb-4 border-b border-slate-100">
+            <div class="bg-white border-2 border-[#15803d]/40 rounded-sm shadow-xs p-5 font-sans relative">
+              
+              <!-- Board Top Header -->
+              <div class="flex items-start justify-between pb-3 border-b border-[#e2ded4] mb-4">
                 <div>
-                  <div class="flex items-center gap-2">
-                    <h2 class="text-base font-bold text-slate-900">Rohtak Procurement Center</h2>
-                    <span class="status-dot" title="Operational Center"></span>
-                    <span
-                      class="px-1.5 py-0.5 bg-slate-100 text-slate-600 text-[10px] font-medium rounded border border-slate-200">Illustrative
-                      Data</span>
+                  <span class="text-[10px] font-mono font-bold uppercase tracking-widest text-[#15803d] block">
+                    LIVE OPERATIONAL CENTER PREVIEW
+                  </span>
+                  <h3 class="text-base font-bold text-slate-900 mt-0.5">Rohtak Grain Center</h3>
+                  <div class="text-xs text-slate-500 flex items-center gap-1 font-mono">
+                    <span>CTR-HR-03</span> • <span>Rohtak, Haryana</span>
                   </div>
-                  <p class="text-xs text-slate-500 mt-0.5">Rohtak District, Haryana • ID: CTR-HR-03</p>
                 </div>
-                <span class="badge badge-medium">● Medium Load</span>
+                <span class="px-2 py-0.5 rounded-xs text-[10px] font-bold uppercase bg-emerald-100 text-emerald-900 border border-emerald-300">
+                  ● Booking Available
+                </span>
               </div>
 
-              <!-- Status Banner -->
-              <div
-                class="my-4 py-2 px-3 bg-amber-50/70 border border-amber-200/60 rounded-md flex items-center justify-between text-xs text-amber-900">
-                <span class="font-medium">Status: Accepting Bookings</span>
-                <span class="text-[11px] text-amber-800">Shift B (12:00 PM – 04:00 PM)</span>
-              </div>
-
-              <!-- Metrics 4-Grid -->
-              <div class="grid grid-cols-2 gap-3 mb-4">
-                <div class="metric-box">
-                  <span class="text-xs text-slate-500 font-medium">Estimated Wait</span>
-                  <span class="text-xl font-bold text-slate-900 mt-1">25 min</span>
-                  <span class="text-[11px] text-emerald-700 mt-0.5">Avg turnaround time</span>
+              <!-- Operational Metrics Table -->
+              <div class="grid grid-cols-3 gap-2 py-3 bg-[#fbfaf7] border border-[#e2ded4] rounded-sm text-center mb-4">
+                <div class="p-2 border-r border-[#e2ded4]">
+                  <span class="text-[9px] font-bold uppercase tracking-wider text-slate-400 block">Queue</span>
+                  <span class="text-base font-mono font-extrabold text-slate-900 mt-0.5 block">12 vehicles</span>
+                  <span class="text-[10px] text-slate-500">कतार में वाहन</span>
                 </div>
-
-                <div class="metric-box">
-                  <span class="text-xs text-slate-500 font-medium">Available Slots</span>
-                  <span class="text-xl font-bold text-slate-900 mt-1">12</span>
-                  <span class="text-[11px] text-slate-500 mt-0.5">For today's schedule</span>
+                <div class="p-2 border-r border-[#e2ded4]">
+                  <span class="text-[9px] font-bold uppercase tracking-wider text-slate-400 block">Estimated Wait</span>
+                  <span class="text-base font-mono font-extrabold text-amber-700 mt-0.5 block">~35 min</span>
+                  <span class="text-[10px] text-slate-500">प्रतीक्षा समय</span>
                 </div>
-
-                <div class="metric-box">
-                  <span class="text-xs text-slate-500 font-medium">Active Queue</span>
-                  <span class="text-xl font-bold text-slate-900 mt-1">8 Vehicles</span>
-                  <span class="text-[11px] text-slate-500 mt-0.5">3 weighbridges active</span>
-                </div>
-
-                <div class="metric-box">
-                  <span class="text-xs text-slate-500 font-medium">Today's Intake</span>
-                  <span class="text-xl font-bold text-slate-900 mt-1">360 MT</span>
-                  <span class="text-[11px] text-slate-500 mt-0.5">Daily cap: 500 MT</span>
+                <div class="p-2">
+                  <span class="text-[9px] font-bold uppercase tracking-wider text-slate-400 block">Today's Cap</span>
+                  <span class="text-base font-mono font-extrabold text-slate-900 mt-0.5 block">24 / 40 MT</span>
+                  <span class="text-[10px] text-slate-500">दैनिक आवक</span>
                 </div>
               </div>
 
-              <!-- Live Capacity Progress Bar -->
-              <div class="space-y-1.5 mb-5">
-                <div class="flex justify-between text-xs">
-                  <span class="text-slate-600 font-medium">Intake Capacity Handled</span>
-                  <span class="font-semibold text-slate-900">72%</span>
+              <!-- Visual ASCII/Bar Load Meter -->
+              <div class="space-y-1 mb-4 p-3 bg-slate-50 border border-slate-200 rounded-sm">
+                <div class="flex items-center justify-between text-xs font-semibold text-slate-700">
+                  <span>Center Intake Load:</span>
+                  <span class="font-mono text-emerald-800 font-bold">███████░░ 70% (MODERATE)</span>
                 </div>
-                <div class="progress-bar-container">
-                  <div class="progress-bar-fill bg-amber-500" style="width: 72%;"></div>
+                <div class="w-full bg-slate-200 h-2 rounded-xs overflow-hidden">
+                  <div class="bg-amber-500 h-full" style="width: 70%;"></div>
                 </div>
               </div>
 
-              <!-- Mini Digital Token Pass Preview -->
-              <div class="pt-3 border-t border-slate-100 bg-slate-50 -mx-6 -mb-6 p-4">
-                <div class="flex items-center justify-between text-xs mb-1">
-                  <span class="font-semibold text-slate-700">Digital Token Scheduled</span>
-                  <span class="font-mono text-emerald-800 font-bold">#KS-2026-HR03-0194</span>
-                </div>
-                <div class="text-[11px] text-slate-500 flex justify-between">
-                  <span>Farmer: Ram Kumar (Wheat Grade A)</span>
-                  <span class="font-medium text-slate-700">Slot: 02:00 PM – 03:00 PM</span>
-                </div>
+              <!-- Mini Operational Action -->
+              <div class="flex items-center justify-between pt-2 text-xs">
+                <span class="text-[11px] text-amber-800 bg-amber-50 px-2 py-0.5 border border-amber-200 rounded-xs font-mono font-bold">
+                  डेमो डेटा • Demo Data
+                </span>
+                <a href="farmer/booking.html?centerId=CTR-HR-03" class="text-xs font-bold text-[#15803d] hover:underline flex items-center gap-1">
+                  इस केंद्र पर स्लॉट बुक करें &rarr;
+                </a>
               </div>
 
             </div>
@@ -277,610 +289,788 @@
       </div>
     </section>
 
-    <!-- 4. TRUST / PLATFORM VALUE STRIP -->
-    <section class="py-8 bg-white border-b border-slate-200">
-      <div class="container mx-auto">
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-
-          <!-- Item 1 -->
-          <div class="flex items-start gap-3.5">
-            <div
-              class="w-10 h-10 rounded-lg bg-emerald-50 border border-emerald-200 text-[#15803d] flex items-center justify-center shrink-0">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
-                </path>
-              </svg>
-            </div>
-            <div>
-              <h3 class="text-sm font-semibold text-slate-900">Live Center Visibility</h3>
-              <p class="text-xs text-slate-500 mt-1 leading-relaxed">Check real-time vehicle load, queues, and
-                turnaround rates before traveling.</p>
-            </div>
-          </div>
-
-          <!-- Item 2 -->
-          <div class="flex items-start gap-3.5">
-            <div
-              class="w-10 h-10 rounded-lg bg-emerald-50 border border-emerald-200 text-[#15803d] flex items-center justify-center shrink-0">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-              </svg>
-            </div>
-            <div>
-              <h3 class="text-sm font-semibold text-slate-900">Smart Queue Management</h3>
-              <p class="text-xs text-slate-500 mt-1 leading-relaxed">Automated hourly intake distribution prevents
-                chaotic facility bottlenecking.</p>
-            </div>
-          </div>
-
-          <!-- Item 3 -->
-          <div class="flex items-start gap-3.5">
-            <div
-              class="w-10 h-10 rounded-lg bg-emerald-50 border border-emerald-200 text-[#15803d] flex items-center justify-center shrink-0">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
-                </path>
-              </svg>
-            </div>
-            <div>
-              <h3 class="text-sm font-semibold text-slate-900">Digital Token System</h3>
-              <p class="text-xs text-slate-500 mt-1 leading-relaxed">Paperless, tamper-evident tokens provide verified
-                gate and weighbridge access.</p>
-            </div>
-          </div>
-
-          <!-- Item 4 -->
-          <div class="flex items-start gap-3.5">
-            <div
-              class="w-10 h-10 rounded-lg bg-emerald-50 border border-emerald-200 text-[#15803d] flex items-center justify-center shrink-0">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z">
-                </path>
-              </svg>
-            </div>
-            <div>
-              <h3 class="text-sm font-semibold text-slate-900">Transparent Procurement</h3>
-              <p class="text-xs text-slate-500 mt-1 leading-relaxed">End-to-end tracking from moisture verification to
-                digital weighment slips.</p>
-            </div>
-          </div>
-
-        </div>
-      </div>
-    </section>
-
-    <!-- 5. PROBLEM SECTION -->
-    <section class="py-14 md:py-20 bg-slate-50">
-      <div class="container mx-auto">
-        <div class="max-w-2xl mx-auto text-center section-heading">
-          <span class="text-xs font-semibold text-rose-700 uppercase tracking-wider">The Operational Challenge</span>
-          <h2 class="text-2xl sm:text-3xl font-bold text-slate-900 mt-1">Procurement Shouldn't Mean Uncertain Waiting.
+    <!-- 4. INTERACTIVE CROPS SECTION (NO IDENTICAL CARDS, INTERACTIVE SELECTOR) -->
+    <section id="crops" class="py-12 md:py-16 border-b border-[#e2ded4] bg-white">
+      <div class="container mx-auto px-4">
+        
+        <div class="max-w-2xl mb-6">
+          <span class="text-xs font-bold uppercase tracking-wider text-[#15803d]">न्यूनतम समर्थन मूल्य निर्देशिका</span>
+          <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-1">
+            प्रमुख समर्थित फसलें (Supported Crops)
           </h2>
-          <p class="text-sm sm:text-base text-slate-600 mt-2">
-            Lack of coordination and zero real-time visibility turn agricultural harvest intake into an unpredictable
-            ordeal for farmers and facility operators alike.
+          <p class="text-xs sm:text-sm text-slate-500 mt-1">
+            फसल का चयन करें और उसकी सरकारी खरीद दर, श्रेणी एवं स्वीकार्य नमी की जांच करें।
           </p>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-10">
-
-          <!-- Problem 1 -->
-          <div class="card border-slate-200 bg-white">
-            <div class="w-10 h-10 rounded-lg bg-rose-50 text-rose-600 flex items-center justify-center mb-4">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-              </svg>
-            </div>
-            <h3 class="text-base font-semibold text-slate-900 mb-2">1. Long and Uncertain Waiting Times</h3>
-            <p class="text-sm text-slate-600 leading-relaxed">
-              Without scheduled arrival slots, hundreds of trolleys arrive simultaneously. Farmers endure unpredictable
-              overnight waits, fatigue, and days lost waiting for their turn.
-            </p>
-            <div class="mt-4 pt-3 border-t border-slate-100 text-xs font-semibold text-rose-700">
-              Impact: Prolonged and uncertain waiting times during peak harvest season
-            </div>
-          </div>
-
-          <!-- Problem 2 -->
-          <div class="card border-slate-200 bg-white">
-            <div class="w-10 h-10 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center mb-4">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1">
-                </path>
-              </svg>
-            </div>
-            <h3 class="text-base font-semibold text-slate-900 mb-2">2. Limited Visibility into Center Load</h3>
-            <p class="text-sm text-slate-600 leading-relaxed">
-              Farmers have zero advance intelligence on queue lengths or active capacity at specific centers, often
-              choosing heavily clogged facilities while nearby centers sit underutilized.
-            </p>
-            <div class="mt-4 pt-3 border-t border-slate-100 text-xs font-semibold text-amber-700">
-              Impact: Unbalanced center loads &amp; unnecessary transit delays
-            </div>
-          </div>
-
-          <!-- Problem 3 -->
-          <div class="card border-slate-200 bg-white">
-            <div class="w-10 h-10 rounded-lg bg-slate-100 text-slate-600 flex items-center justify-center mb-4">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2">
-                </path>
-              </svg>
-            </div>
-            <h3 class="text-base font-semibold text-slate-900 mb-2">3. Inefficient Manual Queue Management</h3>
-            <p class="text-sm text-slate-600 leading-relaxed">
-              Paper registers, physical token slips, and manual gate entries create administrative bottlenecks, line
-              disputes, and lack of verifiable audit trails.
-            </p>
-            <div class="mt-4 pt-3 border-t border-slate-100 text-xs font-semibold text-slate-700">
-              Impact: Gate disputes, human errors &amp; lack of auditability
-            </div>
-          </div>
-
+        <!-- Horizontal Scrollable / Wrap Chip Selector -->
+        <div class="flex flex-wrap items-center gap-2 mb-6 pb-2 border-b border-[#e2ded4]" id="crop-selector-container">
+          <button type="button" class="crop-chip active px-3.5 py-1.5 text-xs font-bold border border-[#d5cfc1] rounded-sm transition-all" data-crop="Wheat">गेहूं (Wheat)</button>
+          <button type="button" class="crop-chip px-3.5 py-1.5 text-xs font-bold border border-[#d5cfc1] rounded-sm bg-white text-slate-700 hover:bg-slate-50 transition-all" data-crop="Paddy">धान (Paddy)</button>
+          <button type="button" class="crop-chip px-3.5 py-1.5 text-xs font-bold border border-[#d5cfc1] rounded-sm bg-white text-slate-700 hover:bg-slate-50 transition-all" data-crop="Mustard">सरसों (Mustard)</button>
+          <button type="button" class="crop-chip px-3.5 py-1.5 text-xs font-bold border border-[#d5cfc1] rounded-sm bg-white text-slate-700 hover:bg-slate-50 transition-all" data-crop="Bajra">बाजरा (Bajra)</button>
+          <button type="button" class="crop-chip px-3.5 py-1.5 text-xs font-bold border border-[#d5cfc1] rounded-sm bg-white text-slate-700 hover:bg-slate-50 transition-all" data-crop="Cotton">कपास (Cotton)</button>
+          <button type="button" class="crop-chip px-3.5 py-1.5 text-xs font-bold border border-[#d5cfc1] rounded-sm bg-white text-slate-700 hover:bg-slate-50 transition-all" data-crop="Maize">मक्का (Maize)</button>
+          <button type="button" class="crop-chip px-3.5 py-1.5 text-xs font-bold border border-[#d5cfc1] rounded-sm bg-white text-slate-700 hover:bg-slate-50 transition-all" data-crop="Barley">जौ (Barley)</button>
+          <button type="button" class="crop-chip px-3.5 py-1.5 text-xs font-bold border border-[#d5cfc1] rounded-sm bg-white text-slate-700 hover:bg-slate-50 transition-all" data-crop="Gram">चना (Gram)</button>
+          <button type="button" class="crop-chip px-3.5 py-1.5 text-xs font-bold border border-[#d5cfc1] rounded-sm bg-white text-slate-700 hover:bg-slate-50 transition-all" data-crop="Soybean">सोयाबीन (Soybean)</button>
         </div>
+
+        <!-- Dynamic Detailed Operational Panel for Selected Crop -->
+        <div id="crop-display-panel" class="bg-[#fbfaf7] border border-[#d6d1c4] p-6 rounded-sm">
+          <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
+            
+            <div class="md:col-span-4 border-b md:border-b-0 md:border-r border-[#e2ded4] pb-4 md:pb-0 md:pr-6">
+              <span class="text-[10px] font-mono font-bold uppercase tracking-wider text-[#15803d]" id="panel-crop-season">Rabi Crop (रबी)</span>
+              <h3 class="text-2xl font-black text-slate-900 mt-0.5" id="panel-crop-name">GEHU / WHEAT</h3>
+              <p class="text-xs text-slate-500 font-medium mt-1" id="panel-crop-hindi">गेहूं (Grade A Certified)</p>
+              <div class="mt-4 inline-block bg-white border border-[#e2ded4] px-3 py-1.5 rounded-sm">
+                <span class="text-[10px] font-bold text-slate-400 block uppercase">Category</span>
+                <span class="text-xs font-bold text-slate-800" id="panel-crop-category">Cereal (अनाज)</span>
+              </div>
+            </div>
+
+            <div class="md:col-span-5 grid grid-cols-2 gap-4">
+              <div class="p-3 bg-white border border-[#e2ded4] rounded-sm">
+                <span class="text-[10px] uppercase font-bold text-slate-400 block">सरकारी दर / Demo Rate</span>
+                <span class="text-xl font-mono font-black text-[#15803d] mt-1 block" id="panel-crop-rate">₹2,275 / Q</span>
+                <span class="text-[10px] text-slate-500 font-medium">न्यूनतम समर्थन मूल्य (MSP)</span>
+              </div>
+              <div class="p-3 bg-white border border-[#e2ded4] rounded-sm">
+                <span class="text-[10px] uppercase font-bold text-slate-400 block">मानक नमी सीमा (Moisture)</span>
+                <span class="text-xl font-mono font-black text-slate-800 mt-1 block" id="panel-crop-moisture">12.0% Max</span>
+                <span class="text-[10px] text-slate-500 font-medium">FAQ गुणवत्ता मानदंड</span>
+              </div>
+            </div>
+
+            <div class="md:col-span-3 text-left md:text-right space-y-2">
+              <a id="panel-crop-action-btn" href="farmer/centers.html?commodity=Wheat" class="btn btn-primary btn-md w-full md:w-auto text-xs font-bold py-2.5 px-4 rounded-sm shadow-xs inline-flex items-center justify-center gap-1.5">
+                <span>खरीद केंद्र खोजें</span> &rarr;
+              </a>
+              <div class="text-[10px] text-slate-400 block font-mono">
+                डेमो दर • Demo Rate (Illustrative)
+              </div>
+            </div>
+
+          </div>
+        </div>
+
       </div>
     </section>
 
-    <!-- 6. CORE FEATURES -->
-    <section id="features" class="py-14 md:py-20 bg-white border-b border-slate-200">
-      <div class="container mx-auto">
-        <div class="max-w-2xl mx-auto text-center section-heading">
-          <span class="text-xs font-semibold text-[#15803d] uppercase tracking-wider">Platform Capabilities</span>
-          <h2 class="text-2xl sm:text-3xl font-bold text-slate-900 mt-1">Everything Needed for a Smarter Procurement
-            Journey</h2>
-          <p class="text-sm sm:text-base text-slate-600 mt-2">
-            Engineered for operational efficiency, transparency, and low cognitive load for every participant.
+    <!-- 5. 7-STEP FARMER PROCESS TIMELINE (NUMBERED CONNECTED STEPS) -->
+    <section id="journey" class="py-12 md:py-18 border-b border-[#e2ded4] bg-[#fbfaf7]">
+      <div class="container mx-auto px-4">
+        
+        <div class="max-w-2xl mb-8">
+          <span class="text-xs font-bold uppercase tracking-wider text-[#15803d]">कार्यप्रणाली एवं चरण</span>
+          <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-1">
+            7 चरणों में खेत से खरीद तक की यात्रा
+          </h2>
+          <p class="text-xs sm:text-sm text-slate-500 mt-1">
+            Step-by-step verified timeline from initial center search to digital procurement receipt.
           </p>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-10">
-
-          <!-- Feature 1 -->
-          <div class="feature-card">
-            <div class="feature-icon-wrapper">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
-              </svg>
-            </div>
-            <h3 class="text-base font-semibold text-slate-900 mb-2">1. Smart Center Discovery</h3>
-            <p class="text-sm text-slate-600 leading-relaxed">
-              Find verified procurement centers based on district location, accepted commodities, distance, and
-              real-time operational status.
-            </p>
-          </div>
-
-          <!-- Feature 2 -->
-          <div class="feature-card">
-            <div class="feature-icon-wrapper">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z">
-                </path>
-              </svg>
-            </div>
-            <h3 class="text-base font-semibold text-slate-900 mb-2">2. Load &amp; Queue Visibility</h3>
-            <p class="text-sm text-slate-600 leading-relaxed">
-              Color-coded load indicators (Low, Medium, High) and live estimated wait times allow farmers to evaluate
-              center readiness before leaving home.
-            </p>
-          </div>
-
-          <!-- Feature 3 -->
-          <div class="feature-card">
-            <div class="feature-icon-wrapper">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-              </svg>
-            </div>
-            <h3 class="text-base font-semibold text-slate-900 mb-2">3. Slot Booking</h3>
-            <p class="text-sm text-slate-600 leading-relaxed">
-              Book guaranteed arrival windows matched to the center's hourly processing throughput, eliminating ad-hoc
-              congestion and queue spikes.
-            </p>
-          </div>
-
-          <!-- Feature 4 -->
-          <div class="feature-card">
-            <div class="feature-icon-wrapper">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z">
-                </path>
-              </svg>
-            </div>
-            <h3 class="text-base font-semibold text-slate-900 mb-2">4. Digital Token</h3>
-            <p class="text-sm text-slate-600 leading-relaxed">
-              Receive an instantaneous digital pass containing your verified appointment details, vehicle registration,
-              and quick gate check-in credentials.
-            </p>
-          </div>
-
-          <!-- Feature 5 -->
-          <div class="feature-card">
-            <div class="feature-icon-wrapper">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-              </svg>
-            </div>
-            <h3 class="text-base font-semibold text-slate-900 mb-2">5. Live Queue Tracking</h3>
-            <p class="text-sm text-slate-600 leading-relaxed">
-              Track token position live from your phone. Receive updates as vehicles ahead complete weighbridge
-              processing, keeping you fully informed.
-            </p>
-          </div>
-
-          <!-- Feature 6 -->
-          <div class="feature-card">
-            <div class="feature-icon-wrapper">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-              </svg>
-            </div>
-            <h3 class="text-base font-semibold text-slate-900 mb-2">6. Procurement Tracking</h3>
-            <p class="text-sm text-slate-600 leading-relaxed">
-              Transparent digital record of every stage: gate entry, quality &amp; moisture inspection, gross weighing,
-              and digital procurement receipt issuance.
-            </p>
-          </div>
-
-        </div>
-      </div>
-    </section>
-
-    <!-- 7. HOW IT WORKS -->
-    <section id="how-it-works" class="py-14 md:py-20 bg-slate-50 border-b border-slate-200">
-      <div class="container mx-auto">
-        <div class="max-w-2xl mx-auto text-center section-heading">
-          <span class="text-xs font-semibold text-[#15803d] uppercase tracking-wider">Step-by-Step Workflow</span>
-          <h2 class="text-2xl sm:text-3xl font-bold text-slate-900 mt-1">How KisanSetu Works</h2>
-          <p class="text-sm sm:text-base text-slate-600 mt-2">
-            A simple 5-step journey designed for clarity, low cognitive load, and zero confusion.
-          </p>
-        </div>
-
-        <!-- 5-Step Process Flow -->
-        <div class="mt-12 grid grid-cols-1 md:grid-cols-5 gap-8 md:gap-4 relative">
+        <!-- Connected Process Timeline -->
+        <div class="grid grid-cols-1 md:grid-cols-7 border border-[#e2ded4] bg-white rounded-sm overflow-hidden divide-y md:divide-y-0 md:divide-x divide-[#e2ded4]">
 
           <!-- Step 1 -->
-          <div class="step-item">
-            <div class="step-connector-line hidden md:block"></div>
-            <div class="step-circle step-circle-active">1</div>
-            <h3 class="text-sm font-semibold text-slate-900 mb-1">Create Profile</h3>
-            <p class="text-xs text-slate-500 leading-relaxed">
-              Register your farmer profile with crop type, estimated yield, and contact number.
-            </p>
+          <div class="p-4 flex flex-col justify-between hover:bg-slate-50 transition-colors">
+            <div>
+              <span class="text-lg font-mono font-black text-[#15803d] block">01</span>
+              <h3 class="text-xs font-bold text-slate-900 mt-1">Center Discovery</h3>
+              <div class="text-[11px] font-semibold text-slate-500">केंद्र खोजें</div>
+              <p class="text-[11px] text-slate-500 mt-2 leading-relaxed">
+                फसल व ज़िले अनुसार पास के केंद्र देखें।
+              </p>
+            </div>
+            <div class="mt-4 pt-2 border-t border-slate-100 text-[10px] font-mono text-slate-400">Step 1 of 7</div>
           </div>
 
           <!-- Step 2 -->
-          <div class="step-item">
-            <div class="step-connector-line hidden md:block"></div>
-            <div class="step-circle">2</div>
-            <h3 class="text-sm font-semibold text-slate-900 mb-1">Find a Center</h3>
-            <p class="text-xs text-slate-500 leading-relaxed">
-              Locate authorized procurement facilities near your village handling your commodity.
-            </p>
+          <div class="p-4 flex flex-col justify-between hover:bg-slate-50 transition-colors">
+            <div>
+              <span class="text-lg font-mono font-black text-[#15803d] block">02</span>
+              <h3 class="text-xs font-bold text-slate-900 mt-1">Slot Booking</h3>
+              <div class="text-[11px] font-semibold text-slate-500">स्लॉट बुक करें</div>
+              <p class="text-[11px] text-slate-500 mt-2 leading-relaxed">
+                निश्चित तारीख और 1-घंटे का स्लॉट चुनें।
+              </p>
+            </div>
+            <div class="mt-4 pt-2 border-t border-slate-100 text-[10px] font-mono text-slate-400">Step 2 of 7</div>
           </div>
 
           <!-- Step 3 -->
-          <div class="step-item">
-            <div class="step-connector-line hidden md:block"></div>
-            <div class="step-circle">3</div>
-            <h3 class="text-sm font-semibold text-slate-900 mb-1">Compare Load</h3>
-            <p class="text-xs text-slate-500 leading-relaxed">
-              Check live queue status, average wait times, and available capacity across centers.
-            </p>
+          <div class="p-4 flex flex-col justify-between hover:bg-slate-50 transition-colors">
+            <div>
+              <span class="text-lg font-mono font-black text-[#15803d] block">03</span>
+              <h3 class="text-xs font-bold text-slate-900 mt-1">Digital Token</h3>
+              <div class="text-[11px] font-semibold text-slate-500">डिजिटल टोकन</div>
+              <p class="text-[11px] text-slate-500 mt-2 leading-relaxed">
+                #KS-TKN-xxxx डिजिटल पास प्राप्त करें।
+              </p>
+            </div>
+            <div class="mt-4 pt-2 border-t border-slate-100 text-[10px] font-mono text-slate-400">Step 3 of 7</div>
           </div>
 
           <!-- Step 4 -->
-          <div class="step-item">
-            <div class="step-connector-line hidden md:block"></div>
-            <div class="step-circle">4</div>
-            <h3 class="text-sm font-semibold text-slate-900 mb-1">Book a Slot</h3>
-            <p class="text-xs text-slate-500 leading-relaxed">
-              Choose your preferred arrival window and receive an instant verified Digital Token.
-            </p>
+          <div class="p-4 flex flex-col justify-between hover:bg-slate-50 transition-colors">
+            <div>
+              <span class="text-lg font-mono font-black text-[#15803d] block">04</span>
+              <h3 class="text-xs font-bold text-slate-900 mt-1">Live Queue</h3>
+              <div class="text-[11px] font-semibold text-slate-500">लाइव कतार</div>
+              <p class="text-[11px] text-slate-500 mt-2 leading-relaxed">
+                मोबाइल पर आगे के वाहनों की संख्या देखें।
+              </p>
+            </div>
+            <div class="mt-4 pt-2 border-t border-slate-100 text-[10px] font-mono text-slate-400">Step 4 of 7</div>
           </div>
 
           <!-- Step 5 -->
-          <div class="step-item">
-            <div class="step-circle">5</div>
-            <h3 class="text-sm font-semibold text-slate-900 mb-1">Track &amp; Procure</h3>
-            <p class="text-xs text-slate-500 leading-relaxed">
-              Arrive at the scheduled slot, present your token, and track weighing to receipt completion.
-            </p>
+          <div class="p-4 flex flex-col justify-between hover:bg-slate-50 transition-colors">
+            <div>
+              <span class="text-lg font-mono font-black text-[#15803d] block">05</span>
+              <h3 class="text-xs font-bold text-slate-900 mt-1">Gate Check-in</h3>
+              <div class="text-[11px] font-semibold text-slate-500">गेट सत्यापन</div>
+              <p class="text-[11px] text-slate-500 mt-2 leading-relaxed">
+                गेट पर ऑपरेटर टोकन स्कैन करता है।
+              </p>
+            </div>
+            <div class="mt-4 pt-2 border-t border-slate-100 text-[10px] font-mono text-slate-400">Step 5 of 7</div>
+          </div>
+
+          <!-- Step 6 -->
+          <div class="p-4 flex flex-col justify-between hover:bg-slate-50 transition-colors">
+            <div>
+              <span class="text-lg font-mono font-black text-[#15803d] block">06</span>
+              <h3 class="text-xs font-bold text-slate-900 mt-1">Weighment</h3>
+              <div class="text-[11px] font-semibold text-slate-500">इलेक्ट्रॉनिक तौल</div>
+              <p class="text-[11px] text-slate-500 mt-2 leading-relaxed">
+                कांटे पर सकल, खाली और शुद्ध वजन दर्ज।
+              </p>
+            </div>
+            <div class="mt-4 pt-2 border-t border-slate-100 text-[10px] font-mono text-slate-400">Step 6 of 7</div>
+          </div>
+
+          <!-- Step 7 -->
+          <div class="p-4 flex flex-col justify-between bg-emerald-50/60 hover:bg-emerald-50 transition-colors">
+            <div>
+              <span class="text-lg font-mono font-black text-emerald-800 block">07</span>
+              <h3 class="text-xs font-bold text-emerald-950 mt-1">Digital Receipt</h3>
+              <div class="text-[11px] font-semibold text-emerald-700">खरीद रसीद</div>
+              <p class="text-[11px] text-emerald-800 mt-2 leading-relaxed">
+                ई-रसीद (#KSP-RCP) तुरंत जारी।
+              </p>
+            </div>
+            <div class="mt-4 pt-2 border-t border-emerald-200 text-[10px] font-mono text-emerald-700 font-bold">Complete</div>
           </div>
 
         </div>
+
       </div>
     </section>
 
-    <!-- 8. CENTERS & SMART INTELLIGENCE SECTION -->
-    <section id="centers" class="py-14 md:py-20 bg-white border-b border-slate-200">
-      <div class="container mx-auto">
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+    <!-- 6. LIVE QUEUE OPERATIONAL TIMELINE VISUAL -->
+    <section id="live-queue-preview" class="py-12 md:py-16 border-b border-[#e2ded4] bg-white">
+      <div class="container mx-auto px-4">
+        
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+          
+          <div class="lg:col-span-5 space-y-4">
+            <span class="text-xs font-bold uppercase tracking-wider text-[#15803d]">वास्तविक कतार मॉनिटरिंग</span>
+            <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900">
+              कतार स्थिति का पारदर्शी प्रवाह
+            </h2>
+            <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+              गेट से धर्मकांटा तक वाहन की सटीक स्थिति डिजिटल रूप से ट्रैक होती है। न लाइन तोड़ी जा सकती है, न ही अनिश्चितता रहती है।
+            </p>
+            <div class="p-3 bg-[#fbfaf7] border border-[#e2ded4] rounded-sm text-xs space-y-1">
+              <div class="font-bold text-slate-800">डेमो प्रक्रिया • Demo Flow</div>
+              <p class="text-slate-500 text-[11px]">
+                बुकिंग पुष्टि से लेकर खरीद पूर्ण होने तक प्रत्येक चरण किसान और ऑपरेटर दोनों को समान रूप से दिखाई देता है।
+              </p>
+            </div>
+            <div>
+              <a href="farmer/queue.html" class="btn btn-primary btn-sm text-xs font-bold py-2 px-4 rounded-sm shadow-xs inline-flex items-center gap-1.5">
+                <span>⚡</span> लाइव कतार स्क्रीन देखें &rarr;
+              </a>
+            </div>
+          </div>
 
-          <!-- Left Info Column -->
-          <div class="lg:col-span-6 space-y-6">
-            <div
-              class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-xs font-semibold text-emerald-800">
-              <span class="w-2 h-2 rounded-full bg-[#15803d]"></span>
-              Queue Load Balancing Intelligence
+          <!-- Operational Flow Indicator Board -->
+          <div class="lg:col-span-7 bg-[#fbfaf7] border border-[#d6d1c4] p-5 rounded-sm">
+            <div class="space-y-3 font-mono text-xs">
+              
+              <div class="flex items-center justify-between p-2.5 bg-white border border-[#e2ded4] rounded-xs">
+                <span class="font-bold text-slate-800">1. Booking Confirmed</span>
+                <span class="font-bold text-emerald-700 flex items-center gap-1">✓ CONFIRMED</span>
+              </div>
+
+              <div class="flex items-center justify-between p-2.5 bg-white border border-[#e2ded4] rounded-xs">
+                <span class="font-bold text-slate-800">2. Arrival at Center</span>
+                <span class="font-bold text-emerald-700 flex items-center gap-1">✓ ARRIVED</span>
+              </div>
+
+              <div class="flex items-center justify-between p-2.5 bg-white border border-[#e2ded4] rounded-xs">
+                <span class="font-bold text-slate-800">3. Gate Verification</span>
+                <span class="font-bold text-emerald-700 flex items-center gap-1">✓ CHECKED_IN</span>
+              </div>
+
+              <div class="flex items-center justify-between p-2.5 bg-amber-50/70 border border-amber-300 rounded-xs">
+                <span class="font-bold text-amber-900">4. Queue Position</span>
+                <span class="font-black text-amber-800 bg-amber-200/60 px-2 py-0.5 rounded-xs">POSITION 05 (Ahead: 4)</span>
+              </div>
+
+              <div class="flex items-center justify-between p-2.5 bg-emerald-100/60 border border-emerald-400 rounded-xs">
+                <span class="font-bold text-emerald-950">5. Procurement / Weighbridge</span>
+                <span class="font-black text-emerald-800 animate-pulse">● LIVE AT WEIGHBRIDGE</span>
+              </div>
+
+              <div class="flex items-center justify-between p-2.5 bg-white border border-[#e2ded4] rounded-xs opacity-75">
+                <span class="font-medium text-slate-500">6. Digital Receipt Issued</span>
+                <span class="text-slate-400 font-medium">○ PENDING FINISH</span>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 7. DIGITAL RECEIPT REALISTIC PREVIEW (ITEM 7) -->
+    <section id="receipt-preview" class="py-12 md:py-16 border-b border-[#e2ded4] bg-[#fbfaf7]">
+      <div class="container mx-auto px-4">
+        
+        <div class="max-w-2xl mb-8">
+          <span class="text-xs font-bold uppercase tracking-wider text-[#15803d]">ई-प्रमाणित खरीद दस्तावेज</span>
+          <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-1">
+            डिजिटल खरीद रसीद नमूना (Receipt Preview)
+          </h2>
+          <p class="text-xs sm:text-sm text-slate-500 mt-1">
+            सकल, खाली गाड़ी और शुद्ध वजन के साथ जारी की जाने वाली आधिकारिक इलेक्ट्रॉनिक खरीद रसीद।
+          </p>
+        </div>
+
+        <!-- Realistic Digital Receipt Slip -->
+        <div class="max-w-xl mx-auto bg-white border border-[#d5cfc1] shadow-xs p-6 rounded-xs font-sans text-xs">
+          
+          <div class="text-center pb-4 border-b border-slate-200">
+            <span class="text-[10px] font-mono uppercase tracking-widest text-[#15803d] font-bold block">GOVERNMENT PROCUREMENT INTAKE</span>
+            <h3 class="text-lg font-black text-slate-900 mt-0.5">KISANSETU DIGITAL PROCUREMENT RECEIPT</h3>
+            <span class="text-[11px] text-slate-500 font-mono">इलेक्ट्रॉनिक खरीद एवं धर्मकांटा तौल प्रमाण पत्र</span>
+          </div>
+
+          <div class="py-3 border-b border-slate-200 grid grid-cols-2 gap-2 text-[11px]">
+            <div>
+              <span class="text-slate-400 block text-[10px]">किसान (Farmer):</span>
+              <span class="font-bold text-slate-800">राम कुमार (Demo Farmer)</span>
+            </div>
+            <div class="text-right">
+              <span class="text-slate-400 block text-[10px]">रसीद संख्या (Receipt ID):</span>
+              <span class="font-mono font-bold text-slate-800">KSP-RCP-2026-0842</span>
+            </div>
+            <div>
+              <span class="text-slate-400 block text-[10px]">फसल (Crop):</span>
+              <span class="font-bold text-slate-800">Wheat (गेहूं - FAQ Grade A)</span>
+            </div>
+            <div class="text-right">
+              <span class="text-slate-400 block text-[10px]">खरीद केंद्र (Center):</span>
+              <span class="font-medium text-slate-800">Rohtak Grain Center</span>
+            </div>
+          </div>
+
+          <!-- Itemized Weight Math Table -->
+          <div class="py-3 border-b border-slate-200 space-y-1.5 font-mono text-xs">
+            <div class="flex justify-between">
+              <span class="text-slate-500">सकल वजन (Gross Weight):</span>
+              <span class="font-bold text-slate-800">58.20 Q</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-slate-500">खाली गाड़ी वजन (Tare Weight):</span>
+              <span class="font-bold text-slate-800">5.70 Q</span>
+            </div>
+            <div class="flex justify-between pt-1 border-t border-slate-100 text-slate-900 font-bold">
+              <span>शुद्ध वजन (Net Weight):</span>
+              <span class="text-emerald-800">52.50 Q</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-slate-500">MSP खरीद दर (Demo Rate):</span>
+              <span class="font-bold text-slate-800">₹2,275.00 / Q</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-slate-500">कटौती (Deductions):</span>
+              <span class="font-bold text-slate-800">₹0.00</span>
+            </div>
+          </div>
+
+          <!-- Total Due -->
+          <div class="py-3 flex items-center justify-between border-b border-slate-200">
+            <div>
+              <span class="text-[10px] uppercase font-bold text-slate-400 block">कुल देय राशि (Net Amount Due)</span>
+              <span class="text-xl font-mono font-black text-[#15803d]">₹1,19,437.50</span>
+            </div>
+            <div class="w-14 h-14 border border-slate-300 bg-slate-50 p-1 flex items-center justify-center text-[9px] text-center font-mono text-slate-400">
+              [QR VERIFIED]
+            </div>
+          </div>
+
+          <div class="pt-3 text-[10px] text-slate-400 flex items-center justify-between">
+            <span>डेमो रसीद • Demo Receipt (Illustrative Prototype)</span>
+            <a href="farmer/sales-history.html" class="font-bold text-[#15803d] hover:underline">
+              विक्रय इतिहास में देखें &rarr;
+            </a>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 8. OPERATIONAL CENTERS DIRECTORY (TWO-COLUMN DIRECTORY LAYOUT) -->
+    <section id="centers" class="py-12 md:py-16 border-b border-[#e2ded4] bg-white">
+      <div class="container mx-auto px-4">
+        
+        <div class="max-w-2xl mb-8">
+          <span class="text-xs font-bold uppercase tracking-wider text-[#15803d]">सरकारी खरीद केंद्र निर्देशिका</span>
+          <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-1">
+            खरीद केंद्र निर्देशिका (Centers Directory)
+          </h2>
+          <p class="text-xs sm:text-sm text-slate-500 mt-1">
+            अपने ज़िले के अधिकृत केंद्र देखें, वास्तविक भार की तुलना करें और सीधे स्लॉट बुक करें।
+          </p>
+        </div>
+
+        <!-- Two Column Operational Directory -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+          
+          <!-- Left Column: Filters -->
+          <div class="lg:col-span-4 bg-[#fbfaf7] border border-[#d6d1c4] p-4 rounded-sm space-y-4 text-xs font-sans">
+            <div class="pb-2 border-b border-[#e2ded4] flex items-center justify-between">
+              <span class="font-bold uppercase tracking-wider text-slate-700">फ़िल्टर (Filters)</span>
+              <button type="button" id="dir-reset-btn" class="text-[#15803d] font-bold hover:underline">रीसेट</button>
             </div>
 
-            <h2 class="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">
-              Make Better Procurement Decisions
-            </h2>
+            <div>
+              <label class="font-bold text-slate-700 block mb-1">फसल (Crop)</label>
+              <select id="dir-crop-filter" class="w-full p-2 border border-[#d5cfc1] bg-white rounded-xs text-xs">
+                <option value="">सभी फसलें (All Crops)</option>
+                <option value="Wheat">Wheat (गेहूं)</option>
+                <option value="Mustard">Mustard (सरसों)</option>
+                <option value="Paddy">Paddy (धान)</option>
+                <option value="Bajra">Bajra (बाजरा)</option>
+                <option value="Cotton">Cotton (कपास)</option>
+                <option value="Maize">Maize (मक्का)</option>
+                <option value="Barley">Barley (जौ)</option>
+                <option value="Gram">Gram (चना)</option>
+                <option value="Soybean">Soybean (सोयाबीन)</option>
+              </select>
+            </div>
 
-            <p class="text-sm sm:text-base text-slate-600 leading-relaxed">
-              KisanSetu aggregates operational metrics across nearby facilities to provide data-driven recommendations.
-              Instead of blindly joining long queues, farmers can compare centers across five critical operational
-              parameters:
-            </p>
+            <div>
+              <label class="font-bold text-slate-700 block mb-1">ज़िला (District)</label>
+              <select id="dir-district-filter" class="w-full p-2 border border-[#d5cfc1] bg-white rounded-xs text-xs">
+                <option value="">सभी ज़िले (All Districts)</option>
+                <option value="Karnal">Karnal (करनाल)</option>
+                <option value="Ambala">Ambala (अम्बाला)</option>
+                <option value="Rohtak">Rohtak (रोहतक)</option>
+                <option value="Panipat">Panipat (पानीपत)</option>
+                <option value="Kurukshetra">Kurukshetra (कुरुक्षेत्र)</option>
+                <option value="Hisar">Hisar (हिसार)</option>
+                <option value="Sirsa">Sirsa (सिरसा)</option>
+                <option value="Jind">Jind (जींद)</option>
+                <option value="Rewari">Rewari (रेवाड़ी)</option>
+              </select>
+            </div>
 
-            <ul class="space-y-3 text-sm text-slate-700">
-              <li class="flex items-start gap-2.5">
-                <svg class="w-5 h-5 text-[#15803d] shrink-0 mt-0.5" fill="none" stroke="currentColor"
-                  viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                </svg>
-                <span><strong>Distance &amp; Transit Time:</strong> Distance from your farm to each authorized
-                  center.</span>
+            <div>
+              <label class="font-bold text-slate-700 block mb-1">उपलब्धता स्थिति</label>
+              <select id="dir-status-filter" class="w-full p-2 border border-[#d5cfc1] bg-white rounded-xs text-xs">
+                <option value="">सभी केंद्र (All Centers)</option>
+                <option value="available">केवल बुकिंग उपलब्ध (Available)</option>
+              </select>
+            </div>
+
+            <div class="pt-2 text-[11px] text-slate-500">
+              प्रदर्शित: <span id="dir-count" class="font-bold text-slate-800">17</span> / 17 केंद्र
+            </div>
+          </div>
+
+          <!-- Right Column: Results List -->
+          <div class="lg:col-span-8 space-y-3" id="dir-results-container">
+            <!-- Rendered dynamically by JavaScript from MOCK_CENTERS -->
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 9. PROBLEM VS SOLUTION (EDITORIAL COMPARISON) -->
+    <section id="comparison" class="py-12 md:py-18 border-b border-[#e2ded4] bg-[#fbfaf7]">
+      <div class="container mx-auto px-4">
+        
+        <div class="max-w-2xl mb-8">
+          <span class="text-xs font-bold uppercase tracking-wider text-rose-700">पारंपरिक बनाम आधुनिक समाधान</span>
+          <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-1">
+            पारंपरिक व्यवस्था बनाम किसान सेतु
+          </h2>
+          <p class="text-xs sm:text-sm text-slate-500 mt-1">
+            Why KisanSetu brings operational dignity, predictability, and transparency to mandi procurement.
+          </p>
+        </div>
+
+        <!-- Editorial Split Comparison Table -->
+        <div class="grid grid-cols-1 md:grid-cols-2 border border-[#d6d1c4] bg-white rounded-xs divide-y md:divide-y-0 md:divide-x divide-[#d6d1c4]">
+          
+          <!-- Column 1: Traditional Mandi -->
+          <div class="p-6 space-y-4">
+            <div class="flex items-center gap-2 pb-3 border-b border-slate-200">
+              <span class="w-6 h-6 rounded-xs bg-rose-100 text-rose-800 flex items-center justify-center text-xs font-bold font-mono">✕</span>
+              <h3 class="text-sm font-bold text-rose-900 uppercase tracking-wide">TRADITIONAL MANDI (पारंपरिक व्यवस्था)</h3>
+            </div>
+            
+            <ul class="space-y-3.5 text-xs text-slate-600">
+              <li class="flex items-start gap-2">
+                <span class="text-rose-600 font-bold">•</span>
+                <span><strong>Uncertain arrival:</strong> बिना पूर्व सूचना के सैकड़ों ट्रैक्टर एक साथ पहुंचते हैं।</span>
               </li>
-              <li class="flex items-start gap-2.5">
-                <svg class="w-5 h-5 text-[#15803d] shrink-0 mt-0.5" fill="none" stroke="currentColor"
-                  viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                </svg>
-                <span><strong>Current Center Load:</strong> Real-time categorization (Low / Medium / High).</span>
+              <li class="flex items-start gap-2">
+                <span class="text-rose-600 font-bold">•</span>
+                <span><strong>Long waiting:</strong> किसानों को 12 से 36 घंटे ट्रैक्टर में रात बितानी पड़ती है।</span>
               </li>
-              <li class="flex items-start gap-2.5">
-                <svg class="w-5 h-5 text-[#15803d] shrink-0 mt-0.5" fill="none" stroke="currentColor"
-                  viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                </svg>
-                <span><strong>Estimated Waiting Time:</strong> Calculated based on vehicle queue and active weighbridge
-                  velocity.</span>
+              <li class="flex items-start gap-2">
+                <span class="text-rose-600 font-bold">•</span>
+                <span><strong>No queue visibility:</strong> आगे कितने वाहन हैं, इसकी कोई पूर्व जानकारी नहीं होती।</span>
               </li>
-              <li class="flex items-start gap-2.5">
-                <svg class="w-5 h-5 text-[#15803d] shrink-0 mt-0.5" fill="none" stroke="currentColor"
-                  viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                </svg>
-                <span><strong>Slot &amp; Commodity Availability:</strong> Verified quotas for your specific harvest
-                  variety.</span>
+              <li class="flex items-start gap-2">
+                <span class="text-rose-600 font-bold">•</span>
+                <span><strong>Manual tracking:</strong> कागजी पर्ची खोने व कतार विवाद की निरंतर आशंका।</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-rose-600 font-bold">•</span>
+                <span><strong>Paper-based records:</strong> हस्तलिखित प्रविष्टियों में कटौती का अस्पष्ट हिसाब।</span>
               </li>
             </ul>
-
-            <div class="p-3.5 bg-slate-50 border border-slate-200 rounded-lg text-xs text-slate-600">
-              <strong class="text-slate-800">Operational Note:</strong> Data-driven recommendations help balance vehicle
-              arrival rates across district centers, smoothing peak queue surges and reducing unnecessary waiting.
-            </div>
           </div>
 
-          <!-- Right Comparison Visual -->
-          <div class="lg:col-span-6 space-y-4">
-
-            <!-- Center Card A: Recommended (Low Load) -->
-            <div class="card border-emerald-300 bg-white shadow-sm ring-1 ring-emerald-200 relative">
-              <div class="flex items-start justify-between gap-3 mb-3">
-                <div>
-                  <div class="flex items-center gap-2">
-                    <span
-                      class="px-2 py-0.5 bg-emerald-100 text-emerald-800 text-[10px] font-bold rounded uppercase tracking-wider">Recommended
-                      Center</span>
-                    <span
-                      class="px-1.5 py-0.5 bg-slate-100 text-slate-600 text-[10px] font-medium rounded border border-slate-200">Illustrative
-                      Data</span>
-                  </div>
-                  <h3 class="text-base font-bold text-slate-900 mt-1">Karnal Central Procurement Center</h3>
-                  <p class="text-xs text-slate-500">12 km from your location • ID: CTR-HR-01</p>
-                </div>
-                <span class="badge badge-low">● Low Load</span>
-              </div>
-
-              <div class="grid grid-cols-3 gap-2 py-3 border-y border-slate-100 text-center text-xs">
-                <div>
-                  <span class="text-slate-400 block text-[11px]">Est. Wait</span>
-                  <span class="text-base font-bold text-emerald-700">15 min</span>
-                </div>
-                <div>
-                  <span class="text-slate-400 block text-[11px]">Available Slots</span>
-                  <span class="text-base font-bold text-slate-900">28 Today</span>
-                </div>
-                <div>
-                  <span class="text-slate-400 block text-[11px]">Commodity</span>
-                  <span class="text-xs font-semibold text-slate-800 mt-1 block">Wheat (₹2,275)</span>
-                </div>
-              </div>
-
-              <div class="mt-3 flex items-center justify-between text-xs">
-                <span class="text-emerald-700 font-medium flex items-center gap-1">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                  </svg>
-                  Smooth flow • 4 weighbridges operational
-                </span>
-                <span class="font-semibold text-[#15803d]">Optimal Choice</span>
-              </div>
+          <!-- Column 2: KisanSetu -->
+          <div class="p-6 space-y-4 bg-[#fcfbf9]">
+            <div class="flex items-center gap-2 pb-3 border-b border-slate-200">
+              <span class="w-6 h-6 rounded-xs bg-emerald-100 text-emerald-800 flex items-center justify-center text-xs font-bold font-mono">✓</span>
+              <h3 class="text-sm font-bold text-emerald-900 uppercase tracking-wide">KISANSETU PLATFORM (किसान सेतु समाधान)</h3>
             </div>
 
-            <!-- Center Card B: Alternative (High Load) -->
-            <div class="card border-slate-200 bg-slate-50/60 shadow-xs">
-              <div class="flex items-start justify-between gap-3 mb-3">
-                <div>
-                  <div class="flex items-center gap-2">
-                    <span
-                      class="px-2 py-0.5 bg-rose-100 text-rose-800 text-[10px] font-bold rounded uppercase tracking-wider">Heavy
-                      Congestion</span>
-                    <span
-                      class="px-1.5 py-0.5 bg-slate-100 text-slate-600 text-[10px] font-medium rounded border border-slate-200">Illustrative
-                      Data</span>
-                  </div>
-                  <h3 class="text-base font-semibold text-slate-900 mt-1">Panipat North Procurement Center</h3>
-                  <p class="text-xs text-slate-500">18 km from your location • ID: CTR-HR-05</p>
-                </div>
-                <span class="badge badge-high">● High Load</span>
-              </div>
-
-              <div class="grid grid-cols-3 gap-2 py-3 border-y border-slate-200 text-center text-xs">
-                <div>
-                  <span class="text-slate-400 block text-[11px]">Est. Wait</span>
-                  <span class="text-base font-bold text-rose-700">110 min</span>
-                </div>
-                <div>
-                  <span class="text-slate-400 block text-[11px]">Available Slots</span>
-                  <span class="text-base font-bold text-slate-900">3 Left</span>
-                </div>
-                <div>
-                  <span class="text-slate-400 block text-[11px]">Commodity</span>
-                  <span class="text-xs font-semibold text-slate-800 mt-1 block">Wheat (₹2,275)</span>
-                </div>
-              </div>
-
-              <div class="mt-3 flex items-center justify-between text-xs text-slate-500">
-                <span class="text-rose-700 font-medium">Heavy arrival queue observed</span>
-                <span>Booking alternate advised</span>
-              </div>
-            </div>
-
+            <ul class="space-y-3.5 text-xs text-slate-700 font-medium">
+              <li class="flex items-start gap-2">
+                <span class="text-[#15803d] font-bold font-mono">✓</span>
+                <span><strong>Center discovery:</strong> कम भीड़ वाले निकटतम केंद्र का स्वतः चयन।</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-[#15803d] font-bold font-mono">✓</span>
+                <span><strong>Slot booking:</strong> 30–45 मिनट का निश्चित समय स्लॉट आवंटन।</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-[#15803d] font-bold font-mono">✓</span>
+                <span><strong>Digital token:</strong> क्यूआर-सत्यापित डिजिटल पास (#KS-TKN-xxxx)।</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-[#15803d] font-bold font-mono">✓</span>
+                <span><strong>Live queue:</strong> मोबाइल पर कतार स्थिति व प्रतीक्षा समय का लाइव अपडेट।</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-[#15803d] font-bold font-mono">✓</span>
+                <span><strong>Digital receipt:</strong> धर्मकांटा तौल के बाद तुरंत प्रमाणित ई-रसीद।</span>
+              </li>
+            </ul>
           </div>
 
         </div>
+
       </div>
     </section>
 
-    <!-- 9. CTA SECTION -->
-    <section id="get-started" class="py-14 md:py-20 bg-emerald-900 text-white relative overflow-hidden">
-      <div class="container mx-auto text-center max-w-3xl relative z-10 space-y-6">
-        <span
-          class="inline-block px-3 py-1 rounded-full bg-emerald-800/80 text-emerald-200 text-xs font-semibold tracking-wide border border-emerald-700">
-          Streamlined Agricultural Procurement
-        </span>
-
-        <h2 class="text-2xl sm:text-4xl font-bold tracking-tight text-white">
-          Ready for a Smarter Procurement Experience?
-        </h2>
-
-        <p class="text-sm sm:text-base text-emerald-100 leading-relaxed max-w-xl mx-auto">
-          Create a profile, discover procurement centers, and manage your journey with greater visibility, verified time
-          slots, and minimal waiting.
-        </p>
-
-        <div class="flex flex-wrap items-center justify-center gap-4 pt-2">
-          <a href="pages/register.html"
-            class="btn bg-white text-emerald-900 hover:bg-emerald-50 border-white btn-lg font-semibold shadow-md">
-            Get Started
-          </a>
-          <a href="#centers"
-            class="btn bg-transparent border-emerald-400 text-white hover:bg-emerald-800 btn-lg font-medium">
-            Explore Centers
-          </a>
+    <!-- 10. COMPACT EDITORIAL BENEFITS LIST (ITEM 10) -->
+    <section id="benefits" class="py-12 md:py-16 border-b border-[#e2ded4] bg-white">
+      <div class="container mx-auto px-4">
+        
+        <div class="max-w-2xl mb-8">
+          <span class="text-xs font-bold uppercase tracking-wider text-[#15803d]">प्लेटफ़ॉर्म विशेषताएं</span>
+          <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-1">
+            मुख्य लाभ (Key Capabilities)
+          </h2>
         </div>
 
-        <p class="text-xs text-emerald-300 pt-3">
-          Zero Software Installation • Accessible on Any Smartphone • Free Public Service
+        <!-- 2-Column Editorial List -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4 border-t border-[#e2ded4] pt-6 text-xs">
+          
+          <div class="py-2 border-b border-[#f1efe9]">
+            <span class="font-bold text-slate-900 block text-sm">1. Easy Booking</span>
+            <p class="text-slate-500 mt-0.5 leading-relaxed">अपनी सुविधानुसार निश्चित तारीख और समय स्लॉट चुनें।</p>
+          </div>
+
+          <div class="py-2 border-b border-[#f1efe9]">
+            <span class="font-bold text-slate-900 block text-sm">2. Digital Token</span>
+            <p class="text-slate-500 mt-0.5 leading-relaxed">गेट पर प्रवेश के लिए कागजरहित डिजिटल पास।</p>
+          </div>
+
+          <div class="py-2 border-b border-[#f1efe9]">
+            <span class="font-bold text-slate-900 block text-sm">3. Live Queue</span>
+            <p class="text-slate-500 mt-0.5 leading-relaxed">गाड़ी का क्रम व धर्मकांटा स्थिति मोबाइल पर वास्तविक समय में देखें।</p>
+          </div>
+
+          <div class="py-2 border-b border-[#f1efe9]">
+            <span class="font-bold text-slate-900 block text-sm">4. Transparent Procurement</span>
+            <p class="text-slate-500 mt-0.5 leading-relaxed">सकल और खाली गाड़ी वजन का पारदर्शी डिजिटल हिसाब।</p>
+          </div>
+
+          <div class="py-2 border-b border-[#f1efe9]">
+            <span class="font-bold text-slate-900 block text-sm">5. Digital Receipt</span>
+            <p class="text-slate-500 mt-0.5 leading-relaxed">खरीद संपन्न होते ही तुरंत डाउनलोड करने योग्य ई-रसीद।</p>
+          </div>
+
+          <div class="py-2 border-b border-[#f1efe9]">
+            <span class="font-bold text-slate-900 block text-sm">6. Center Information</span>
+            <p class="text-slate-500 mt-0.5 leading-relaxed">दैनिक क्षमता, कतार भार व स्वीकार्य फसलों की पूर्व जानकारी।</p>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 11. 10-QUESTION EDITORIAL ACCESSIBLE FAQ ACCORDION (ITEM 9) -->
+    <section id="faq" class="py-12 md:py-18 border-b border-[#e2ded4] bg-[#fbfaf7]">
+      <div class="container mx-auto px-4 max-w-4xl">
+        
+        <div class="mb-8">
+          <span class="text-xs font-bold uppercase tracking-wider text-[#15803d]">अक्सर पूछे जाने वाले सवाल</span>
+          <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-1">
+            सामान्य प्रश्नोत्तरी (FAQ)
+          </h2>
+          <p class="text-xs sm:text-sm text-slate-500 mt-1">
+            Clear operational answers to common questions about slot booking, digital tokens, and procurement.
+          </p>
+        </div>
+
+        <!-- 10 Accessible FAQ Accordion Items (Hairline Rules, Editorial) -->
+        <div class="border-t border-[#e2ded4] divide-y divide-[#e2ded4]" id="faq-accordion-group">
+
+          <!-- FAQ 1 -->
+          <div class="py-3">
+            <button type="button" class="faq-toggle w-full py-2 text-left flex items-center justify-between gap-4 focus:outline-none" aria-expanded="false" aria-controls="faq-ans-1">
+              <span class="text-sm font-bold text-slate-900">
+                1. किसान सेतु क्या है और यह कैसे काम करता है? <span class="block text-xs font-normal text-slate-500 mt-0.5">(What is KisanSetu and how does it work?)</span>
+              </span>
+              <span class="faq-icon text-slate-400 text-sm font-mono shrink-0">[+]</span>
+            </button>
+            <div id="faq-ans-1" class="faq-content pt-2 pb-3 text-xs text-slate-600 leading-relaxed hidden">
+              किसान सेतु एक डिजिटल खरीद एवं कतार प्रबंधन प्लेटफॉर्म है। यह किसानों को अपनी फसल बेचने के लिए अधिकृत सरकारी खरीद केंद्रों पर पूर्व समय स्लॉट आरक्षित करने, डिजिटल टोकन प्राप्त करने और मोबाइल पर लाइव कतार की स्थिति देखने की सुविधा देता है।
+            </div>
+          </div>
+
+          <!-- FAQ 2 -->
+          <div class="py-3">
+            <button type="button" class="faq-toggle w-full py-2 text-left flex items-center justify-between gap-4 focus:outline-none" aria-expanded="false" aria-controls="faq-ans-2">
+              <span class="text-sm font-bold text-slate-900">
+                2. क्या स्लॉट बुकिंग के लिए कोई शुल्क देना होता है? <span class="block text-xs font-normal text-slate-500 mt-0.5">(Is there any fee for slot booking?)</span>
+              </span>
+              <span class="faq-icon text-slate-400 text-sm font-mono shrink-0">[+]</span>
+            </button>
+            <div id="faq-ans-2" class="faq-content pt-2 pb-3 text-xs text-slate-600 leading-relaxed hidden">
+              नहीं, किसान सेतु पूरी तरह से निःशुल्क सार्वजनिक सेवा है। स्लॉट बुकिंग, कतार ट्रैकिंग या डिजिटल रसीद प्राप्त करने के लिए किसानों से कोई शुल्क नहीं लिया जाता।
+            </div>
+          </div>
+
+          <!-- FAQ 3 -->
+          <div class="py-3">
+            <button type="button" class="faq-toggle w-full py-2 text-left flex items-center justify-between gap-4 focus:outline-none" aria-expanded="false" aria-controls="faq-ans-3">
+              <span class="text-sm font-bold text-slate-900">
+                3. मैं अपनी फसल के लिए उपयुक्त खरीद केंद्र कैसे खोजूं? <span class="block text-xs font-normal text-slate-500 mt-0.5">(How do I find the best procurement center for my crop?)</span>
+              </span>
+              <span class="faq-icon text-slate-400 text-sm font-mono shrink-0">[+]</span>
+            </button>
+            <div id="faq-ans-3" class="faq-content pt-2 pb-3 text-xs text-slate-600 leading-relaxed hidden">
+              'खरीद केंद्र' पृष्ठ पर जाकर अपनी फसल (जैसे गेहूं, सरसों, धान) और ज़िले का चयन करें। सिस्टम आपको कम भीड़ वाले (Low Load) और निकटतम उपलब्ध केंद्र की सूची प्रदर्शित करता है।
+            </div>
+          </div>
+
+          <!-- FAQ 4 -->
+          <div class="py-3">
+            <button type="button" class="faq-toggle w-full py-2 text-left flex items-center justify-between gap-4 focus:outline-none" aria-expanded="false" aria-controls="faq-ans-4">
+              <span class="text-sm font-bold text-slate-900">
+                4. डिजिटल टोकन क्या है और इसका उपयोग कैसे करें? <span class="block text-xs font-normal text-slate-500 mt-0.5">(What is a digital token and how is it used?)</span>
+              </span>
+              <span class="faq-icon text-slate-400 text-sm font-mono shrink-0">[+]</span>
+            </button>
+            <div id="faq-ans-4" class="faq-content pt-2 pb-3 text-xs text-slate-600 leading-relaxed hidden">
+              स्लॉट बुक करने पर किसान को एक अद्वितीय टोकन संख्या (#KS-TKN-xxxx) मिलती है। केंद्र के प्रवेश द्वार पर ऑपरेटर इस टोकन को स्कैन कर गाड़ी को परिसर में प्रवेश देता है।
+            </div>
+          </div>
+
+          <!-- FAQ 5 -->
+          <div class="py-3">
+            <button type="button" class="faq-toggle w-full py-2 text-left flex items-center justify-between gap-4 focus:outline-none" aria-expanded="false" aria-controls="faq-ans-5">
+              <span class="text-sm font-bold text-slate-900">
+                5. यदि मैं निर्धारित समय स्लॉट पर न पहुंच पाऊं तो क्या होगा? <span class="block text-xs font-normal text-slate-500 mt-0.5">(What happens if I miss my scheduled arrival slot?)</span>
+              </span>
+              <span class="faq-icon text-slate-400 text-sm font-mono shrink-0">[+]</span>
+            </button>
+            <div id="faq-ans-5" class="faq-content pt-2 pb-3 text-xs text-slate-600 leading-relaxed hidden">
+              यदि आप समय पर नहीं पहुंच पाते हैं, तो स्लॉट शुरू होने से पहले किसान पोर्टल से अपनी बुकिंग रद्द करके नया समय चुन सकते हैं। केंद्र पहुंचने पर ऑपरेटर अगली उपलब्ध शिफ्ट में समायोजन कर सकता है।
+            </div>
+          </div>
+
+          <!-- FAQ 6 -->
+          <div class="py-3">
+            <button type="button" class="faq-toggle w-full py-2 text-left flex items-center justify-between gap-4 focus:outline-none" aria-expanded="false" aria-controls="faq-ans-6">
+              <span class="text-sm font-bold text-slate-900">
+                6. लाइव कतार ट्रैकिंग कैसे काम करती है? <span class="block text-xs font-normal text-slate-500 mt-0.5">(How does live queue tracking work?)</span>
+              </span>
+              <span class="faq-icon text-slate-400 text-sm font-mono shrink-0">[+]</span>
+            </button>
+            <div id="faq-ans-6" class="faq-content pt-2 pb-3 text-xs text-slate-600 leading-relaxed hidden">
+              किसान पोर्टल के 'लाइव कतार' अनुभाग में आपकी गाड़ी का टोकन नंबर, कतार में वर्तमान स्थान (जैसे 5वां स्थान), आगे खड़े वाहनों की संख्या और अनुमानित प्रतीक्षा समय मिनटों में दिखता है।
+            </div>
+          </div>
+
+          <!-- FAQ 7 -->
+          <div class="py-3">
+            <button type="button" class="faq-toggle w-full py-2 text-left flex items-center justify-between gap-4 focus:outline-none" aria-expanded="false" aria-controls="faq-ans-7">
+              <span class="text-sm font-bold text-slate-900">
+                7. क्या मैं अपनी बुकिंग रद्द कर सकता हूँ? <span class="block text-xs font-normal text-slate-500 mt-0.5">(Can I cancel an active booking?)</span>
+              </span>
+              <span class="faq-icon text-slate-400 text-sm font-mono shrink-0">[+]</span>
+            </button>
+            <div id="faq-ans-7" class="faq-content pt-2 pb-3 text-xs text-slate-600 leading-relaxed hidden">
+              हाँ, जब तक आपकी बुकिंग 'पुष्टि हुई' (CONFIRMED) स्थिति में है और आपने केंद्र के गेट पर चेक-इन नहीं किया है, आप किसान डैशबोर्ड से तुरंत बुकिंग रद्द कर सकते हैं।
+            </div>
+          </div>
+
+          <!-- FAQ 8 -->
+          <div class="py-3">
+            <button type="button" class="faq-toggle w-full py-2 text-left flex items-center justify-between gap-4 focus:outline-none" aria-expanded="false" aria-controls="faq-ans-8">
+              <span class="text-sm font-bold text-slate-900">
+                8. तौल और गुणवत्ता जांच की क्या प्रक्रिया है? <span class="block text-xs font-normal text-slate-500 mt-0.5">(What is the weighment and quality inspection process?)</span>
+              </span>
+              <span class="faq-icon text-slate-400 text-sm font-mono shrink-0">[+]</span>
+            </button>
+            <div id="faq-ans-8" class="faq-content pt-2 pb-3 text-xs text-slate-600 leading-relaxed hidden">
+              केंद्र पर पहले भरी गाड़ी का सकल वजन (Gross Weight) लिया जाता है। इसके बाद नमी मापक यंत्र से नमी और गुणवत्ता जांची जाती है। खाली गाड़ी (Tare Weight) के वजन के बाद शुद्ध वजन स्वतः निर्धारित होता है।
+            </div>
+          </div>
+
+          <!-- FAQ 9 -->
+          <div class="py-3">
+            <button type="button" class="faq-toggle w-full py-2 text-left flex items-center justify-between gap-4 focus:outline-none" aria-expanded="false" aria-controls="faq-ans-9">
+              <span class="text-sm font-bold text-slate-900">
+                9. डिजिटल खरीद रसीद कब और कैसे मिलती है? <span class="block text-xs font-normal text-slate-500 mt-0.5">(When and how do I receive the procurement receipt?)</span>
+              </span>
+              <span class="faq-icon text-slate-400 text-sm font-mono shrink-0">[+]</span>
+            </button>
+            <div id="faq-ans-9" class="faq-content pt-2 pb-3 text-xs text-slate-600 leading-relaxed hidden">
+              ऑपरेटर द्वारा धर्मकांटा तौल पूरा करते ही तुरंत ई-रसीद (#KSP-RCP-xxxx) जारी हो जाती है। इसे किसान अपने मोबाइल से देख सकते हैं, प्रिंट कर सकते हैं अथवा विक्रय इतिहास में सुरक्षित रख सकते हैं।
+            </div>
+          </div>
+
+          <!-- FAQ 10 -->
+          <div class="py-3">
+            <button type="button" class="faq-toggle w-full py-2 text-left flex items-center justify-between gap-4 focus:outline-none" aria-expanded="false" aria-controls="faq-ans-10">
+              <span class="text-sm font-bold text-slate-900">
+                10. क्या यह वास्तविक सरकारी खरीद प्रणाली है? <span class="block text-xs font-normal text-slate-500 mt-0.5">(Is this a live government procurement portal?)</span>
+              </span>
+              <span class="faq-icon text-slate-400 text-sm font-mono shrink-0">[+]</span>
+            </button>
+            <div id="faq-ans-10" class="faq-content pt-2 pb-3 text-xs text-slate-600 leading-relaxed hidden">
+              यह स्मार्ट इंडिया हैकथॉन (SIH) के लिए विकसित एक प्रोटोटाइप और अवधारणा प्रमाण (Proof of Concept) है। वर्तमान में यह सिम्युलेटेड डेमो डेटा और ब्राउज़र स्टोरेज पर काम करता है ताकि मेंटर्स और निर्णायकों को संपूर्ण एंड-टू-एंड यूजर जर्नी का स्पष्ट अनुभव कराया जा सके।
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 12. MINIMAL CALL TO ACTION (NO GIANT BLOBS) -->
+    <section class="py-12 md:py-16 bg-[#14532d] text-white">
+      <div class="container mx-auto px-4 text-center max-w-2xl space-y-4">
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-white">
+          आज ही अपनी फसल का स्लॉट बुक करें
+        </h2>
+        <p class="text-xs sm:text-sm text-emerald-100 leading-relaxed">
+          अपनी फसल के लिए नजदीकी खरीद केंद्र खोजें, लाइव कतार का जायजा लें और समय स्लॉट चुनकर परेशानी-मुक्त खरीद का लाभ उठाएं।
         </p>
+        <div class="pt-2 flex flex-wrap items-center justify-center gap-3">
+          <a href="farmer/centers.html" class="btn bg-white text-emerald-950 hover:bg-slate-100 border-white text-xs font-bold py-2.5 px-5 rounded-sm">
+            खरीद केंद्र खोजें &rarr;
+          </a>
+          <a href="farmer/dashboard.html" class="btn bg-transparent border-emerald-400 text-white hover:bg-emerald-900 text-xs font-semibold py-2.5 px-5 rounded-sm">
+            किसान पोर्टल देखें
+          </a>
+        </div>
+        <div class="text-[10px] text-emerald-300 font-mono pt-2">
+          शून्य स्थापना शुल्क • किसी भी स्मार्टफोन पर तुरंत उपलब्ध
+        </div>
       </div>
     </section>
 
   </main>
 
-  <!-- 10. FOOTER -->
-  <footer id="about" class="bg-white border-t border-slate-200 pt-12 pb-8 text-xs text-slate-500">
-    <div class="container mx-auto">
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
-
-        <!-- Col 1: About Platform -->
-        <div class="space-y-3">
-          <div class="flex items-center gap-2">
-            <div class="w-6 h-6 rounded bg-[#15803d] text-white flex items-center justify-center text-xs font-bold">K
-            </div>
-            <span class="text-base font-bold text-slate-900">KisanSetu</span>
-            <span class="text-xs text-slate-400">| किसान सेतु</span>
+  <!-- 13. MINIMAL TRUSTWORTHY FOOTER -->
+  <footer id="about" class="bg-white border-t border-[#e2ded4] pt-8 pb-6 text-xs text-slate-500 font-sans">
+    <div class="container mx-auto px-4">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+        
+        <div>
+          <div class="flex items-center gap-2 mb-2">
+            <div class="w-5 h-5 rounded-xs bg-[#15803d] text-white flex items-center justify-center text-xs font-bold">K</div>
+            <span class="font-extrabold text-slate-900">KisanSetu</span>
+            <span class="text-slate-400">| किसान सेतु</span>
           </div>
-          <p class="leading-relaxed">
-            KisanSetu is a Smart Procurement &amp; Queue Intelligence Platform engineered to eliminate uncertain wait
-            times, optimize facility intake, and provide data-driven transparency across agricultural procurement
-            centers.
+          <p class="text-[11px] leading-relaxed text-slate-500">
+            Digital Mandi & Agricultural Queue Intelligence Platform — engineered for zero-congestion procurement, verified time slots, and tamper-evident digital receipts.
           </p>
-          <div class="pt-1 text-[11px] font-medium text-emerald-800">
-            SIH Innovation Project
+        </div>
+
+        <div>
+          <h4 class="font-bold text-slate-800 uppercase tracking-wider text-[10px] mb-2">नेविगेशन</h4>
+          <div class="flex flex-wrap gap-x-4 gap-y-1 text-[11px]">
+            <a href="#home" class="hover:text-[#15803d]">मुख्य पृष्ठ</a>
+            <a href="#crops" class="hover:text-[#15803d]">फसलें</a>
+            <a href="#centers" class="hover:text-[#15803d]">खरीद केंद्र</a>
+            <a href="#journey" class="hover:text-[#15803d]">7-चरणीय प्रक्रिया</a>
+            <a href="#faq" class="hover:text-[#15803d]">सामान्य प्रश्न</a>
+            <a href="farmer/dashboard.html" class="hover:text-[#15803d]">किसान पोर्टल</a>
           </div>
         </div>
 
-        <!-- Col 2: Navigation Links -->
         <div>
-          <h4 class="text-xs font-bold uppercase tracking-wider text-slate-900 mb-3">Navigation</h4>
-          <ul class="space-y-2">
-            <li><a href="#home" class="hover:text-[#15803d] transition-colors">Home</a></li>
-            <li><a href="#how-it-works" class="hover:text-[#15803d] transition-colors">How It Works</a></li>
-            <li><a href="#features" class="hover:text-[#15803d] transition-colors">Core Features</a></li>
-            <li><a href="#centers" class="hover:text-[#15803d] transition-colors">Centers</a></li>
-            <li><a href="#about" class="hover:text-[#15803d] transition-colors">About</a></li>
-          </ul>
-        </div>
-
-        <!-- Col 3: Portal Areas (Future Phases) -->
-        <div>
-          <h4 class="text-xs font-bold uppercase tracking-wider text-slate-900 mb-3">Stakeholder Portals</h4>
-          <ul class="space-y-2">
-            <li><span class="text-slate-400">Farmer Self-Service (Phase 3)</span></li>
-            <li><span class="text-slate-400">Procurement Center Operator (Phase 4)</span></li>
-            <li><span class="text-slate-400">District Admin Dashboard (Phase 5)</span></li>
-            <li><span class="text-slate-400">Super Admin Governance (Phase 5)</span></li>
-          </ul>
-        </div>
-
-        <!-- Col 4: Public Standards & Compliance -->
-        <div>
-          <h4 class="text-xs font-bold uppercase tracking-wider text-slate-900 mb-3">Platform Standards</h4>
-          <ul class="space-y-2">
-            <li>• Open Source &amp; Free Web Stack</li>
-            <li>• High Accessibility (WCAG 2.1)</li>
-            <li>• Zero-Data Commercialization</li>
-            <li>• Mobile First &amp; Low Bandwidth Ready</li>
-          </ul>
+          <h4 class="font-bold text-slate-800 uppercase tracking-wider text-[10px] mb-2">प्रोटोटाइप मानक</h4>
+          <p class="text-[11px] leading-relaxed text-slate-500">
+            SIH Innovation Prototype 2026. Built with client-side localStorage simulation and verified operational workflows.
+          </p>
         </div>
 
       </div>
 
-      <!-- Bottom Bar -->
-      <div class="pt-6 border-t border-slate-100 flex flex-wrap items-center justify-between gap-3 text-slate-400">
+      <div class="pt-4 border-t border-slate-100 flex flex-wrap items-center justify-between gap-2 text-[10px] text-slate-400">
         <div>
-          &copy; 2026 KisanSetu. Built as an SIH Innovation Project.
+          &copy; 2026 KisanSetu. Built for SIH / Mentor Demonstration.
         </div>
-        <div>
-          Clean, open-source technology for accessible public service.
+        <div class="font-mono text-amber-700 bg-amber-50 px-2 py-0.5 border border-amber-200 rounded-xs">
+          डेमो डेटा • Illustrative Prototype Simulation
         </div>
       </div>
     </div>
   </footer>
 
-  <!-- Core JavaScript Foundation Scripts -->
+  <!-- Scripts: Mock Data, Utils, API, and Operational Interactivity -->
   <script src="js/mock-data.js"></script>
   <script src="js/utils.js"></script>
   <script src="js/api.js"></script>
 
-  <!-- Interactive UI Initialization Script -->
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       // 1. Mobile Menu Toggle
@@ -900,7 +1090,6 @@
           }
         });
 
-        // Close mobile menu upon clicking any navigation link
         document.querySelectorAll('.nav-mobile-link').forEach(link => {
           link.addEventListener('click', () => {
             mobileMenu.classList.add('hidden');
@@ -913,10 +1102,189 @@
         });
       }
 
-      // 2. Initialize Lucide Icons if loaded
-      if (window.lucide && typeof window.lucide.createIcons === 'function') {
-        window.lucide.createIcons();
+      // 2. Interactive Crop Selector (Item 3)
+      const cropChips = document.querySelectorAll('.crop-chip');
+      const commodities = (window.MOCK_COMMODITIES) || [];
+
+      function selectCrop(cropKey) {
+        const found = commodities.find(c => 
+          (c.nameEnglish && c.nameEnglish.toLowerCase() === cropKey.toLowerCase()) ||
+          (c.name && c.name.toLowerCase().includes(cropKey.toLowerCase()))
+        );
+
+        if (!found) return;
+
+        // Update active chip UI
+        cropChips.forEach(chip => {
+          if (chip.dataset.crop.toLowerCase() === cropKey.toLowerCase()) {
+            chip.classList.add('active');
+            chip.classList.remove('bg-white', 'text-slate-700');
+          } else {
+            chip.classList.remove('active');
+            chip.classList.add('bg-white', 'text-slate-700');
+          }
+        });
+
+        // Update panel info
+        const panelName = document.getElementById('panel-crop-name');
+        const panelHindi = document.getElementById('panel-crop-hindi');
+        const panelSeason = document.getElementById('panel-crop-season');
+        const panelCategory = document.getElementById('panel-crop-category');
+        const panelRate = document.getElementById('panel-crop-rate');
+        const panelMoisture = document.getElementById('panel-crop-moisture');
+        const panelBtn = document.getElementById('panel-crop-action-btn');
+
+        if (panelName) panelName.textContent = `${(found.nameHindi || found.hindiName || '').toUpperCase()} / ${(found.nameEnglish || found.name).toUpperCase()}`;
+        if (panelHindi) panelHindi.textContent = `${found.nameHindi || found.hindiName} (${found.name})`;
+        if (panelSeason) panelSeason.textContent = found.season || 'Rabi Crop';
+        if (panelCategory) panelCategory.textContent = found.category || 'Grain';
+        if (panelRate) panelRate.textContent = `₹${(found.mspPerQuintal || found.demoRate).toLocaleString('en-IN')} / Q`;
+        if (panelMoisture) panelMoisture.textContent = `${found.moistureMaxPercent || 12.0}% Max`;
+        if (panelBtn) panelBtn.href = `farmer/centers.html?commodity=${encodeURIComponent(found.nameEnglish || found.name)}`;
       }
+
+      cropChips.forEach(chip => {
+        chip.addEventListener('click', () => {
+          selectCrop(chip.dataset.crop);
+        });
+      });
+
+      // 4. Operational Centers Directory Listing (Item 4)
+      const centers = (window.MOCK_CENTERS) || [];
+      const dirContainer = document.getElementById('dir-results-container');
+      const dirCropFilter = document.getElementById('dir-crop-filter');
+      const dirDistrictFilter = document.getElementById('dir-district-filter');
+      const dirStatusFilter = document.getElementById('dir-status-filter');
+      const dirResetBtn = document.getElementById('dir-reset-btn');
+      const dirCount = document.getElementById('dir-count');
+
+      function renderCentersDirectory() {
+        if (!dirContainer) return;
+
+        const selCrop = dirCropFilter ? dirCropFilter.value.toLowerCase() : '';
+        const selDist = dirDistrictFilter ? dirDistrictFilter.value.toLowerCase() : '';
+        const selStatus = dirStatusFilter ? dirStatusFilter.value : '';
+
+        const filtered = centers.filter(c => {
+          // Crop check
+          const cropsList = [
+            c.commodity,
+            ...(Array.isArray(c.commodities) ? c.commodities : []),
+            ...(Array.isArray(c.acceptedCrops) ? c.acceptedCrops : [])
+          ].filter(Boolean).join(' ').toLowerCase();
+          const matchCrop = !selCrop || cropsList.includes(selCrop);
+
+          // District check
+          const matchDist = !selDist || (c.district && c.district.toLowerCase() === selDist);
+
+          // Status check
+          const isAvail = typeof window.KisanUtils !== 'undefined' ? window.KisanUtils.isCenterAcceptingBookings(c.id) : true;
+          const matchStatus = !selStatus || isAvail;
+
+          return matchCrop && matchDist && matchStatus;
+        });
+
+        if (dirCount) dirCount.textContent = filtered.length;
+
+        if (filtered.length === 0) {
+          dirContainer.innerHTML = `
+            <div class="p-8 bg-white border border-[#d6d1c4] text-center text-xs text-slate-500 rounded-sm">
+              कोई खरीद केंद्र उपलब्ध नहीं है। कृपया फ़िल्टर बदलें।
+            </div>
+          `;
+          return;
+        }
+
+        dirContainer.innerHTML = filtered.slice(0, 5).map(c => {
+          const isAvail = typeof window.KisanUtils !== 'undefined' ? window.KisanUtils.isCenterAcceptingBookings(c.id) : true;
+          const statusBadge = isAvail 
+            ? `<span class="text-[10px] font-bold text-emerald-800 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-xs">● Booking Available</span>`
+            : `<span class="text-[10px] font-bold text-amber-800 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-xs">⚠️ Booking Paused</span>`;
+
+          const loadUpper = String(c.loadStatus || 'MODERATE').toUpperCase();
+          const loadMeter = loadUpper === 'LOW' ? '███░░░░░░░ 30%' : (loadUpper === 'HIGH' ? '█████████░ 90%' : '██████░░░░ 60%');
+
+          const bookBtn = isAvail
+            ? `<a href="farmer/booking.html?centerId=${encodeURIComponent(c.id)}" class="btn btn-primary btn-sm text-[11px] font-bold py-1.5 px-3 rounded-xs">Book Slot</a>`
+            : `<button disabled class="btn btn-outline btn-sm text-[11px] font-semibold py-1.5 px-3 opacity-50 cursor-not-allowed">Unavailable</button>`;
+
+          return `
+            <div class="bg-white border border-[#e2ded4] p-4 rounded-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 font-sans hover:border-[#15803d]/50 transition-colors">
+              <div class="space-y-1 flex-1">
+                <div class="flex items-center gap-2">
+                  <span class="text-[10px] font-mono font-bold text-slate-400">${c.id}</span>
+                  <h4 class="text-sm font-bold text-slate-900">${c.name}</h4>
+                  ${statusBadge}
+                </div>
+                <div class="text-[11px] text-slate-500 flex flex-wrap items-center gap-x-3 gap-y-1">
+                  <span>${c.district}, ${c.state}</span>
+                  <span>•</span>
+                  <span>फसल: <strong>${c.commodity || 'विविध'}</strong></span>
+                  <span>•</span>
+                  <span class="font-mono">कतार: <strong>${c.currentQueueVehicles} वाहन</strong></span>
+                  <span>•</span>
+                  <span class="font-mono text-amber-800">प्रतीक्षा: <strong>~${c.estimatedWaitMinutes} min</strong></span>
+                </div>
+                <div class="text-[10px] font-mono text-slate-500 pt-0.5">
+                  Load: ${loadMeter} • दैनिक क्षमता: ${c.dailyCapacity || (c.dailyCapacityMT + ' MT')}
+                </div>
+              </div>
+
+              <div class="flex items-center gap-2 shrink-0 self-end sm:self-center">
+                <a href="farmer/center-details.html?id=${encodeURIComponent(c.id)}" class="btn btn-outline btn-sm text-[11px] font-semibold py-1.5 px-2.5 rounded-xs border-[#d5cfc1]">
+                  View
+                </a>
+                ${bookBtn}
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      dirCropFilter?.addEventListener('change', renderCentersDirectory);
+      dirDistrictFilter?.addEventListener('change', renderCentersDirectory);
+      dirStatusFilter?.addEventListener('change', renderCentersDirectory);
+      dirResetBtn?.addEventListener('click', () => {
+        if (dirCropFilter) dirCropFilter.value = '';
+        if (dirDistrictFilter) dirDistrictFilter.value = '';
+        if (dirStatusFilter) dirStatusFilter.value = '';
+        renderCentersDirectory();
+      });
+
+      renderCentersDirectory();
+
+      // 5. Accessible FAQ Accordion (Item 9)
+      const faqToggles = document.querySelectorAll('.faq-toggle');
+      faqToggles.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const isExpanded = btn.getAttribute('aria-expanded') === 'true';
+          const targetId = btn.getAttribute('aria-controls');
+          const content = document.getElementById(targetId);
+          const icon = btn.querySelector('.faq-icon');
+
+          // Single-open accordion
+          faqToggles.forEach(otherBtn => {
+            if (otherBtn !== btn) {
+              otherBtn.setAttribute('aria-expanded', 'false');
+              const otherTarget = document.getElementById(otherBtn.getAttribute('aria-controls'));
+              if (otherTarget) otherTarget.classList.add('hidden');
+              const otherIcon = otherBtn.querySelector('.faq-icon');
+              if (otherIcon) otherIcon.textContent = '[+]';
+            }
+          });
+
+          if (isExpanded) {
+            btn.setAttribute('aria-expanded', 'false');
+            content?.classList.add('hidden');
+            if (icon) icon.textContent = '[+]';
+          } else {
+            btn.setAttribute('aria-expanded', 'true');
+            content?.classList.remove('hidden');
+            if (icon) icon.textContent = '[−]';
+          }
+        });
+      });
+
     });
   </script>
 </body>

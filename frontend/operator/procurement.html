@@ -70,6 +70,10 @@
         <a href="procurement.html" class="px-3 py-1.5 rounded-lg bg-teal-50 text-[#0f766e] border border-teal-200">
           Procurement Operations
         </a>
+        <a href="complaints.html"
+          class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors">
+          Complaints (शिकायतें)
+        </a>
       </nav>
     </div>
   </header>
@@ -221,24 +225,41 @@
               </div>
             </div>
 
-            <!-- Weighbridge Scales Readout (Simulated Mock) -->
-            <div class="p-4 bg-slate-900 text-white rounded-xl shadow-xs">
-              <div class="flex items-center justify-between mb-3 text-[11px] text-slate-400">
-                <span class="uppercase tracking-wider font-mono font-semibold">Scale Terminal #1</span>
-                <span class="bg-slate-800 text-teal-400 px-2 py-0.5 rounded text-[10px] font-mono">DEMO SCALE</span>
+            <!-- Weighbridge Scales Readout & Input (Simulated Mock) -->
+            <div class="p-4 bg-slate-900 text-white rounded-xl shadow-xs space-y-3">
+              <div class="flex items-center justify-between text-[11px] text-slate-400">
+                <span class="uppercase tracking-wider font-mono font-semibold">Scale Terminal #1 (इलेक्ट्रॉनिक कांटा)</span>
+                <span class="bg-slate-800 text-teal-400 px-2 py-0.5 rounded text-[10px] font-mono">CALIBRATED DEMO</span>
               </div>
+              
               <div class="grid grid-cols-3 gap-2 text-center">
                 <div class="p-2 bg-slate-800/80 rounded-lg">
                   <div class="text-[10px] text-slate-400 uppercase">Gross Wt (भरा)</div>
-                  <div class="text-sm font-bold font-mono text-white mt-1">6,450 kg</div>
+                  <div class="text-sm font-bold font-mono text-white mt-1" id="wb-gross-display">58.20 QTL</div>
                 </div>
                 <div class="p-2 bg-slate-800/80 rounded-lg">
                   <div class="text-[10px] text-slate-400 uppercase">Tare Wt (खाली)</div>
-                  <div class="text-sm font-bold font-mono text-white mt-1">2,150 kg</div>
+                  <div class="text-sm font-bold font-mono text-white mt-1" id="wb-tare-display">5.70 QTL</div>
                 </div>
                 <div class="p-2 bg-emerald-950 border border-emerald-500/30 rounded-lg">
-                  <div class="text-[10px] text-emerald-300 uppercase font-bold">Net Wt (कुल उपज)</div>
-                  <div class="text-sm font-bold font-mono text-emerald-400 mt-1">43.00 Qtl</div>
+                  <div class="text-[10px] text-emerald-300 uppercase font-bold">Net Wt (शुद्ध उपज)</div>
+                  <div class="text-sm font-bold font-mono text-emerald-400 mt-1" id="wb-net-display">52.50 QTL</div>
+                </div>
+              </div>
+
+              <!-- Financial Procurement Breakdown (Demo Math) -->
+              <div class="pt-2 border-t border-slate-800 grid grid-cols-3 gap-2 text-center text-[11px]">
+                <div>
+                  <span class="text-slate-400 block text-[10px]">Demo Rate</span>
+                  <span class="font-bold text-amber-400 font-mono" id="wb-rate-display">₹2,425/QTL</span>
+                </div>
+                <div>
+                  <span class="text-slate-400 block text-[10px]">Deductions</span>
+                  <span class="font-bold text-slate-300 font-mono" id="wb-deductions-display">₹0.00</span>
+                </div>
+                <div>
+                  <span class="text-emerald-300 block text-[10px] font-bold">Procurement Value</span>
+                  <span class="font-bold text-emerald-400 font-mono" id="wb-amount-display">₹1,27,312.50</span>
                 </div>
               </div>
             </div>
@@ -247,16 +268,16 @@
             <div class="grid grid-cols-2 gap-3">
               <div class="p-2.5 bg-slate-50 rounded-lg border border-slate-200">
                 <div class="text-[10px] text-slate-500">Moisture Content (नमी)</div>
-                <div class="font-bold text-slate-900 text-xs mt-0.5 flex items-center gap-1.5">
+                <div class="font-bold text-slate-900 text-xs mt-0.5 flex items-center gap-1.5" id="desk-moisture">
                   <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-                  11.6% <span class="text-[10px] font-normal text-emerald-700">(Passed)</span>
+                  12.4% <span class="text-[10px] font-normal text-emerald-700">(मानक अनुसार / Passed)</span>
                 </div>
               </div>
               <div class="p-2.5 bg-slate-50 rounded-lg border border-slate-200">
-                <div class="text-[10px] text-slate-500">Foreign Matter (विदेशी तत्व)</div>
-                <div class="font-bold text-slate-900 text-xs mt-0.5 flex items-center gap-1.5">
+                <div class="text-[10px] text-slate-500">Quality Benchmark (गुणवत्ता)</div>
+                <div class="font-bold text-slate-900 text-xs mt-0.5 flex items-center gap-1.5" id="desk-quality">
                   <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-                  0.4% <span class="text-[10px] font-normal text-emerald-700">(Grade A)</span>
+                  Grade A <span class="text-[10px] font-normal text-emerald-700">(FAQ Compliant)</span>
                 </div>
               </div>
             </div>
@@ -289,13 +310,18 @@
               </div>
 
               <div id="already-completed-notice"
-                class="hidden p-3 bg-emerald-50 border border-emerald-200 rounded-xl text-emerald-900 text-xs">
-                <div class="font-bold flex items-center gap-1.5 text-emerald-800">
-                  &check; Electronic Procurement Receipt Issued (खरीद रसीद जारी)
+                class="hidden p-3.5 bg-emerald-50 border border-emerald-200 rounded-xl text-emerald-900 text-xs space-y-2">
+                <div class="font-bold flex items-center justify-between text-emerald-800">
+                  <span class="flex items-center gap-1.5">&check; Digital Procurement Receipt Issued (खरीद रसीद जारी)</span>
+                  <span class="font-mono text-[10px] bg-white px-2 py-0.5 rounded border border-emerald-300 text-emerald-900" id="issued-receipt-id">KSP-RCP-xxxx</span>
                 </div>
-                <div class="mt-1 text-[11px] text-emerald-700 leading-relaxed">
-                  Net 43.00 Quintals recorded. Digital MSP purchase acknowledgment transmitted to farmer portal and DBT
-                  treasury.
+                <div class="text-[11px] text-emerald-700 leading-relaxed" id="issued-receipt-desc">
+                  Net 52.50 Quintals recorded. Digital MSP purchase acknowledgment transmitted to farmer portal and DBT treasury.
+                </div>
+                <div class="pt-1">
+                  <a id="issued-receipt-link" href="../farmer/receipt.html" target="_blank" class="btn btn-outline btn-sm text-xs font-semibold py-1.5 px-3 bg-white text-emerald-800 border-emerald-300 hover:bg-emerald-100 flex items-center justify-center gap-1.5">
+                    <span>🧾</span> डिजिटल रसीद देखें (View Digital Receipt) &rarr;
+                  </a>
                 </div>
               </div>
             </div>
@@ -424,6 +450,19 @@
           startBtnContainer.classList.add('hidden');
           completeBtnContainer.classList.add('hidden');
           completedNotice.classList.remove('hidden');
+
+          const receipt = window.KisanOperator.getReceiptById(bookingId);
+          if (receipt) {
+            document.getElementById('wb-gross-display').textContent = `${receipt.grossWeight} QTL`;
+            document.getElementById('wb-tare-display').textContent = `${receipt.tareWeight} QTL`;
+            document.getElementById('wb-net-display').textContent = `${receipt.netWeight} QTL`;
+            document.getElementById('wb-rate-display').textContent = `₹${receipt.rate.toLocaleString('en-IN')}/QTL`;
+            document.getElementById('wb-deductions-display').textContent = `₹${receipt.deductions.toFixed(2)}`;
+            document.getElementById('wb-amount-display').textContent = `₹${receipt.netAmount.toLocaleString('en-IN')}`;
+            document.getElementById('issued-receipt-id').textContent = receipt.receiptId;
+            document.getElementById('issued-receipt-desc').textContent = `Net ${receipt.netWeight} Quintals of ${receipt.commodity} recorded @ ₹${receipt.rate}/QTL. Demo procurement value: ₹${receipt.netAmount.toLocaleString('en-IN')}.`;
+            document.getElementById('issued-receipt-link').href = `../farmer/receipt.html?id=${encodeURIComponent(receipt.receiptId)}`;
+          }
         } else if (isInProgress) {
           stageBadge.className = "text-[10px] font-bold px-2 py-0.5 rounded bg-amber-100 text-amber-800 border border-amber-200";
           stageBadge.textContent = "Intake in Progress";

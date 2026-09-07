@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Super Admin Grievance Escalation Console | KisanSetu</title>
+
+  <!-- Typography: Inter & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Core Design System -->
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    body {
+      background-color: #faf9f5;
+      color: #0f172a;
+    }
+    .font-mono-num {
+      font-family: 'JetBrains Mono', ui-monospace, monospace;
+    }
+  </style>
+</head>
+
+<body class="bg-[#faf9f5] text-[#0f172a] min-h-screen flex flex-col justify-between antialiased font-sans">
+
+  <!-- Authenticated Super Admin Header -->
+  <header class="bg-white border-b border-[#e2ded4] py-3.5 px-4 sticky top-0 z-40 shadow-2xs">
+    <div class="container mx-auto flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <a href="super-admin-dashboard.html"
+          class="w-9 h-9 rounded-sm bg-rose-700 text-white flex items-center justify-center font-bold text-sm shadow-2xs">
+          K
+        </a>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="text-base font-black text-slate-900 tracking-tight">KisanSetu</span>
+            <span class="text-xs text-slate-400">| Super Admin</span>
+          </div>
+          <div class="text-[11px] font-bold text-rose-700 -mt-0.5">
+            Final Grievance Escalation Tier (Level 3)
+          </div>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <div class="text-right hidden sm:block">
+          <div class="text-xs font-semibold text-slate-900" id="header-user-name">Loading...</div>
+          <div class="text-[11px] text-rose-700 font-medium">Role: Super Admin (Tier 0)</div>
+        </div>
+        <a href="super-admin-dashboard.html" class="btn btn-outline btn-sm text-xs py-1.5 px-3">
+          &larr; Dashboard
+        </a>
+        <button type="button" id="logout-btn" class="btn btn-outline btn-sm text-xs py-1.5 px-3">
+          Logout
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Container -->
+  <main class="container mx-auto py-6 sm:py-8 px-4 flex-1 space-y-6">
+
+    <!-- Header Banner -->
+    <div class="bg-white border border-[#e2ded4] rounded-sm p-5 shadow-2xs">
+      <div class="flex flex-wrap items-start justify-between gap-4">
+        <div>
+          <div class="flex items-center gap-2 mb-1.5">
+            <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-xs bg-rose-50 text-rose-800 border border-rose-200 text-[11px] font-bold">
+              <span class="w-1.5 h-1.5 rounded-full bg-rose-700"></span>
+              LEVEL 3: Apex Grievance Redressal & Policy Governance
+            </span>
+            <span class="inline-flex items-center px-2 py-0.5 rounded-xs text-[10px] font-semibold bg-blue-50 text-blue-700 border border-blue-200">
+              डेमो डेटा • Demo Flow
+            </span>
+          </div>
+          <h1 class="text-xl sm:text-2xl font-bold text-slate-900">
+            Super Admin Escalated Cases & Final Orders
+          </h1>
+          <p class="text-xs sm:text-sm text-slate-600 mt-1">
+            Grievances escalated by District Administrators that could not be resolved locally. Super Admin is the final authority.
+          </p>
+        </div>
+
+        <div class="p-2.5 bg-rose-50/60 border border-rose-200 rounded-xs text-xs text-rose-900 max-w-sm">
+          <strong class="text-rose-950">Hierarchy Limit:</strong>
+          This is the final escalation tier. No further upward escalation is permitted. Determinations issued here are final.
+        </div>
+      </div>
+    </div>
+
+    <!-- KPI Metrics -->
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+      <div class="bg-white border border-[#e2ded4] p-3.5 rounded-sm">
+        <div class="text-[11px] font-semibold text-slate-500">Super Admin Escalations</div>
+        <div class="text-2xl font-bold font-mono-num text-slate-900 mt-1" id="sa-total">0</div>
+        <div class="text-[10px] text-slate-400 mt-0.5">Tier 3 active cases</div>
+      </div>
+      <div class="bg-white border border-[#e2ded4] p-3.5 rounded-sm">
+        <div class="text-[11px] font-semibold text-rose-700">Critical / High Severity</div>
+        <div class="text-2xl font-bold font-mono-num text-rose-700 mt-1" id="sa-critical">0</div>
+        <div class="text-[10px] text-slate-400 mt-0.5">Requires immediate directive</div>
+      </div>
+      <div class="bg-white border border-[#e2ded4] p-3.5 rounded-sm">
+        <div class="text-[11px] font-semibold text-amber-700">Under Review</div>
+        <div class="text-2xl font-bold font-mono-num text-amber-700 mt-1" id="sa-review">0</div>
+        <div class="text-[10px] text-slate-400 mt-0.5">Investigation active</div>
+      </div>
+      <div class="bg-white border border-[#e2ded4] p-3.5 rounded-sm">
+        <div class="text-[11px] font-semibold text-emerald-800">Final Resolution Delivered</div>
+        <div class="text-2xl font-bold font-mono-num text-emerald-800 mt-1" id="sa-resolved">0</div>
+        <div class="text-[10px] text-slate-400 mt-0.5">Order issued & closed</div>
+      </div>
+    </div>
+
+    <!-- Cases Table Card -->
+    <div class="bg-white border border-[#e2ded4] rounded-sm shadow-2xs">
+      <div class="p-4 border-b border-[#e2ded4] flex items-center justify-between">
+        <h2 class="text-sm font-bold text-slate-900 uppercase tracking-wide">
+          Super Admin Grievance Docket (Level 3)
+        </h2>
+        <span class="badge badge-error text-[10px] font-mono-num" id="docket-count">0 cases</span>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-xs border-collapse">
+          <thead>
+            <tr class="bg-[#fbfaf7] border-b border-[#e2ded4] text-slate-600 uppercase font-bold text-[10px]">
+              <th class="py-3 px-3">Complaint #</th>
+              <th class="py-3 px-3">Farmer & Phone</th>
+              <th class="py-3 px-3">Center / District</th>
+              <th class="py-3 px-3">Subject & Escalation Trail</th>
+              <th class="py-3 px-3">Priority</th>
+              <th class="py-3 px-3">Status</th>
+              <th class="py-3 px-3 text-right">Super Admin Actions</th>
+            </tr>
+          </thead>
+          <tbody id="sa-table-body" class="divide-y divide-[#e2ded4]">
+            <tr>
+              <td colspan="7" class="p-8 text-center text-slate-400 text-xs">
+                Loading Level 3 escalations...
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- View Case Modal -->
+  <div id="sa-case-modal" class="hidden fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white border border-[#e2ded4] rounded-sm max-w-2xl w-full p-6 shadow-xl max-h-[90vh] overflow-y-auto space-y-4">
+      <div class="flex items-center justify-between pb-3 border-b border-[#e2ded4]">
+        <div class="flex items-center gap-2">
+          <span class="font-mono-num font-bold text-xs bg-slate-100 text-slate-800 px-2 py-0.5 border rounded-xs" id="modal-cmp-num">-</span>
+          <span class="badge text-[11px] font-bold" id="modal-status-badge">-</span>
+          <span class="text-[11px] font-bold px-2 py-0.5 border rounded-xs" id="modal-priority-badge">-</span>
+        </div>
+        <button type="button" onclick="document.getElementById('sa-case-modal').classList.add('hidden')" class="text-slate-400 hover:text-slate-700 text-lg font-bold">&times;</button>
+      </div>
+
+      <div>
+        <h3 class="text-base font-bold text-slate-900" id="modal-subject">-</h3>
+        <div class="text-[11px] text-slate-500 mt-1 flex flex-wrap gap-x-4">
+          <span>Farmer: <strong class="text-slate-800" id="modal-farmer">-</strong></span>
+          <span>Center: <strong class="text-slate-800" id="modal-center">-</strong></span>
+          <span>Booking: <strong class="font-mono-num text-slate-800" id="modal-booking">-</strong></span>
+          <span>Token: <strong class="font-mono-num text-slate-800" id="modal-token">-</strong></span>
+        </div>
+      </div>
+
+      <div>
+        <div class="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">Original Farmer Description:</div>
+        <div class="p-3 bg-[#faf9f5] border border-[#e2ded4] rounded-xs text-xs text-slate-800 leading-relaxed" id="modal-desc">-</div>
+      </div>
+
+      <div>
+        <div class="text-[11px] font-bold text-rose-800 uppercase tracking-wider mb-1">Escalation Summary:</div>
+        <div class="p-3 bg-rose-50/50 border border-rose-200 rounded-xs text-xs text-rose-950 leading-relaxed" id="modal-esc-reason">-</div>
+      </div>
+
+      <div id="modal-resolution-box" class="hidden p-3 bg-emerald-50 border border-emerald-200 rounded-xs text-xs">
+        <strong class="text-emerald-900 block mb-0.5">Final Resolution Order:</strong>
+        <span class="text-emerald-950 font-medium" id="modal-resolution-text">-</span>
+      </div>
+
+      <div>
+        <div class="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2">Complete Multi-Tier Audit Trail:</div>
+        <div id="modal-timeline" class="space-y-2 max-h-48 overflow-y-auto border border-slate-100 p-2.5 rounded-xs bg-slate-50 text-xs">
+          <!-- Timeline entries -->
+        </div>
+      </div>
+
+      <div class="pt-3 border-t border-[#e2ded4] flex justify-end">
+        <button type="button" onclick="document.getElementById('sa-case-modal').classList.add('hidden')" class="btn btn-outline btn-sm text-xs py-1.5 px-4">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Final Resolution Order Modal -->
+  <div id="sa-resolve-modal" class="hidden fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white border border-[#e2ded4] rounded-sm max-w-md w-full p-6 shadow-xl space-y-4">
+      <div class="flex items-center justify-between pb-2 border-b border-[#e2ded4]">
+        <div class="flex items-center gap-2 text-rose-800 font-bold text-sm">
+          <span>⚖️</span> Issue Final Super Admin Resolution Directive
+        </div>
+        <button type="button" onclick="document.getElementById('sa-resolve-modal').classList.add('hidden')" class="text-slate-400 hover:text-slate-700 text-lg font-bold">&times;</button>
+      </div>
+
+      <div class="text-xs text-slate-600">
+        Case: <strong class="font-mono-num" id="sa-res-modal-cmp-num">-</strong>
+      </div>
+
+      <form id="sa-resolve-form" class="space-y-3">
+        <div>
+          <label class="form-label font-bold text-xs text-slate-800">Final Order / Directive *</label>
+          <textarea id="sa-order-input" rows="4" class="form-textarea border-[#d6d1c4] text-xs py-2 rounded-xs"
+            placeholder="Enter binding state/central resolution directive..." required></textarea>
+        </div>
+        <div id="sa-res-error" class="text-xs text-rose-600 font-semibold hidden"></div>
+
+        <div class="flex items-center justify-end gap-2 pt-2 border-t border-slate-100">
+          <button type="button" onclick="document.getElementById('sa-resolve-modal').classList.add('hidden')" class="btn btn-outline btn-sm text-xs py-1.5 px-3">Cancel</button>
+          <button type="submit" class="btn btn-primary btn-sm bg-rose-700 hover:bg-rose-800 text-white border-rose-700 text-xs font-bold py-1.5 px-4">
+            Issue Final Directive
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Simple Footer -->
+  <footer class="py-4 text-center text-xs text-slate-400 border-t border-[#e2ded4] bg-white">
+    KisanSetu &copy; 2026 • SIH Innovation Prototype • Super Admin Governance Console
+  </footer>
+
+  <!-- Scripts: Mock Data, Utils, Auth Engine, Complaints Engine -->
+  <script src="../js/mock-data.js"></script>
+  <script src="../js/utils.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/complaints.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // 1. Enforce Super Admin Route Protection
+      const user = window.KisanAuth.requireAuth('super_admin', 'super-admin-login.html');
+      if (!user) return;
+
+      const adminName = user.name || 'Demo Super Admin';
+      document.getElementById('header-user-name').textContent = adminName;
+
+      // Logout handler
+      document.getElementById('logout-btn')?.addEventListener('click', () => {
+        window.KisanAuth.logout('super-admin-login.html');
+      });
+
+      let activeCaseId = null;
+
+      function renderTable() {
+        const escalations = window.KisanComplaints.getAllComplaints().filter(c => {
+          return c.currentLevel === 'SUPER_ADMIN' || (c.history && c.history.some(h => h.role === 'super_admin'));
+        });
+
+        // Metrics
+        const total = escalations.length;
+        const critical = escalations.filter(c => ['HIGH', 'CRITICAL'].includes(c.priority)).length;
+        const inReview = escalations.filter(c => c.status === 'IN_PROGRESS' && c.currentLevel === 'SUPER_ADMIN').length;
+        const resolved = escalations.filter(c => ['RESOLVED', 'CLOSED'].includes(c.status)).length;
+
+        document.getElementById('sa-total').textContent = total;
+        document.getElementById('sa-critical').textContent = critical;
+        document.getElementById('sa-review').textContent = inReview;
+        document.getElementById('sa-resolved').textContent = resolved;
+        document.getElementById('docket-count').textContent = `${total} cases`;
+
+        const tbody = document.getElementById('sa-table-body');
+        if (escalations.length === 0) {
+          tbody.innerHTML = `
+            <tr>
+              <td colspan="7" class="p-8 text-center text-slate-400 text-xs">
+                No complaints currently escalated to Super Admin level.
+              </td>
+            </tr>
+          `;
+          return;
+        }
+
+        tbody.innerHTML = escalations.map(c => {
+          const statusMeta = window.KisanComplaints.getStatusMeta(c.status);
+          let pBadgeClass = 'bg-slate-100 text-slate-700 border-slate-200';
+          if (c.priority === 'HIGH') pBadgeClass = 'bg-amber-100 text-amber-900 border-amber-300 font-bold';
+          if (c.priority === 'CRITICAL') pBadgeClass = 'bg-rose-100 text-rose-900 border-rose-300 font-bold';
+
+          return `
+            <tr class="hover:bg-[#faf9f5] transition-colors">
+              <td class="py-3 px-3 font-mono-num font-bold text-slate-800">
+                ${c.complaintNumber}
+              </td>
+              <td class="py-3 px-3">
+                <div class="font-bold text-slate-800">${c.farmerName}</div>
+                <div class="text-[10px] text-slate-400">${c.farmerPhone || 'N/A'}</div>
+              </td>
+              <td class="py-3 px-3 text-slate-600">
+                ${c.relatedCenterName || c.relatedCenterId || 'Center'}
+              </td>
+              <td class="py-3 px-3 max-w-xs">
+                <div class="font-medium text-slate-800 truncate">${c.subject}</div>
+                ${c.escalationReason ? `<div class="text-[10px] text-rose-700 italic truncate">Reason: ${c.escalationReason}</div>` : ''}
+              </td>
+              <td class="py-3 px-3">
+                <span class="text-[10px] px-2 py-0.5 border rounded-xs ${pBadgeClass}">
+                  ${c.priority}
+                </span>
+              </td>
+              <td class="py-3 px-3">
+                <span class="badge ${statusMeta.badgeClass} text-[10px] font-bold">
+                  ● ${statusMeta.en}
+                </span>
+              </td>
+              <td class="py-3 px-3 text-right">
+                <div class="inline-flex items-center gap-1">
+                  <button type="button" class="btn-sa-view btn btn-outline btn-sm text-[11px] py-1 px-2 text-slate-700" data-id="${c.complaintNumber}">
+                    View Case
+                  </button>
+
+                  ${c.status !== 'RESOLVED' && c.status !== 'CLOSED' ? `
+                    <button type="button" class="btn-sa-inv btn btn-outline btn-sm text-[11px] py-1 px-2 border-teal-300 text-teal-800 bg-teal-50" data-id="${c.complaintNumber}">
+                      Review
+                    </button>
+                    <button type="button" class="btn-sa-res btn btn-primary btn-sm bg-rose-700 hover:bg-rose-800 text-white border-rose-700 text-[11px] py-1 px-2" data-id="${c.complaintNumber}">
+                      Resolve
+                    </button>
+                  ` : ''}
+
+                  ${c.status === 'RESOLVED' ? `
+                    <button type="button" class="btn-sa-close btn btn-outline btn-sm text-[11px] py-1 px-2 border-slate-300 text-slate-600" data-id="${c.complaintNumber}">
+                      Close
+                    </button>
+                  ` : ''}
+                </div>
+              </td>
+            </tr>
+          `;
+        }).join('');
+      }
+
+      // Event Delegation
+      const tbody = document.getElementById('sa-table-body');
+      tbody.addEventListener('click', (e) => {
+        const viewBtn = e.target.closest('.btn-sa-view');
+        const invBtn = e.target.closest('.btn-sa-inv');
+        const resBtn = e.target.closest('.btn-sa-res');
+        const closeBtn = e.target.closest('.btn-sa-close');
+
+        if (viewBtn) openCaseModal(viewBtn.dataset.id);
+        else if (invBtn) {
+          window.KisanComplaints.investigateComplaint(invBtn.dataset.id, user);
+          renderTable();
+        } else if (resBtn) openResolveModal(resBtn.dataset.id);
+        else if (closeBtn) {
+          if (confirm('Formally close this case?')) {
+            window.KisanComplaints.closeComplaint(closeBtn.dataset.id, user);
+            renderTable();
+          }
+        }
+      });
+
+      function openCaseModal(cmpNum) {
+        const c = window.KisanComplaints.getComplaintById(cmpNum);
+        if (!c) return;
+
+        const statusMeta = window.KisanComplaints.getStatusMeta(c.status);
+        document.getElementById('modal-cmp-num').textContent = c.complaintNumber;
+        document.getElementById('modal-status-badge').textContent = `● ${statusMeta.en}`;
+        document.getElementById('modal-status-badge').className = `badge ${statusMeta.badgeClass} text-[11px] font-bold`;
+        document.getElementById('modal-priority-badge').textContent = c.priority;
+        document.getElementById('modal-subject').textContent = c.subject;
+        document.getElementById('modal-farmer').textContent = `${c.farmerName} (${c.farmerPhone || 'N/A'})`;
+        document.getElementById('modal-center').textContent = c.relatedCenterName || c.relatedCenterId || 'N/A';
+        document.getElementById('modal-booking').textContent = c.relatedBookingId || 'N/A';
+        document.getElementById('modal-token').textContent = c.relatedToken || 'N/A';
+        document.getElementById('modal-desc').textContent = c.description;
+        document.getElementById('modal-esc-reason').textContent = c.escalationReason || 'N/A';
+
+        const resBox = document.getElementById('modal-resolution-box');
+        if (c.resolution) {
+          resBox.classList.remove('hidden');
+          document.getElementById('modal-resolution-text').textContent = c.resolution;
+        } else {
+          resBox.classList.add('hidden');
+        }
+
+        const tContainer = document.getElementById('modal-timeline');
+        tContainer.innerHTML = (c.history || []).map((h, i) => `
+          <div class="border-b border-slate-200 pb-1.5 mb-1.5 last:border-b-0 last:mb-0 last:pb-0">
+            <div class="flex justify-between text-[10px] text-slate-500 font-semibold">
+              <span class="text-slate-700 font-bold">${h.action} by ${h.actor || h.role} (${h.role})</span>
+              <span class="font-mono-num">${new Date(h.timestamp).toLocaleTimeString()}</span>
+            </div>
+            ${h.note ? `<div class="text-[11px] text-slate-800 mt-0.5">${h.note}</div>` : ''}
+          </div>
+        `).join('');
+
+        document.getElementById('sa-case-modal').classList.remove('hidden');
+      }
+
+      function openResolveModal(cmpNum) {
+        activeCaseId = cmpNum;
+        document.getElementById('sa-res-modal-cmp-num').textContent = cmpNum;
+        document.getElementById('sa-order-input').value = '';
+        document.getElementById('sa-res-error').classList.add('hidden');
+        document.getElementById('sa-resolve-modal').classList.remove('hidden');
+      }
+
+      document.getElementById('sa-resolve-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const directive = document.getElementById('sa-order-input').value.trim();
+        const err = document.getElementById('sa-res-error');
+        err.classList.add('hidden');
+
+        const res = window.KisanComplaints.resolveComplaint(activeCaseId, directive, user);
+        if (res.success) {
+          document.getElementById('sa-resolve-modal').classList.add('hidden');
+          renderTable();
+        } else {
+          err.textContent = res.error || 'Failed to resolve';
+          err.classList.remove('hidden');
+        }
+      });
+
+      // Initial Render
+      renderTable();
+    });
+  </script>
+</body>
+
+</html>

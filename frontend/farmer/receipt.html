@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="hi">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>डिजिटल खरीद रसीद | Digital Procurement Receipt — KisanSetu</title>
+
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Core Design System -->
+  <link rel="stylesheet" href="../css/style.css">
+
+  <style>
+    @media print {
+      body {
+        background-color: white !important;
+      }
+      header, footer, .no-print {
+        display: none !important;
+      }
+      .receipt-card {
+        box-shadow: none !important;
+        border: 1px solid #cbd5e1 !important;
+        margin: 0 !important;
+        padding: 1.5rem !important;
+      }
+    }
+  </style>
+</head>
+
+<body class="bg-[#f8fafc] text-[#0f172a] min-h-screen flex flex-col justify-between antialiased">
+
+  <!-- Authenticated Header -->
+  <header class="bg-white border-b border-slate-200 py-3.5 px-4 sticky top-0 z-40 shadow-xs no-print">
+    <div class="container mx-auto flex flex-wrap items-center justify-between gap-3">
+      <!-- Brand & Back -->
+      <div class="flex items-center gap-3">
+        <a href="dashboard.html"
+          class="w-9 h-9 rounded-lg bg-[#15803d] text-white flex items-center justify-center font-bold text-sm shadow-xs">
+          K
+        </a>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="text-base font-bold text-slate-900 tracking-tight">KisanSetu</span>
+            <span class="text-xs text-slate-400">| किसान सेतु</span>
+          </div>
+          <div class="text-[11px] font-semibold text-[#15803d] -mt-0.5">
+            डिजिटल खरीद प्रमाणपत्र (Procurement Receipt)
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Actions -->
+      <div class="flex items-center gap-2">
+        <a href="sales-history.html" class="btn btn-outline btn-sm text-xs font-semibold py-1.5 px-3">
+          &larr; विक्रय इतिहास (Sales History)
+        </a>
+        <a href="dashboard.html" class="btn btn-outline btn-sm text-xs font-semibold py-1.5 px-3">
+          डैशबोर्ड (Dashboard)
+        </a>
+        <button type="button" onclick="window.print()" class="btn btn-primary btn-sm text-xs font-semibold py-1.5 px-3 flex items-center gap-1.5 shadow-xs">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path>
+          </svg>
+          प्रिंट / सेव रसीद (Print)
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="container mx-auto py-6 sm:py-10 px-4 flex-1">
+
+    <!-- Not Found State -->
+    <div id="receipt-not-found" class="max-w-md mx-auto card p-8 bg-white border-slate-200 text-center shadow-xs hidden">
+      <div class="w-12 h-12 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center mx-auto mb-3">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+        </svg>
+      </div>
+      <h2 class="text-base font-bold text-slate-900 mb-1">रसीद नहीं मिली (Receipt Not Found)</h2>
+      <p class="text-xs text-slate-500 mb-4">निर्दिष्ट रसीद आईडी उपलब्ध नहीं है। कृपया विक्रय इतिहास देखें।</p>
+      <a href="sales-history.html" class="btn btn-primary btn-sm text-xs font-semibold py-2 px-4 inline-block">
+        विक्रय इतिहास पर जाएं (Go to Sales History)
+      </a>
+    </div>
+
+    <!-- Official Digital Receipt Card -->
+    <div id="receipt-card-container" class="max-w-2xl mx-auto space-y-4">
+      
+      <!-- Top Banner / Badge Bar (No Print) -->
+      <div class="flex flex-wrap items-center justify-between gap-2 text-xs no-print">
+        <span class="text-slate-500">ई-खरीद पावती • Electronic Procurement Acknowledgment</span>
+        <span class="text-[11px] font-semibold text-blue-700 bg-blue-50 px-2.5 py-0.5 rounded border border-blue-200">
+          डेमो प्रोटोटाइप रसीद • Demo Prototype Receipt
+        </span>
+      </div>
+
+      <!-- Receipt Canvas -->
+      <div class="card p-6 sm:p-8 bg-white border-slate-200 shadow-sm relative overflow-hidden receipt-card">
+        
+        <!-- Header Strip -->
+        <div class="flex items-start justify-between border-b border-slate-200 pb-5 mb-5">
+          <div class="flex items-center gap-3">
+            <div class="w-12 h-12 rounded-xl bg-[#15803d] text-white flex items-center justify-center font-bold text-xl shadow-xs">
+              🌾
+            </div>
+            <div>
+              <div class="text-[10px] font-bold text-[#15803d] uppercase tracking-wider">
+                भारत सरकार • राज्य कृषि विपणन बोर्ड (सिमुलेटेड)
+              </div>
+              <h1 class="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
+                डिजिटल खरीद रसीद
+              </h1>
+              <div class="text-xs font-semibold text-slate-500">
+                Digital Crop Procurement Certificate & Weighment Slip
+              </div>
+            </div>
+          </div>
+
+          <div class="text-right">
+            <span class="text-[10px] uppercase font-bold text-slate-400 block">रसीद संख्या (Receipt ID)</span>
+            <span class="font-mono text-sm sm:text-base font-bold text-[#15803d]" id="rcp-id">KSP-RCP-xxxx</span>
+            <span class="inline-block text-[9px] font-bold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200 mt-1">
+              ✓ प्रमाणित (Verified)
+            </span>
+          </div>
+        </div>
+
+        <!-- Section 1: Farmer & Center Information -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs pb-5 border-b border-slate-100">
+          <div class="p-3.5 bg-slate-50 rounded-lg border border-slate-150 space-y-1.5">
+            <span class="text-[10px] uppercase font-bold text-slate-400 block">किसान विवरण (Farmer Details)</span>
+            <div class="flex justify-between">
+              <span class="text-slate-500">नाम (Name):</span>
+              <strong class="text-slate-900 font-semibold" id="rcp-farmer-name">-</strong>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-slate-500">मोबाइल (Phone):</span>
+              <span class="font-mono text-slate-700" id="rcp-farmer-phone">-</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-slate-500">टोकन (Token):</span>
+              <span class="font-mono font-bold text-emerald-800" id="rcp-token-id">-</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-slate-500">बुकिंग (Booking ID):</span>
+              <span class="font-mono text-slate-600" id="rcp-booking-id">-</span>
+            </div>
+          </div>
+
+          <div class="p-3.5 bg-slate-50 rounded-lg border border-slate-150 space-y-1.5">
+            <span class="text-[10px] uppercase font-bold text-slate-400 block">खरीद केंद्र विवरण (Center Details)</span>
+            <div class="flex justify-between">
+              <span class="text-slate-500">केंद्र (Center):</span>
+              <strong class="text-slate-900 font-semibold text-right" id="rcp-center-name">-</strong>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-slate-500">केंद्र कोड (Center ID):</span>
+              <span class="font-mono text-slate-700" id="rcp-center-id">-</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-slate-500">दिनांक (Date):</span>
+              <span class="font-semibold text-slate-800" id="rcp-date">-</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-slate-500">समय (Time):</span>
+              <span class="text-slate-700" id="rcp-time">-</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 2: Weighbridge & Quality Parameters -->
+        <div class="py-5 border-b border-slate-100 space-y-3">
+          <div class="flex items-center justify-between text-xs">
+            <h3 class="font-bold text-slate-900 uppercase tracking-wider text-[11px]">
+              तौल एवं गुणवत्ता विश्लेषण (Electronic Weighment & Quality)
+            </h3>
+            <span class="text-[10px] font-mono text-slate-400">Electronic Weighbridge Calibrated</span>
+          </div>
+
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+            <div class="p-3 bg-white rounded-lg border border-slate-200 text-center">
+              <span class="text-slate-400 block text-[10px]">सकल वजन (Gross Wt)</span>
+              <span class="text-sm font-bold font-mono text-slate-800 mt-0.5 block" id="rcp-gross-wt">-</span>
+              <span class="text-[10px] text-slate-400">भरा वाहन</span>
+            </div>
+            <div class="p-3 bg-white rounded-lg border border-slate-200 text-center">
+              <span class="text-slate-400 block text-[10px]">खाली वजन (Tare Wt)</span>
+              <span class="text-sm font-bold font-mono text-slate-800 mt-0.5 block" id="rcp-tare-wt">-</span>
+              <span class="text-[10px] text-slate-400">खाली वाहन</span>
+            </div>
+            <div class="p-3 bg-emerald-50 rounded-lg border border-emerald-300 text-center">
+              <span class="text-emerald-800 block text-[10px] font-bold">शुद्ध वजन (Net Weight)</span>
+              <span class="text-base font-bold font-mono text-emerald-800 mt-0.5 block" id="rcp-net-wt">-</span>
+              <span class="text-[10px] text-emerald-700 font-medium">कुल उत्पाद</span>
+            </div>
+            <div class="p-3 bg-white rounded-lg border border-slate-200 text-center">
+              <span class="text-slate-400 block text-[10px]">नमी (Moisture)</span>
+              <span class="text-sm font-bold font-mono text-slate-800 mt-0.5 block" id="rcp-moisture">-</span>
+              <span class="text-[10px] text-emerald-700 font-semibold" id="rcp-quality">मानक उत्तीर्ण</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 3: Financial Procurement Breakdown -->
+        <div class="py-5 border-b border-slate-200 space-y-3">
+          <h3 class="font-bold text-slate-900 uppercase tracking-wider text-[11px]">
+            फसल मूल्य एवं विपणन गणना (Procurement Value Calculation)
+          </h3>
+
+          <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 text-xs space-y-2.5">
+            <div class="flex justify-between items-center pb-2 border-b border-slate-200">
+              <span class="text-slate-600">फसल का नाम (Crop Variety):</span>
+              <strong class="text-slate-900 text-sm" id="rcp-crop">-</strong>
+            </div>
+
+            <div class="flex justify-between items-center">
+              <span class="text-slate-600">प्रमाणित दर (Demo Rate):</span>
+              <span class="font-mono font-bold text-slate-800 text-xs" id="rcp-rate">-</span>
+            </div>
+
+            <div class="flex justify-between items-center">
+              <span class="text-slate-600">सकल मूल्य (Gross Procurement Value):</span>
+              <span class="font-mono text-slate-800" id="rcp-gross-amount">-</span>
+            </div>
+
+            <div class="flex justify-between items-center">
+              <span class="text-slate-600">कटौती / प्रभार (Mandatory Deductions):</span>
+              <span class="font-mono text-slate-700" id="rcp-deductions">₹0.00</span>
+            </div>
+
+            <div class="pt-2.5 border-t border-slate-300 flex justify-between items-center">
+              <div>
+                <span class="text-xs font-bold text-slate-900 block">कुल देय मूल्य (Net Procurement Value):</span>
+                <span class="text-[10px] text-slate-500">Illustrative Demo Net Amount</span>
+              </div>
+              <span class="font-mono text-lg sm:text-xl font-bold text-[#15803d]" id="rcp-net-amount">₹0</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 4: Security Stamp & Official Disclaimer -->
+        <div class="pt-5 flex flex-wrap items-center justify-between gap-4 text-xs">
+          <div class="space-y-1 text-slate-500 text-[11px] max-w-sm leading-relaxed">
+            <div class="font-semibold text-slate-700 flex items-center gap-1">
+              <span>🔒</span> ई-सत्यापित डिजिटल रसीद • Electronic Verified
+            </div>
+            <p>
+              यह प्रमाणपत्र किसान सेतु स्मार्ट प्रोक्योरमेंट पोर्टल पर इलेक्ट्रॉनिक वेईब्रिज के आधार पर स्वतः सृजित है।
+            </p>
+            <p class="text-[10px] text-amber-800 bg-amber-50 px-2 py-1 rounded border border-amber-200 inline-block font-medium">
+              डेमो डेटा: यह रसीद केवल प्रोटोटाइप मूल्यांकन हेतु है। कोई वास्तविक बैंक अंतरण नहीं हुआ है।
+            </p>
+          </div>
+
+          <!-- Digital Seal Badge -->
+          <div class="p-3 rounded-lg border-2 border-dashed border-emerald-400 bg-emerald-50/50 text-center w-36 shrink-0">
+            <div class="text-[9px] font-bold text-[#15803d] uppercase tracking-widest">KisanSetu</div>
+            <div class="text-xs font-bold text-emerald-950 mt-0.5">खरीद संपन्न</div>
+            <div class="text-[9px] text-emerald-800 font-mono mt-0.5">STAGE COMPLETED</div>
+            <div class="text-[8px] text-slate-400 mt-1 font-mono" id="rcp-seal-time">-</div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Action Buttons Footer (No Print) -->
+      <div class="flex flex-wrap items-center justify-between gap-3 pt-2 no-print">
+        <a href="sales-history.html" class="btn btn-outline text-xs font-semibold py-2 px-4">
+          &larr; विक्रय इतिहास (Sales History)
+        </a>
+        <div class="flex items-center gap-2">
+          <button type="button" onclick="copyReceiptLink()" class="btn btn-outline text-xs font-semibold py-2 px-3 flex items-center gap-1">
+            <span>🔗</span> लिंक कॉपी करें (Copy Link)
+          </button>
+          <a href="dashboard.html" class="btn btn-primary text-xs font-semibold py-2 px-4">
+            डैशबोर्ड पर जाएं (Go to Dashboard) &rarr;
+          </a>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- Footer (No Print) -->
+  <footer class="py-4 text-center text-xs text-slate-400 border-t border-slate-200 bg-white no-print">
+    KisanSetu &copy; 2026 • SIH Innovation Project • Smart Procurement Platform
+  </footer>
+
+  <!-- Scripts -->
+  <script src="../js/mock-data.js"></script>
+  <script src="../js/utils.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="farmer.js"></script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      // 1. Enforce Farmer Auth
+      const user = window.KisanAuth.requireAuth('farmer', '../pages/login.html');
+      if (!user) return;
+
+      // 2. Parse Query Params (?id=... or ?bookingId=...)
+      const params = new URLSearchParams(window.location.search);
+      const receiptId = params.get('id');
+      const bookingId = params.get('bookingId');
+      const targetQuery = receiptId || bookingId;
+
+      // 3. Lookup Receipt Record
+      let receipt = null;
+      if (targetQuery) {
+        receipt = window.FarmerPortal.getReceiptById(targetQuery);
+      }
+      
+      // Fallback: If no query param provided, show most recent sale
+      if (!receipt) {
+        receipt = window.FarmerPortal.getRecentSale();
+      }
+
+      const notFoundContainer = document.getElementById('receipt-not-found');
+      const cardContainer = document.getElementById('receipt-card-container');
+
+      if (!receipt) {
+        notFoundContainer.classList.remove('hidden');
+        cardContainer.classList.add('hidden');
+        return;
+      }
+
+      // 4. Populate Receipt Details
+      document.getElementById('rcp-id').textContent = receipt.receiptId || "KSP-RCP-0001";
+      document.getElementById('rcp-farmer-name').textContent = receipt.farmerName || user.name || "Demo Farmer";
+      document.getElementById('rcp-farmer-phone').textContent = receipt.farmerPhone || user.phone || "98765 43210";
+      document.getElementById('rcp-token-id').textContent = receipt.tokenId || "-";
+      document.getElementById('rcp-booking-id').textContent = receipt.bookingId || "-";
+
+      document.getElementById('rcp-center-name').textContent = receipt.centerName || "Karnal Central Procurement Center";
+      document.getElementById('rcp-center-id').textContent = receipt.centerId || "CTR-HR-01";
+      document.getElementById('rcp-date').textContent = receipt.date || "Today (आज)";
+      document.getElementById('rcp-time').textContent = receipt.time || "10:30 AM";
+
+      const gross = typeof receipt.grossWeight === 'number' ? receipt.grossWeight : parseFloat(receipt.grossWeight) || 58.20;
+      const tare = typeof receipt.tareWeight === 'number' ? receipt.tareWeight : parseFloat(receipt.tareWeight) || 5.70;
+      const net = typeof receipt.netWeight === 'number' ? receipt.netWeight : parseFloat(receipt.netWeight) || 52.50;
+      const rate = typeof receipt.rate === 'number' ? receipt.rate : parseFloat(receipt.rate) || 2425;
+      const grossAmt = typeof receipt.grossAmount === 'number' ? receipt.grossAmount : (net * rate);
+      const ded = typeof receipt.deductions === 'number' ? receipt.deductions : 0;
+      const netAmt = typeof receipt.netAmount === 'number' ? receipt.netAmount : (grossAmt - ded);
+
+      document.getElementById('rcp-gross-wt').textContent = `${gross.toFixed(2)} QTL`;
+      document.getElementById('rcp-tare-wt').textContent = `${tare.toFixed(2)} QTL`;
+      document.getElementById('rcp-net-wt').textContent = `${net.toFixed(2)} QTL`;
+      document.getElementById('rcp-moisture').textContent = receipt.moisture || "12.4%";
+      document.getElementById('rcp-quality').textContent = receipt.quality || "Grade A (मानक अनुसार)";
+
+      document.getElementById('rcp-crop').textContent = receipt.crop || receipt.commodity || "Wheat (गेहूं)";
+      document.getElementById('rcp-rate').textContent = `₹${rate.toLocaleString('en-IN')}/QTL`;
+      document.getElementById('rcp-gross-amount').textContent = `₹${grossAmt.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`;
+      document.getElementById('rcp-deductions').textContent = `₹${ded.toFixed(2)}`;
+      document.getElementById('rcp-net-amount').textContent = `₹${netAmt.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`;
+      document.getElementById('rcp-seal-time').textContent = receipt.completedAt ? new Date(receipt.completedAt).toLocaleDateString('en-IN') : new Date().toLocaleDateString('en-IN');
+    });
+
+    window.copyReceiptLink = function() {
+      navigator.clipboard.writeText(window.location.href).then(() => {
+        alert("रसीद लिंक कॉपी हो गया (Receipt link copied to clipboard)");
+      }).catch(() => {
+        alert("URL: " + window.location.href);
+      });
+    };
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="hi">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>बुकिंग विवरण | Booking Details — KisanSetu</title>
+
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Core Design System -->
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body class="bg-[#f8fafc] text-[#0f172a] min-h-screen flex flex-col justify-between antialiased">
+
+  <!-- Authenticated Header -->
+  <header class="bg-white border-b border-slate-200 py-3.5 px-4 sticky top-0 z-40 shadow-xs">
+    <div class="container mx-auto flex flex-wrap items-center justify-between gap-3">
+      <!-- Brand & Tag -->
+      <div class="flex items-center gap-3">
+        <a href="dashboard.html"
+          class="w-9 h-9 rounded-lg bg-[#15803d] text-white flex items-center justify-center font-bold text-sm shadow-xs">
+          K
+        </a>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="text-base font-bold text-slate-900 tracking-tight">KisanSetu</span>
+            <span class="text-xs text-slate-400">| किसान सेतु</span>
+          </div>
+          <div class="text-[11px] font-semibold text-[#15803d] -mt-0.5">
+            किसान पोर्टल (Farmer Portal)
+          </div>
+        </div>
+      </div>
+
+      <!-- Navigation & Logout -->
+      <div class="flex items-center gap-3">
+        <a href="bookings.html"
+          class="btn btn-outline btn-sm text-xs font-semibold flex items-center gap-1.5 py-1.5 px-3">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18">
+            </path>
+          </svg>
+          मेरी बुकिंग (My Bookings)
+        </a>
+
+        <button type="button" id="logout-btn" class="btn btn-outline btn-sm text-xs py-1.5 px-3">
+          लॉगआउट (Logout)
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Container -->
+  <main class="container mx-auto py-6 sm:py-8 px-4 flex-1">
+
+    <!-- Not Found Error Container (Hidden by default) -->
+    <div id="error-container"
+      class="card p-10 bg-white border-slate-200 text-center max-w-lg mx-auto hidden shadow-xs my-8">
+      <div class="w-14 h-14 rounded-full bg-rose-50 text-rose-600 flex items-center justify-center mx-auto mb-3">
+        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z">
+          </path>
+        </svg>
+      </div>
+      <h2 class="text-xl font-bold text-slate-900 mb-1">बुकिंग नहीं मिली</h2>
+      <p class="text-xs text-slate-500 mb-6">
+        (No booking record found for the provided Booking ID)
+      </p>
+      <a href="bookings.html" class="btn btn-primary text-xs font-semibold py-2.5 px-5 inline-flex items-center gap-1.5">
+        ← मेरी बुकिंग पर वापस जाएं (Back to My Bookings)
+      </a>
+    </div>
+
+    <!-- Booking Details Content (Hidden until resolved) -->
+    <div id="booking-details-content" class="max-w-4xl mx-auto space-y-6 hidden">
+
+      <!-- Breadcrumbs -->
+      <nav class="flex items-center gap-2 text-xs text-slate-500 font-medium" aria-label="Breadcrumb">
+        <a href="dashboard.html" class="hover:text-[#15803d]">डैशबोर्ड</a>
+        <span>/</span>
+        <a href="bookings.html" class="hover:text-[#15803d]">मेरी बुकिंग</a>
+        <span>/</span>
+        <span class="text-slate-900 font-bold" id="crumb-booking-id">-</span>
+      </nav>
+
+      <!-- Hero Summary Card -->
+      <div class="card p-6 bg-white border-slate-200 shadow-xs">
+        <div class="flex flex-wrap items-start justify-between gap-4">
+          <div>
+            <div class="flex flex-wrap items-center gap-2 mb-2">
+              <span id="booking-status-badge"
+                class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border">
+                <!-- Injected dynamically -->
+              </span>
+
+              <span class="text-xs font-mono font-bold text-slate-700 bg-slate-100 px-2.5 py-1 rounded border border-slate-200" id="detail-booking-id">
+                -
+              </span>
+
+              <span class="text-[10px] text-amber-700 bg-amber-50 px-2 py-1 rounded border border-amber-200 font-medium">
+                डेमो डेटा • Demo Data
+              </span>
+            </div>
+
+            <h1 class="text-xl sm:text-2xl font-bold text-slate-900 leading-snug" id="detail-center-name">
+              -
+            </h1>
+            <p class="text-xs text-slate-500 mt-1 flex items-center gap-1" id="detail-center-location">
+              <svg class="w-3.5 h-3.5 text-slate-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+              </svg>
+              <span>-</span>
+            </p>
+          </div>
+
+          <!-- Digital Token Box -->
+          <div class="p-4 bg-emerald-50/70 border border-emerald-200 rounded-xl text-center min-w-[160px] shadow-xs">
+            <span class="text-slate-500 block text-[10px] uppercase font-bold tracking-wider">डिजिटल टोकन</span>
+            <span class="text-lg sm:text-xl font-mono font-black text-emerald-800 tracking-tight" id="detail-token-num">
+              -
+            </span>
+            <span class="text-[10px] text-slate-400 block mt-0.5" id="detail-token-sub">
+              प्रवेश पर्ची (Entry Pass)
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Specifications Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+
+        <!-- Slot & Commodity Card -->
+        <div class="card p-5 bg-white border-slate-200 shadow-xs space-y-3.5">
+          <h2 class="text-xs font-bold uppercase tracking-wider text-slate-700 flex items-center gap-1.5 pb-2 border-b border-slate-100">
+            <span>🌾</span> फसल व स्लॉट विवरण (Slot & Commodity)
+          </h2>
+
+          <div class="space-y-2.5 text-xs">
+            <div class="flex justify-between py-1 border-b border-slate-50">
+              <span class="text-slate-500">फसल (Commodity):</span>
+              <span class="font-bold text-slate-800" id="detail-commodity">-</span>
+            </div>
+            <div class="flex justify-between py-1 border-b border-slate-50">
+              <span class="text-slate-500">आगमन दिनांक (Date):</span>
+              <span class="font-bold text-slate-800" id="detail-date">-</span>
+            </div>
+            <div class="flex justify-between py-1 border-b border-slate-50">
+              <span class="text-slate-500">समय स्लॉट (Time Slot):</span>
+              <span class="font-bold text-[#15803d]" id="detail-slot">-</span>
+            </div>
+            <div class="flex justify-between py-1 border-b border-slate-50">
+              <span class="text-slate-500">केंद्र कोड (Center ID):</span>
+              <span class="font-mono font-semibold text-slate-700" id="detail-center-id">-</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Registration & Lifecycle Details -->
+        <div class="card p-5 bg-white border-slate-200 shadow-xs space-y-3.5">
+          <h2 class="text-xs font-bold uppercase tracking-wider text-slate-700 flex items-center gap-1.5 pb-2 border-b border-slate-100">
+            <span>👤</span> पंजीकरण व स्थिति (Registration & Lifecycle)
+          </h2>
+
+          <div class="space-y-2.5 text-xs">
+            <div class="flex justify-between py-1 border-b border-slate-50">
+              <span class="text-slate-500">किसान का नाम (Farmer):</span>
+              <span class="font-bold text-slate-800" id="detail-farmer-name">-</span>
+            </div>
+            <div class="flex justify-between py-1 border-b border-slate-50">
+              <span class="text-slate-500">मोबाइल नंबर (Phone):</span>
+              <span class="font-medium text-slate-700" id="detail-farmer-phone">-</span>
+            </div>
+            <div class="flex justify-between py-1 border-b border-slate-50">
+              <span class="text-slate-500">पंजीकरण समय (Created):</span>
+              <span class="font-medium text-slate-700" id="detail-created-at">-</span>
+            </div>
+            <div class="flex justify-between py-1 border-b border-slate-50" id="cancellation-meta-row">
+              <span class="text-slate-500" id="cancellation-meta-label">स्थिति अद्यतन:</span>
+              <span class="font-medium text-slate-700" id="cancellation-meta-value">-</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Operational Queue Status Section (When active/in queue) -->
+      <div id="operational-queue-section" class="card p-5 bg-white border-slate-200 shadow-xs space-y-3 hidden">
+        <h2 class="text-xs font-bold uppercase tracking-wider text-slate-700 flex items-center gap-1.5 pb-2 border-b border-slate-100">
+          <span>⚡</span> लाइव कतार परिचालन (Live Queue Operations)
+        </h2>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+          <div class="p-3 bg-slate-50 rounded-lg border border-slate-200">
+            <span class="text-slate-400 block text-[10px]">वर्तमान चरण</span>
+            <span class="font-bold text-slate-800 text-sm mt-0.5 block" id="queue-stage-text">-</span>
+          </div>
+          <div class="p-3 bg-slate-50 rounded-lg border border-slate-200">
+            <span class="text-slate-400 block text-[10px]">कतार स्थान (Queue Position)</span>
+            <span class="font-bold text-slate-800 text-sm mt-0.5 block" id="queue-position-text">-</span>
+          </div>
+          <div class="p-3 bg-slate-50 rounded-lg border border-slate-200">
+            <span class="text-slate-400 block text-[10px]">अनुमानित प्रतीक्षा (Est. Wait)</span>
+            <span class="font-bold text-emerald-700 text-sm mt-0.5 block" id="queue-wait-text">-</span>
+          </div>
+        </div>
+
+        <div class="pt-2 flex justify-end">
+          <a href="queue.html" class="btn btn-primary btn-sm text-xs font-semibold py-1.5 px-3 flex items-center gap-1">
+            ⚡ लाइव कतार मॉनिटर खोलें (Open Live Queue) &rarr;
+          </a>
+        </div>
+      </div>
+
+      <!-- Cancellation Management Card -->
+      <div id="cancellation-action-card" class="card p-5 bg-white border-slate-200 shadow-xs space-y-3">
+        <h2 class="text-xs font-bold uppercase tracking-wider text-slate-700 flex items-center gap-1.5 pb-2 border-b border-slate-100">
+          <span>⚙️</span> बुकिंग प्रबंधन (Booking Actions)
+        </h2>
+
+        <!-- Cancellable Container -->
+        <div id="cancel-eligible-box" class="hidden flex flex-wrap items-center justify-between gap-4 p-4 rounded-lg bg-rose-50/50 border border-rose-200">
+          <div>
+            <h3 class="text-xs font-bold text-rose-900">स्लॉट रद्द करना (Cancel Reservation)</h3>
+            <p class="text-xs text-rose-700 mt-0.5 leading-relaxed">
+              यदि आप इस समय स्लॉट पर खरीद केंद्र नहीं पहुंच सकते, तो कृपया स्लॉट रद्द करें। रद्द करने पर अन्य किसान समय स्लॉट का उपयोग कर सकेंगे।
+            </p>
+          </div>
+          <button type="button" id="open-cancel-modal-btn"
+            class="btn btn-primary btn-sm bg-rose-600 hover:bg-rose-700 text-white border-rose-600 text-xs font-semibold py-2 px-4 shadow-xs shrink-0">
+            बुकिंग रद्द करें (Cancel Booking)
+          </button>
+        </div>
+
+        <!-- Non-Cancellable Explanation Notice -->
+        <div id="cancel-ineligible-notice" class="hidden p-3.5 rounded-lg bg-slate-50 border border-slate-200 text-xs text-slate-600">
+          <span class="font-semibold text-slate-800" id="ineligible-reason-title">रद्दीकरण उपलब्ध नहीं</span>
+          <p class="text-slate-500 mt-0.5" id="ineligible-reason-desc">-</p>
+        </div>
+      </div>
+
+      <!-- Quick Navigation Action Bar -->
+      <div class="flex flex-wrap items-center justify-between gap-3 pt-2">
+        <a href="bookings.html" class="btn btn-outline btn-sm text-xs font-semibold py-2 px-4 text-slate-600">
+          ← सभी बुकिंग देखें (Back to Bookings)
+        </a>
+
+        <div class="flex flex-wrap items-center gap-2" id="bottom-action-buttons">
+          <a href="token.html" id="action-token-btn" class="btn btn-outline btn-sm text-xs font-semibold py-2 px-3">
+            टोकन पर्ची (Token Slip)
+          </a>
+          <a href="booking-confirmation.html" id="action-receipt-btn" class="btn btn-outline btn-sm text-xs font-semibold py-2 px-3">
+            रसीद (Receipt)
+          </a>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- Cancellation Confirmation Modal -->
+  <div id="cancel-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-xl max-w-md w-full p-6 shadow-xl border border-slate-200 space-y-4">
+      <div class="flex items-start gap-3">
+        <div class="w-10 h-10 rounded-full bg-rose-50 text-rose-600 flex items-center justify-center shrink-0">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z">
+            </path>
+          </svg>
+        </div>
+        <div>
+          <h3 class="text-base font-bold text-slate-900">
+            क्या आप यह बुकिंग रद्द करना चाहते हैं?
+          </h3>
+          <p class="text-xs text-slate-500 mt-1 leading-relaxed">
+            Are you sure you want to cancel this booking? रद्दीकरण के बाद यह स्लॉट अन्य किसानों के लिए उपलब्ध हो जाएगा।
+          </p>
+        </div>
+      </div>
+
+      <div class="p-3.5 bg-slate-50 rounded-lg border border-slate-200 text-xs space-y-1.5">
+        <div class="flex justify-between">
+          <span class="text-slate-500">बुकिंग आईडी:</span>
+          <span class="font-mono font-bold text-slate-800" id="modal-booking-id">-</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-slate-500">खरीद केंद्र:</span>
+          <span class="font-medium text-slate-800" id="modal-center-name">-</span>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-end gap-2.5 pt-2">
+        <button type="button" id="modal-keep-btn" class="btn btn-outline btn-sm text-xs font-semibold py-2 px-4 text-slate-600">
+          रद्द न करें (Keep Booking)
+        </button>
+        <button type="button" id="modal-confirm-btn" class="btn btn-primary btn-sm bg-rose-600 hover:bg-rose-700 text-white border-rose-600 text-xs font-semibold py-2 px-4 shadow-xs">
+          हां, रद्द करें (Confirm Cancel)
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notification Toast -->
+  <div id="toast"
+    class="fixed bottom-5 right-5 z-50 bg-slate-900 text-white text-xs px-4 py-3 rounded-lg shadow-lg flex items-center gap-2 border border-slate-700 hidden transition-opacity duration-300">
+    <span class="text-emerald-400">✔</span>
+    <span id="toast-message">बुकिंग सफलतापूर्वक रद्द कर दी गई। (Booking cancelled successfully)</span>
+  </div>
+
+  <!-- Footer -->
+  <footer class="py-4 text-center text-xs text-slate-400 border-t border-slate-200 bg-white">
+    KisanSetu &copy; 2026 • SIH Innovation Project
+  </footer>
+
+  <!-- Scripts -->
+  <script src="../js/mock-data.js"></script>
+  <script src="../js/utils.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="farmer.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // 1. Enforce Farmer Route Protection
+      const user = window.KisanAuth.requireAuth('farmer', '../pages/login.html');
+      if (!user) return;
+
+      // 2. Logout Handler
+      document.getElementById('logout-btn').addEventListener('click', () => {
+        window.KisanAuth.logout('../pages/login.html');
+      });
+
+      // 3. Read Query Parameter (?id=KS-BOOK-XXXX or ?bookingId=...)
+      const urlParams = new URLSearchParams(window.location.search);
+      const bookingId = urlParams.get('id') || urlParams.get('bookingId');
+
+      const errorContainer = document.getElementById('error-container');
+      const detailsContent = document.getElementById('booking-details-content');
+
+      if (!bookingId) {
+        errorContainer.classList.remove('hidden');
+        return;
+      }
+
+      // 4. Retrieve Booking from storage
+      const booking = window.FarmerPortal.getBookingById(bookingId);
+      if (!booking) {
+        errorContainer.classList.remove('hidden');
+        return;
+      }
+
+      // Modal & Toast Elements
+      const cancelModal = document.getElementById('cancel-modal');
+      const modalBookingId = document.getElementById('modal-booking-id');
+      const modalCenterName = document.getElementById('modal-center-name');
+      const modalKeepBtn = document.getElementById('modal-keep-btn');
+      const modalConfirmBtn = document.getElementById('modal-confirm-btn');
+      const toast = document.getElementById('toast');
+      const toastMessage = document.getElementById('toast-message');
+
+      function showToast(msg) {
+        toastMessage.textContent = msg;
+        toast.classList.remove('hidden');
+        setTimeout(() => toast.classList.add('hidden'), 4000);
+      }
+
+      // 5. Populate and render details
+      function renderBookingDetails() {
+        const currentBooking = window.FarmerPortal.getBookingById(bookingId) || booking;
+        const status = window.FarmerPortal.getBookingStatus(currentBooking);
+        const badge = window.FarmerPortal.getBookingStatusBadge(status);
+        const canCancel = window.FarmerPortal.canCancelBooking(currentBooking);
+
+        detailsContent.classList.remove('hidden');
+
+        // Breadcrumbs & Title
+        document.getElementById('crumb-booking-id').textContent = currentBooking.bookingId;
+        document.getElementById('detail-booking-id').textContent = currentBooking.bookingId;
+        document.getElementById('detail-center-name').textContent = currentBooking.centerName || 'खरीद केंद्र';
+        document.getElementById('detail-center-location').querySelector('span').textContent =
+          `${currentBooking.district || ''}${currentBooking.state ? ', ' + currentBooking.state : ''}`;
+
+        // Status Badge
+        const statusBadgeEl = document.getElementById('booking-status-badge');
+        statusBadgeEl.className = `inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border ${badge.badgeClass}`;
+        statusBadgeEl.innerHTML = `<span class="w-2 h-2 rounded-full ${badge.dotColor}"></span> ${badge.labelHindi} (${badge.labelEnglish})`;
+
+        // Digital Token
+        const tokenNum = currentBooking.tokenId || window.FarmerPortal.generateTokenNumber(currentBooking);
+        document.getElementById('detail-token-num').textContent = tokenNum;
+        if (status === 'CANCELLED') {
+          document.getElementById('detail-token-sub').textContent = 'रद्द / अमान्य टोकन (Cancelled Token)';
+          document.getElementById('detail-token-sub').className = 'text-[10px] text-rose-500 font-bold block mt-0.5';
+        }
+
+        // Slot & Commodity
+        document.getElementById('detail-commodity').textContent = currentBooking.commodity || 'विविध फसलें';
+        document.getElementById('detail-date').textContent = currentBooking.bookingDate || 'आज';
+        document.getElementById('detail-slot').textContent = currentBooking.timeSlot || '-';
+        document.getElementById('detail-center-id').textContent = currentBooking.centerId || '-';
+
+        // Farmer Info
+        document.getElementById('detail-farmer-name').textContent = currentBooking.farmerName || user.name || 'Demo Farmer';
+        document.getElementById('detail-farmer-phone').textContent = currentBooking.farmerPhone || user.phone || '9876543210';
+        document.getElementById('detail-created-at').textContent = currentBooking.createdAt
+          ? new Date(currentBooking.createdAt).toLocaleString('hi-IN')
+          : 'हाल ही में (Recent)';
+
+        // Cancellation or Status Metadata Row
+        const metaRow = document.getElementById('cancellation-meta-row');
+        const metaLabel = document.getElementById('cancellation-meta-label');
+        const metaValue = document.getElementById('cancellation-meta-value');
+        if (status === 'CANCELLED') {
+          metaLabel.textContent = 'रद्दीकरण समय (Cancelled):';
+          metaValue.textContent = currentBooking.cancelledAt
+            ? new Date(currentBooking.cancelledAt).toLocaleString('hi-IN') + (currentBooking.cancelledBy ? ` (${currentBooking.cancelledBy})` : '')
+            : 'रद्द';
+          metaValue.className = 'font-bold text-rose-600';
+        } else {
+          metaLabel.textContent = 'वर्तमान स्थिति:';
+          metaValue.textContent = `${badge.labelHindi} (${badge.labelEnglish})`;
+          metaValue.className = 'font-medium text-slate-700';
+        }
+
+        // Operational Queue Section (when in queue / arrival underway)
+        const queueSec = document.getElementById('operational-queue-section');
+        const queue = window.FarmerPortal.getQueueStatus();
+        const isQueueMatching = queue && queue.bookingId && String(queue.bookingId).trim().toUpperCase() === String(currentBooking.bookingId).trim().toUpperCase();
+
+        if (isQueueMatching && (status === 'ARRIVED' || status === 'CHECKED_IN' || status === 'IN_QUEUE' || status === 'PROCUREMENT' || status === 'COMPLETED')) {
+          queueSec.classList.remove('hidden');
+          document.getElementById('queue-stage-text').textContent = queue.status || status;
+          document.getElementById('queue-position-text').textContent = typeof queue.queuePosition === 'number' ? `${queue.queuePosition} वाहन` : 'N/A';
+          document.getElementById('queue-wait-text').textContent = typeof queue.estimatedWaitMinutes === 'number' ? `~${queue.estimatedWaitMinutes} मिनट` : 'N/A';
+        } else {
+          queueSec.classList.add('hidden');
+        }
+
+        // Cancellation Action Card
+        const cancelEligibleBox = document.getElementById('cancel-eligible-box');
+        const cancelIneligibleNotice = document.getElementById('cancel-ineligible-notice');
+        const ineligibleReasonTitle = document.getElementById('ineligible-reason-title');
+        const ineligibleReasonDesc = document.getElementById('ineligible-reason-desc');
+
+        if (canCancel) {
+          cancelEligibleBox.classList.remove('hidden');
+          cancelIneligibleNotice.classList.add('hidden');
+        } else {
+          cancelEligibleBox.classList.add('hidden');
+          cancelIneligibleNotice.classList.remove('hidden');
+
+          if (status === 'CANCELLED') {
+            ineligibleReasonTitle.textContent = 'यह बुकिंग रद्द कर दी गई है (Booking is Cancelled)';
+            ineligibleReasonDesc.textContent = 'यह बुकिंग पहले ही रद्द की जा चुकी है। नया स्लॉट लेने के लिए कृपया नया स्लॉट बुक करें।';
+          } else if (status === 'COMPLETED') {
+            ineligibleReasonTitle.textContent = 'खरीद पूर्ण हो चुकी है (Procurement Completed)';
+            ineligibleReasonDesc.textContent = 'इस बुकिंग पर फसल खरीद की प्रक्रिया पूर्ण हो चुकी है, इसे रद्द नहीं किया जा सकता।';
+          } else {
+            ineligibleReasonTitle.textContent = 'परिचालन शुरू हो चुका है (Operations Underway)';
+            ineligibleReasonDesc.textContent = `बुकिंग वर्तमान में '${badge.labelHindi} (${badge.labelEnglish})' चरण में है। केंद्र पर आगमन सत्यापन या कतार प्रक्रिया शुरू होने के बाद स्लॉट रद्द नहीं किया जा सकता।`;
+          }
+        }
+
+        // Action Token and Receipt buttons
+        const actionTokenBtn = document.getElementById('action-token-btn');
+        const actionReceiptBtn = document.getElementById('action-receipt-btn');
+        if (status === 'CANCELLED') {
+          actionTokenBtn.classList.add('opacity-50', 'pointer-events-none');
+          actionReceiptBtn.classList.add('opacity-50', 'pointer-events-none');
+        } else {
+          actionTokenBtn.classList.remove('opacity-50', 'pointer-events-none');
+          actionReceiptBtn.classList.remove('opacity-50', 'pointer-events-none');
+        }
+      }
+
+      // 6. Cancellation Modal Triggers
+      const openModalBtn = document.getElementById('open-cancel-modal-btn');
+      openModalBtn.addEventListener('click', () => {
+        modalBookingId.textContent = booking.bookingId;
+        modalCenterName.textContent = booking.centerName || 'खरीद केंद्र';
+        cancelModal.classList.remove('hidden');
+      });
+
+      modalKeepBtn.addEventListener('click', () => {
+        cancelModal.classList.add('hidden');
+      });
+
+      modalConfirmBtn.addEventListener('click', () => {
+        const res = window.FarmerPortal.cancelBooking(booking.bookingId);
+        cancelModal.classList.add('hidden');
+
+        if (res.success) {
+          showToast('बुकिंग सफलतापूर्वक रद्द कर दी गई (Booking cancelled successfully)।');
+          renderBookingDetails();
+        } else {
+          alert(`रद्दीकरण असफल: ${res.error || 'अज्ञात त्रुटि'}`);
+        }
+      });
+
+      // Initial Render
+      renderBookingDetails();
+    });
+  </script>
+</body>
+
+</html>

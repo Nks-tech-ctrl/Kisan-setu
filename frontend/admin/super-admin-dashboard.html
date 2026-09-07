@@ -79,6 +79,30 @@
       </div>
     </div>
 
+    <!-- Level 3 Grievance Escalation Management Banner -->
+    <div class="card p-5 bg-white border-rose-200 shadow-2xs mb-6 flex flex-wrap items-center justify-between gap-4">
+      <div class="flex items-start gap-3">
+        <div class="w-10 h-10 rounded-sm bg-rose-50 text-rose-700 flex items-center justify-center font-bold text-lg shrink-0">
+          ⚖️
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h2 class="text-sm font-bold text-slate-900">
+              Grievance Escalation Management (Level 3 - Super Admin)
+            </h2>
+            <span class="badge badge-error text-[10px] font-mono-num" id="sa-dash-esc-count">Active Cases</span>
+          </div>
+          <p class="text-xs text-slate-500 mt-0.5 max-w-xl">
+            Review disputes escalated upward by District Administrators. Inspect full multi-level audit histories and issue final binding state directives.
+          </p>
+        </div>
+      </div>
+      <a href="super-admin-complaints.html"
+        class="btn btn-primary btn-sm bg-rose-700 hover:bg-rose-800 text-white border-rose-700 font-bold text-xs py-2 px-4 shadow-2xs inline-flex items-center gap-1.5">
+        <span>Open Grievance Desk</span> &rarr;
+      </a>
+    </div>
+
     <!-- Quick Modules Grid -->
     <div class="mb-8">
       <h2 class="text-xs font-bold uppercase tracking-wider text-slate-600 mb-3">System Governance Modules</h2>
@@ -197,6 +221,7 @@
   <!-- Scripts -->
   <script src="../js/utils.js"></script>
   <script src="../js/auth.js"></script>
+  <script src="../js/complaints.js"></script>
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
@@ -212,6 +237,16 @@
       document.getElementById('logout-btn').addEventListener('click', () => {
         window.KisanAuth.logout('super-admin-login.html');
       });
+
+      // Update Grievance Escalation badge
+      if (window.KisanComplaints) {
+        const saCases = window.KisanComplaints.getSuperAdminComplaints();
+        const pending = saCases.filter(c => c.status !== 'RESOLVED' && c.status !== 'CLOSED');
+        const badge = document.getElementById('sa-dash-esc-count');
+        if (badge) {
+          badge.textContent = `${pending.length} Active`;
+        }
+      }
     });
   </script>
 </body>

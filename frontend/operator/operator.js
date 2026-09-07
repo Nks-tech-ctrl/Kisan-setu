@@ -14,6 +14,8 @@
   const BOOKINGS_HISTORY_KEY = "kisansetu_bookings";
   const QUEUE_STATUS_KEY = "kisansetu_queue_status";
   const OPERATOR_ACTIVITY_KEY = "kisansetu_operator_activity";
+  const PROCUREMENT_RECORDS_KEY = "kisansetu_procurement_records";
+  const NOTIFICATIONS_KEY = "kisansetu_notifications";
 
   // Fixed supplementary demo queue entries representing yard vehicles at Karnal / Center
   const DEFAULT_DEMO_QUEUE_ENTRIES = [
@@ -92,6 +94,8 @@
     BOOKINGS_HISTORY_KEY,
     QUEUE_STATUS_KEY,
     OPERATOR_ACTIVITY_KEY,
+    PROCUREMENT_RECORDS_KEY,
+    NOTIFICATIONS_KEY,
 
     /**
      * Minimal non-breaking operational audit logger for District Admin tracking
@@ -436,9 +440,78 @@
     },
 
     /**
-     * Complete procurement and finalize electronic weighment receipt
+     * Retrieve all procurement records (completed sales receipts) from localStorage
      */
-    completeProcurement(bookingId) {
+    getProcurementRecords() {
+      try {
+        const raw = localStorage.getItem(PROCUREMENT_RECORDS_KEY);
+        if (!raw) return [];
+        const parsed = JSON.parse(raw);
+        return Array.isArray(parsed) ? parsed : [];
+      } catch (e) {
+        console.warn("KisanOperator: Error reading procurement records.", e);
+        return [];
+      }
+    },
+
+    /**
+     * Look up digital procurement receipt by Receipt ID, Booking ID, or Token ID
+     */
+    getReceiptById(receiptIdOrBookingId) {
+      if (!receiptIdOrBookingId) return null;
+      const cleanId = String(receiptIdOrBookingId).trim().toUpperCase();
+      const records = this.getProcurementRecords();
+      return records.find(r => 
+        (r.receiptId && String(r.receiptId).trim().toUpperCase() === cleanId) ||
+        (r.bookingId && String(r.bookingId).trim().toUpperCase() === cleanId) ||
+        (r.tokenId && String(r.tokenId).trim().toUpperCase() === cleanId)
+      ) || null;
+    },
+
+    /**
+     * Persist a digital procurement receipt to localStorage
+     */
+    saveProcurementRecord(record) {
+      try {
+        if (!record || !record.receiptId) return false;
+        const records = this.getProcurementRecords().filter(r => r.receiptId !== record.receiptId);
+        records.unshift(record);
+        if (records.length > 50) records.length = 50;
+        localStorage.setItem(PROCUREMENT_RECORDS_KEY, JSON.stringify(records));
+        return true;
+      } catch (e) {
+        console.error("KisanOperator: Error persisting procurement record.", e);
+        return false;
+      }
+    },
+
+    /**
+     * Dispatch notification to canonical key
+     */
+    addNotification(notif) {
+      try {
+        const raw = localStorage.getItem(NOTIFICATIONS_KEY);
+        const list = raw ? JSON.parse(raw) : [];
+        const entry = {
+          id: "NOTIF-" + Date.now() + "-" + Math.floor(Math.random() * 1000),
+          title: notif.title || "सूचना (Notice)",
+          message: notif.message || "",
+          type: notif.type || "info",
+          timestamp: new Date().toISOString(),
+          read: false
+        };
+        list.unshift(entry);
+        if (list.length > 30) list.length = 30;
+        localStorage.setItem(NOTIFICATIONS_KEY, JSON.stringify(list));
+      } catch (e) {
+        // safe fallback
+      }
+    },
+
+    /**
+     * Complete procurement, perform weighment math, and finalize electronic digital receipt
+     */
+    completeProcurement(bookingId, customWeighment = null) {
       const activeBooking = this.getActiveBooking();
       let liveQueue = this.getLiveQueueStatus();
 
@@ -454,28 +527,175 @@
 
         // Prevent duplicate completion
         if (liveQueue.status === "खरीद पूर्ण (Procurement Completed)") {
-          return { success: true, message: "Procurement already completed", queue: liveQueue };
+          const existingReceipt = this.getReceiptById(bookingId);
+          return { success: true, message: "Procurement already completed", queue: liveQueue, receipt: existingReceipt };
         }
+
+        // Consistent weighment and financial calculations (Demo)
+        const grossWeight = customWeighment && typeof customWeighment.grossWeight === 'number' ? customWeighment.grossWeight : 58.20;
+        const tareWeight = customWeighment && typeof customWeighment.tareWeight === 'number' ? customWeighment.tareWeight : 5.70;
+        const netWeight = customWeighment && typeof customWeighment.netWeight === 'number' ? customWeighment.netWeight : Number((grossWeight - tareWeight).toFixed(2));
+        const moisture = customWeighment && customWeighment.moisture ? customWeighment.moisture : "12.4%";
+        const quality = customWeighment && customWeighment.quality ? customWeighment.quality : "Grade A (FAQ Norms Passed)";
+        const rate = customWeighment && typeof customWeighment.rate === 'number' ? customWeighment.rate : 2425;
+        const grossAmount = customWeighment && typeof customWeighment.grossAmount === 'number' ? customWeighment.grossAmount : Number((netWeight * rate).toFixed(2));
+        const deductions = customWeighment && typeof customWeighment.deductions === 'number' ? customWeighment.deductions : 0;
+        const netAmount = customWeighment && typeof customWeighment.netAmount === 'number' ? customWeighment.netAmount : Number((grossAmount - deductions).toFixed(2));
+
+        const receiptSuffix = String(bookingId).replace(/^KS-BOOK-/, '');
+        const receiptId = `KSP-RCP-${receiptSuffix}`;
+        const tokenId = liveQueue.tokenId || activeBooking.tokenId || `KS-TKN-${receiptSuffix}`;
+
+        const receipt = {
+          receiptId: receiptId,
+          bookingId: bookingId,
+          tokenId: tokenId,
+          farmerName: activeBooking.farmerName || liveQueue.farmerName || "Demo Farmer",
+          farmerPhone: activeBooking.farmerPhone || "98765 43210",
+          commodity: activeBooking.commodity || liveQueue.commodity || "Wheat (Grade A)",
+          crop: activeBooking.commodity || liveQueue.commodity || "Wheat (Grade A)",
+          centerId: activeBooking.centerId || liveQueue.centerId || "CTR-HR-01",
+          centerName: activeBooking.centerName || liveQueue.centerName || "Karnal Central Procurement Center",
+          district: activeBooking.district || "Karnal",
+          date: new Date().toISOString().split('T')[0],
+          time: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }),
+          grossWeight: grossWeight,
+          tareWeight: tareWeight,
+          netWeight: netWeight,
+          unit: "QTL",
+          moisture: moisture,
+          quality: quality,
+          rate: rate,
+          grossAmount: grossAmount,
+          deductions: deductions,
+          netAmount: netAmount,
+          procurementValue: netAmount,
+          status: "COMPLETED",
+          statusLabel: "खरीद पूर्ण • Procurement Completed",
+          isDemo: true,
+          completedAt: new Date().toISOString()
+        };
+
+        this.saveProcurementRecord(receipt);
 
         liveQueue.queuePosition = 0;
         liveQueue.totalVehiclesAhead = 0;
         liveQueue.estimatedWaitMinutes = 0;
         liveQueue.status = "खरीद पूर्ण (Procurement Completed)";
+        liveQueue.procurementStage = "completed";
+        liveQueue.receiptId = receiptId;
 
         this.saveQueueStatus(liveQueue);
-        this.logActivity("procurement_completed", bookingId, { tokenId: liveQueue.tokenId, farmerName: liveQueue.farmerName || activeBooking.farmerName, centerId: liveQueue.centerId });
-        return { success: true, message: "Procurement completed successfully", queue: liveQueue };
+
+        // Update active booking status
+        activeBooking.status = "COMPLETED";
+        activeBooking.receiptId = receiptId;
+        activeBooking.completedAt = receipt.completedAt;
+        try {
+          localStorage.setItem(ACTIVE_BOOKING_KEY, JSON.stringify(activeBooking));
+        } catch (e) {}
+
+        // Update history
+        try {
+          const rawHistory = localStorage.getItem(BOOKINGS_HISTORY_KEY);
+          if (rawHistory) {
+            const history = JSON.parse(rawHistory);
+            const updatedHistory = history.map(b => {
+              if (b && b.bookingId && b.bookingId === bookingId) {
+                return { ...b, status: "COMPLETED", receiptId: receiptId, completedAt: receipt.completedAt };
+              }
+              return b;
+            });
+            localStorage.setItem(BOOKINGS_HISTORY_KEY, JSON.stringify(updatedHistory));
+          }
+        } catch (e) {}
+
+        this.logActivity("procurement_completed", bookingId, {
+          tokenId: tokenId,
+          farmerName: receipt.farmerName,
+          centerId: receipt.centerId,
+          receiptId: receiptId,
+          netWeight: netWeight,
+          netAmount: netAmount
+        });
+
+        this.addNotification({
+          title: "डिजिटल खरीद रसीद जारी (Receipt Issued)",
+          message: `फसल खरीद पूर्ण। रसीद आईडी ${receiptId} (${netWeight} क्विंटल) जारी की गई।`,
+          type: "success"
+        });
+
+        return { success: true, message: "Procurement completed successfully", queue: liveQueue, receipt: receipt };
       }
 
       const demoItem = DEFAULT_DEMO_QUEUE_ENTRIES.find(d => d.bookingId === bookingId);
       if (demoItem) {
         if (demoItem.status === "खरीद पूर्ण (Procurement Completed)") {
-          return { success: true, message: "Procurement already completed", queue: demoItem };
+          const existingReceipt = this.getReceiptById(bookingId);
+          return { success: true, message: "Procurement already completed", queue: demoItem, receipt: existingReceipt };
         }
+
+        const grossWeight = customWeighment && typeof customWeighment.grossWeight === 'number' ? customWeighment.grossWeight : 58.20;
+        const tareWeight = customWeighment && typeof customWeighment.tareWeight === 'number' ? customWeighment.tareWeight : 5.70;
+        const netWeight = customWeighment && typeof customWeighment.netWeight === 'number' ? customWeighment.netWeight : Number((grossWeight - tareWeight).toFixed(2));
+        const moisture = customWeighment && customWeighment.moisture ? customWeighment.moisture : "12.4%";
+        const quality = customWeighment && customWeighment.quality ? customWeighment.quality : "Grade A (FAQ Norms Passed)";
+        const rate = customWeighment && typeof customWeighment.rate === 'number' ? customWeighment.rate : 2425;
+        const grossAmount = customWeighment && typeof customWeighment.grossAmount === 'number' ? customWeighment.grossAmount : Number((netWeight * rate).toFixed(2));
+        const deductions = customWeighment && typeof customWeighment.deductions === 'number' ? customWeighment.deductions : 0;
+        const netAmount = customWeighment && typeof customWeighment.netAmount === 'number' ? customWeighment.netAmount : Number((grossAmount - deductions).toFixed(2));
+
+        const receiptSuffix = String(bookingId).replace(/^KS-BOOK-/, '');
+        const receiptId = `KSP-RCP-${receiptSuffix}`;
+
+        const receipt = {
+          receiptId: receiptId,
+          bookingId: bookingId,
+          tokenId: demoItem.tokenId,
+          farmerName: demoItem.farmerName,
+          farmerPhone: demoItem.phone || "98120 45678",
+          commodity: demoItem.commodity,
+          crop: demoItem.commodity,
+          centerId: demoItem.centerId,
+          centerName: demoItem.centerName,
+          district: "Karnal",
+          date: new Date().toISOString().split('T')[0],
+          time: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }),
+          grossWeight: grossWeight,
+          tareWeight: tareWeight,
+          netWeight: netWeight,
+          unit: "QTL",
+          moisture: moisture,
+          quality: quality,
+          rate: rate,
+          grossAmount: grossAmount,
+          deductions: deductions,
+          netAmount: netAmount,
+          procurementValue: netAmount,
+          status: "COMPLETED",
+          statusLabel: "खरीद पूर्ण • Procurement Completed",
+          isDemo: true,
+          completedAt: new Date().toISOString()
+        };
+
+        this.saveProcurementRecord(receipt);
+
         demoItem.queuePosition = 0;
+        demoItem.totalVehiclesAhead = 0;
+        demoItem.estimatedWaitMinutes = 0;
         demoItem.status = "खरीद पूर्ण (Procurement Completed)";
-        this.logActivity("procurement_completed", bookingId, { tokenId: demoItem.tokenId, farmerName: demoItem.farmerName, centerId: demoItem.centerId });
-        return { success: true, message: "Procurement completed successfully", queue: demoItem };
+        demoItem.receiptId = receiptId;
+
+        this.logActivity("procurement_completed", bookingId, {
+          tokenId: demoItem.tokenId,
+          farmerName: demoItem.farmerName,
+          centerId: demoItem.centerId,
+          receiptId: receiptId,
+          netWeight: netWeight,
+          netAmount: netAmount
+        });
+
+        return { success: true, message: "Procurement completed successfully", queue: demoItem, receipt: receipt };
       }
 
       return { success: false, message: "Booking record not found" };
@@ -484,5 +704,6 @@
 
   // Export to global scope
   window.KisanOperator = KisanOperator;
+  window.OperatorPortal = KisanOperator;
 })();
 

@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="hi">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>फसल विक्रय इतिहास | Crop Sales History — KisanSetu</title>
+
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Core Design System -->
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body class="bg-[#f8fafc] text-[#0f172a] min-h-screen flex flex-col justify-between antialiased">
+
+  <!-- Authenticated Header -->
+  <header class="bg-white border-b border-slate-200 py-3.5 px-4 sticky top-0 z-40 shadow-xs">
+    <div class="container mx-auto flex flex-wrap items-center justify-between gap-3">
+      <!-- Brand & Title -->
+      <div class="flex items-center gap-3">
+        <a href="dashboard.html"
+          class="w-9 h-9 rounded-lg bg-[#15803d] text-white flex items-center justify-center font-bold text-sm shadow-xs">
+          K
+        </a>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="text-base font-bold text-slate-900 tracking-tight">KisanSetu</span>
+            <span class="text-xs text-slate-400">| किसान सेतु</span>
+          </div>
+          <div class="text-[11px] font-semibold text-[#15803d] -mt-0.5">
+            किसान पोर्टल (Farmer Portal)
+          </div>
+        </div>
+      </div>
+
+      <!-- Navigation & Logout -->
+      <div class="flex items-center gap-3">
+        <a href="dashboard.html"
+          class="btn btn-outline btn-sm text-xs font-semibold flex items-center gap-1.5 py-1.5 px-3">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18">
+            </path>
+          </svg>
+          डैशबोर्ड (Dashboard)
+        </a>
+
+        <a href="bookings.html"
+          class="btn btn-outline btn-sm text-xs font-semibold flex items-center gap-1.5 py-1.5 px-3">
+          <span>📋</span> मेरी बुकिंग
+        </a>
+
+        <button type="button" id="logout-btn" class="btn btn-outline btn-sm text-xs py-1.5 px-3">
+          लॉगआउट (Logout)
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Container -->
+  <main class="container mx-auto py-6 sm:py-8 px-4 flex-1">
+
+    <!-- Page Header Banner -->
+    <div class="mb-6">
+      <div class="flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <div
+            class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-50 text-[#15803d] border border-emerald-200 text-[11px] font-semibold mb-2">
+            <span>🌾</span> संपन्न फसल खरीद (Completed Procurement)
+          </div>
+          <h1 class="text-2xl sm:text-3xl font-bold text-slate-900">
+            फसल विक्रय इतिहास
+          </h1>
+          <p class="text-sm text-slate-600 mt-1">
+            अधिकृत खरीद केंद्रों पर बेची गई फसलों का पूर्ण विवरण एवं इलेक्ट्रॉनिक डिजिटल रसीदें।
+          </p>
+          <p class="text-xs text-slate-400 mt-0.5">
+            Verified electronic records of all completed crop intakes, certified weighment, and demo procurement values.
+          </p>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-3">
+          <div class="bg-white border border-slate-200 rounded-xl p-3 shadow-xs text-right">
+            <span class="text-slate-400 block text-[10px] uppercase font-bold">कुल विक्रय मूल्य (Total Value)</span>
+            <span class="font-mono text-base font-bold text-[#15803d]" id="summary-total-amount">₹0.00</span>
+          </div>
+
+          <div class="bg-white border border-slate-200 rounded-xl p-3 shadow-xs text-right">
+            <span class="text-slate-400 block text-[10px] uppercase font-bold">कुल तौल (Total Quantity)</span>
+            <span class="font-mono text-base font-bold text-slate-900" id="summary-total-weight">0.00 QTL</span>
+          </div>
+
+          <div class="bg-white border border-slate-200 rounded-xl p-3 shadow-xs text-center min-w-[70px]">
+            <span class="text-slate-400 block text-[10px] uppercase font-bold">बिक्री (Sales)</span>
+            <span class="font-bold text-slate-900 text-base" id="summary-sales-count">0</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Demo Data Banner -->
+    <div class="p-3 bg-blue-50/70 border border-blue-200 rounded-xl mb-6 flex flex-wrap items-center justify-between gap-2 text-xs text-blue-900">
+      <div class="flex items-center gap-2">
+        <span class="text-sm">ℹ️</span>
+        <span>
+          यह सभी विक्रय प्रविष्टियां इलेक्ट्रॉनिक वेईब्रिज एवं ऑपरेटर द्वारा सत्यापित <strong>डेमो खरीद रिकॉर्ड</strong> हैं।
+        </span>
+      </div>
+      <span class="font-semibold text-blue-800 bg-white px-2.5 py-0.5 rounded border border-blue-200 text-[11px]">
+        डेमो डेटा • Demo Data
+      </span>
+    </div>
+
+    <!-- Sales Records Container -->
+    <div id="sales-list-container" class="space-y-4">
+      <!-- Populated dynamically -->
+    </div>
+
+    <!-- Empty State -->
+    <div id="sales-empty-state" class="hidden card p-10 bg-white border-slate-200 text-center max-w-lg mx-auto shadow-xs my-8">
+      <div class="w-14 h-14 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center mx-auto mb-3">
+        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+          </path>
+        </svg>
+      </div>
+      <h2 class="text-base font-bold text-slate-900 mb-1">कोई संपन्न विक्रय रिकॉर्ड नहीं मिला</h2>
+      <p class="text-xs text-slate-500 mb-6 leading-relaxed">
+        वर्तमान में आपके खाते में कोई पूर्ण हुई फसल खरीद रसीद नहीं है। खरीद केंद्र पर स्लॉट बुक करें और तुलाई पूर्ण होने पर रसीद यहां स्वतः प्रदर्शित होगी।
+      </p>
+      <div class="flex flex-wrap items-center justify-center gap-2">
+        <a href="centers.html" class="btn btn-primary text-xs font-semibold py-2 px-4 inline-flex items-center gap-1.5">
+          <span>📍</span> खरीद केंद्र खोजें (Find Center)
+        </a>
+        <button type="button" id="load-sample-sale-btn" class="btn btn-outline text-xs font-semibold py-2 px-4">
+          नमूना विक्रय लोड करें (Load Sample Demo)
+        </button>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="py-4 text-center text-xs text-slate-400 border-t border-slate-200 bg-white">
+    KisanSetu &copy; 2026 • SIH Innovation Project • Smart Procurement Platform
+  </footer>
+
+  <!-- Scripts -->
+  <script src="../js/mock-data.js"></script>
+  <script src="../js/utils.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="farmer.js"></script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      // 1. Enforce Farmer Auth
+      const user = window.KisanAuth.requireAuth('farmer', '../pages/login.html');
+      if (!user) return;
+
+      // 2. Logout handler
+      document.getElementById('logout-btn')?.addEventListener('click', () => {
+        window.KisanAuth.logout('../pages/login.html');
+      });
+
+      // 3. Render Sales
+      function renderSalesHistory() {
+        const records = window.FarmerPortal.getProcurementRecords();
+        const summary = window.FarmerPortal.getSalesSummary();
+
+        // Update KPIs
+        document.getElementById('summary-total-amount').textContent = `₹${summary.totalProcurementValue.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`;
+        document.getElementById('summary-total-weight').textContent = `${summary.totalCropSold.toFixed(2)} QTL`;
+        document.getElementById('summary-sales-count').textContent = summary.completedSales;
+
+        const container = document.getElementById('sales-list-container');
+        const emptyState = document.getElementById('sales-empty-state');
+
+        if (!records || records.length === 0) {
+          container.innerHTML = '';
+          emptyState.classList.remove('hidden');
+          return;
+        }
+
+        emptyState.classList.add('hidden');
+
+        // Render Cards
+        container.innerHTML = records.map(r => {
+          const gross = typeof r.grossWeight === 'number' ? r.grossWeight : parseFloat(r.grossWeight) || 0;
+          const tare = typeof r.tareWeight === 'number' ? r.tareWeight : parseFloat(r.tareWeight) || 0;
+          const net = typeof r.netWeight === 'number' ? r.netWeight : parseFloat(r.netWeight) || (gross - tare);
+          const rate = typeof r.rate === 'number' ? r.rate : parseFloat(r.rate) || 2425;
+          const grossAmt = typeof r.grossAmount === 'number' ? r.grossAmount : (net * rate);
+          const ded = typeof r.deductions === 'number' ? r.deductions : 0;
+          const netAmt = typeof r.netAmount === 'number' ? r.netAmount : (grossAmt - ded);
+
+          return `
+            <div class="card p-5 bg-white border-slate-200 hover:border-emerald-500 shadow-xs transition-all space-y-4">
+              <div class="flex flex-wrap items-start justify-between gap-3">
+                <div class="space-y-1">
+                  <div class="flex flex-wrap items-center gap-2">
+                    <span class="font-mono text-xs font-bold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+                      ${r.receiptId || 'KSP-RCP-xxxx'}
+                    </span>
+                    <span class="text-[10px] font-mono text-slate-500 bg-slate-100 px-2 py-0.5 rounded">
+                      Token: ${r.tokenId || '-'}
+                    </span>
+                    <span class="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-800 bg-emerald-100/80 px-2 py-0.5 rounded">
+                      <span>✓</span> खरीद पूर्ण (Completed)
+                    </span>
+                  </div>
+                  <h3 class="text-base font-bold text-slate-900 mt-1">
+                    ${r.crop || r.commodity || 'Wheat (Grade A)'}
+                  </h3>
+                  <p class="text-xs text-slate-500">
+                    ${r.centerName || 'Karnal Central Procurement Center'} • ${r.district || 'Haryana'}
+                  </p>
+                </div>
+
+                <div class="text-right">
+                  <span class="text-slate-400 block text-[10px] uppercase font-bold">तौल / खरीद समय</span>
+                  <span class="text-xs font-semibold text-slate-800">${r.date || 'Today'}</span>
+                  <span class="text-[11px] text-slate-500 block">${r.time || ''}</span>
+                </div>
+              </div>
+
+              <!-- Metrics Grid -->
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 p-3.5 bg-slate-50 rounded-xl border border-slate-150 text-xs">
+                <div>
+                  <span class="text-slate-400 block text-[10px]">शुद्ध मात्रा (Net Quantity)</span>
+                  <span class="font-mono font-bold text-slate-900 text-sm mt-0.5 block">${net.toFixed(2)} QTL</span>
+                  <span class="text-[10px] text-slate-400">Gross ${gross.toFixed(2)} - Tare ${tare.toFixed(2)}</span>
+                </div>
+
+                <div>
+                  <span class="text-slate-400 block text-[10px]">प्रमाणित दर (Demo Rate)</span>
+                  <span class="font-mono font-bold text-slate-800 text-sm mt-0.5 block">₹${rate.toLocaleString('en-IN')}/QTL</span>
+                  <span class="text-[10px] text-slate-400">नमी: ${r.moisture || '12.4%'}</span>
+                </div>
+
+                <div>
+                  <span class="text-slate-400 block text-[10px]">कटौती (Deductions)</span>
+                  <span class="font-mono font-medium text-slate-600 text-sm mt-0.5 block">₹${ded.toFixed(2)}</span>
+                  <span class="text-[10px] text-emerald-700 font-medium">FAQ पास</span>
+                </div>
+
+                <div>
+                  <span class="text-emerald-800 block text-[10px] font-bold">खरीद मूल्य (Net Value)</span>
+                  <span class="font-mono font-bold text-emerald-700 text-sm sm:text-base mt-0.5 block">
+                    ₹${netAmt.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
+                  </span>
+                  <span class="text-[10px] text-slate-400 font-mono">Demo Value</span>
+                </div>
+              </div>
+
+              <!-- Footer Actions -->
+              <div class="pt-2 flex flex-wrap items-center justify-between gap-2 border-t border-slate-100 text-xs">
+                <span class="text-[11px] text-slate-400">
+                  बुकिंग संदर्भ: <strong class="font-mono text-slate-600">${r.bookingId || '-'}</strong>
+                </span>
+                <div class="flex items-center gap-2">
+                  <a href="receipt.html?id=${encodeURIComponent(r.receiptId)}"
+                    class="btn btn-outline btn-sm text-xs font-semibold py-1.5 px-3 bg-white text-emerald-800 border-emerald-300 hover:bg-emerald-50 flex items-center gap-1.5 shadow-xs">
+                    <span>🧾</span> डिजिटल रसीद देखें (View Receipt) &rarr;
+                  </a>
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      // Sample Demo Loader button
+      document.getElementById('load-sample-sale-btn')?.addEventListener('click', () => {
+        const sample = [{
+          receiptId: "KSP-RCP-1005",
+          bookingId: "KS-BOOK-1005",
+          tokenId: "KS-TKN-1005",
+          farmerName: user.name || "Demo Farmer",
+          farmerPhone: user.phone || "98120 45678",
+          crop: "Wheat (गेहूं)",
+          commodity: "Wheat (Grade A)",
+          centerId: "CTR-HR-03",
+          centerName: "Rohtak Central Procurement Center",
+          district: "Rohtak",
+          date: "Today (आज)",
+          time: "09:30 AM",
+          completedAt: new Date().toISOString(),
+          grossWeight: 58.20,
+          tareWeight: 5.70,
+          netWeight: 52.50,
+          unit: "QTL",
+          moisture: "12.4%",
+          quality: "Grade A (FAQ Passed)",
+          rate: 2425,
+          grossAmount: 127312.50,
+          deductions: 0.00,
+          netAmount: 127312.50,
+          procurementValue: 127312.50,
+          status: "COMPLETED",
+          statusLabel: "खरीद पूर्ण • Procurement Completed",
+          isDemo: true
+        }];
+        localStorage.setItem("kisansetu_procurement_records", JSON.stringify(sample));
+        renderSalesHistory();
+      });
+
+      // Initial Render
+      renderSalesHistory();
+    });
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>District Grievance Oversight & Escalation Console | KisanSetu</title>
+
+  <!-- Typography: Inter & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Core Design System -->
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    body {
+      background-color: #faf9f5;
+      color: #0f172a;
+    }
+    .hairline {
+      border: 1px solid #e2ded4;
+    }
+    .font-mono-num {
+      font-family: 'JetBrains Mono', ui-monospace, monospace;
+    }
+  </style>
+</head>
+
+<body class="bg-[#faf9f5] text-[#0f172a] min-h-screen flex flex-col justify-between antialiased font-sans">
+
+  <!-- Authenticated Header & Unified Navigation -->
+  <header class="bg-white border-b border-[#e2ded4] sticky top-0 z-40 shadow-2xs">
+    <div class="container mx-auto px-4">
+      <div class="flex items-center justify-between py-3 border-b border-slate-100">
+        <!-- Brand -->
+        <div class="flex items-center gap-3">
+          <a href="dashboard.html"
+            class="w-9 h-9 rounded-sm bg-[#d97706] text-white flex items-center justify-center font-bold text-sm shadow-2xs">
+            K
+          </a>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-base font-black text-slate-900 tracking-tight">KisanSetu</span>
+              <span class="text-xs text-slate-400">| District Oversight</span>
+            </div>
+            <div class="text-[11px] font-bold text-amber-700 -mt-0.5" id="header-district-badge">
+              Karnal District Administration
+            </div>
+          </div>
+        </div>
+
+        <!-- User Info & Logout -->
+        <div class="flex items-center gap-3">
+          <div class="text-right hidden sm:block">
+            <div class="text-xs font-semibold text-slate-900" id="header-user-name">Loading...</div>
+            <div class="text-[11px] text-amber-700 font-medium">District Grievance Officer</div>
+          </div>
+          <button type="button" id="logout-btn" class="btn btn-outline btn-sm text-xs py-1.5 px-3">
+            Logout
+          </button>
+        </div>
+      </div>
+
+      <!-- Unified 8+1 Tab Navigation -->
+      <nav class="flex items-center gap-1 sm:gap-2 overflow-x-auto py-2 text-xs font-semibold">
+        <a href="dashboard.html"
+          class="px-3 py-1.5 rounded-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors">
+          Dashboard
+        </a>
+        <a href="centers.html"
+          class="px-3 py-1.5 rounded-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors">
+          Centers
+        </a>
+        <a href="queue-monitor.html"
+          class="px-3 py-1.5 rounded-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors">
+          Queue Monitor
+        </a>
+        <a href="procurement.html"
+          class="px-3 py-1.5 rounded-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors">
+          Procurement
+        </a>
+        <a href="analytics.html"
+          class="px-3 py-1.5 rounded-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors">
+          Analytics
+        </a>
+        <a href="alerts.html"
+          class="px-3 py-1.5 rounded-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors">
+          Alerts
+        </a>
+        <a href="reports.html"
+          class="px-3 py-1.5 rounded-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors">
+          Reports
+        </a>
+        <a href="operator-activity.html"
+          class="px-3 py-1.5 rounded-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors">
+          Operator Activity
+        </a>
+        <a href="complaints.html"
+          class="px-3 py-1.5 rounded-sm bg-amber-50 text-amber-900 border border-amber-200 font-bold">
+          Complaints (शिकायतें)
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Complaints Management View -->
+  <main class="container mx-auto py-6 sm:py-8 px-4 flex-1 space-y-6">
+
+    <!-- Header Banner -->
+    <div class="bg-white border border-[#e2ded4] rounded-sm p-5 shadow-2xs">
+      <div class="flex flex-wrap items-start justify-between gap-4">
+        <div>
+          <div class="flex items-center gap-2 mb-1.5">
+            <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-xs bg-amber-50 text-amber-900 border border-amber-200 text-[11px] font-bold">
+              <span class="w-1.5 h-1.5 rounded-full bg-amber-600"></span>
+              LEVEL 2: District Grievance Oversight & Escalation Console
+            </span>
+            <span class="inline-flex items-center px-2 py-0.5 rounded-xs text-[10px] font-semibold bg-blue-50 text-blue-700 border border-blue-200">
+              डेमो डेटा • Demo Data
+            </span>
+          </div>
+          <h1 class="text-xl sm:text-2xl font-bold text-slate-900">
+            District Grievance Escalation & Case Resolution
+          </h1>
+          <p class="text-xs sm:text-sm text-slate-600 mt-1">
+            Review complaints escalated from procurement center operators. Resolve district-level disputes or escalate complex technical/policy issues to Super Admin.
+          </p>
+        </div>
+
+        <div class="p-2.5 bg-slate-50 border border-slate-200 rounded-xs text-xs text-slate-600 max-w-sm">
+          <strong class="text-slate-800">Operational Invariant:</strong>
+          District Admin provides supervisory grievance decisions. Transactional booking, weighment, and queue operations remain strictly separated.
+        </div>
+      </div>
+    </div>
+
+    <!-- Dashboard Metrics (Open, In Progress, Escalated, High Priority, Resolved) -->
+    <div class="grid grid-cols-2 sm:grid-cols-5 gap-3">
+      <div class="bg-white border border-[#e2ded4] p-3.5 rounded-sm">
+        <div class="text-[11px] font-semibold text-slate-500">Total Escalated</div>
+        <div class="text-2xl font-bold font-mono-num text-slate-900 mt-1" id="kpi-total">0</div>
+        <div class="text-[10px] text-slate-400 mt-0.5">District jurisdiction</div>
+      </div>
+      <div class="bg-white border border-[#e2ded4] p-3.5 rounded-sm">
+        <div class="text-[11px] font-semibold text-amber-700">Open / Pending Review</div>
+        <div class="text-2xl font-bold font-mono-num text-amber-700 mt-1" id="kpi-open">0</div>
+        <div class="text-[10px] text-slate-400 mt-0.5">Awaiting initial action</div>
+      </div>
+      <div class="bg-white border border-[#e2ded4] p-3.5 rounded-sm">
+        <div class="text-[11px] font-semibold text-teal-700">Under Investigation</div>
+        <div class="text-2xl font-bold font-mono-num text-teal-700 mt-1" id="kpi-progress">0</div>
+        <div class="text-[10px] text-slate-400 mt-0.5">District enquiry active</div>
+      </div>
+      <div class="bg-white border border-[#e2ded4] p-3.5 rounded-sm">
+        <div class="text-[11px] font-semibold text-rose-700">High / Critical Priority</div>
+        <div class="text-2xl font-bold font-mono-num text-rose-700 mt-1" id="kpi-critical">0</div>
+        <div class="text-[10px] text-slate-400 mt-0.5">Urgent attention</div>
+      </div>
+      <div class="bg-white border border-[#e2ded4] p-3.5 rounded-sm">
+        <div class="text-[11px] font-semibold text-emerald-800">Resolved / Closed</div>
+        <div class="text-2xl font-bold font-mono-num text-emerald-800 mt-1" id="kpi-resolved">0</div>
+        <div class="text-[10px] text-slate-400 mt-0.5">Case closed</div>
+      </div>
+    </div>
+
+    <!-- Case Management Table Card -->
+    <div class="bg-white border border-[#e2ded4] rounded-sm shadow-2xs">
+      <div class="p-4 border-b border-[#e2ded4] flex flex-wrap items-center justify-between gap-3">
+        <div class="flex items-center gap-2">
+          <h2 class="text-sm font-bold text-slate-900 uppercase tracking-wide">
+            Level 2 District Grievance Register
+          </h2>
+          <span class="badge badge-info text-[10px] font-mono-num" id="table-count-badge">0 cases</span>
+        </div>
+
+        <!-- Filter Controls -->
+        <div class="flex items-center gap-2 text-xs">
+          <select id="filter-center" class="form-select border-[#d6d1c4] text-xs py-1 px-2 rounded-xs">
+            <option value="ALL">All Centers</option>
+          </select>
+          <select id="filter-status" class="form-select border-[#d6d1c4] text-xs py-1 px-2 rounded-xs">
+            <option value="ALL">All Statuses</option>
+            <option value="ESCALATED">Pending District Action</option>
+            <option value="IN_PROGRESS">In Progress</option>
+            <option value="RESOLVED">Resolved</option>
+            <option value="CLOSED">Closed</option>
+          </select>
+          <select id="filter-priority" class="form-select border-[#d6d1c4] text-xs py-1 px-2 rounded-xs">
+            <option value="ALL">All Priorities</option>
+            <option value="CRITICAL">Critical</option>
+            <option value="HIGH">High</option>
+            <option value="MEDIUM">Medium</option>
+            <option value="LOW">Low</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Table Container -->
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-xs border-collapse">
+          <thead>
+            <tr class="bg-[#fbfaf7] border-b border-[#e2ded4] text-slate-600 uppercase font-bold text-[10px]">
+              <th class="py-3 px-3">Complaint #</th>
+              <th class="py-3 px-3">Farmer & Center</th>
+              <th class="py-3 px-3">Category</th>
+              <th class="py-3 px-3">Subject & Escalation Reason</th>
+              <th class="py-3 px-3">Priority</th>
+              <th class="py-3 px-3">Escalated At</th>
+              <th class="py-3 px-3">Status</th>
+              <th class="py-3 px-3 text-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="complaints-table-body" class="divide-y divide-[#e2ded4]">
+            <tr>
+              <td colspan="8" class="p-8 text-center text-slate-400 text-xs">
+                Loading escalated complaints...
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- View Case Details Modal -->
+  <div id="case-modal" class="hidden fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white border border-[#e2ded4] rounded-sm max-w-2xl w-full p-6 shadow-xl max-h-[90vh] overflow-y-auto space-y-4">
+      <div class="flex items-center justify-between pb-3 border-b border-[#e2ded4]">
+        <div class="flex items-center gap-2">
+          <span class="font-mono-num font-bold text-xs bg-slate-100 text-slate-800 px-2 py-0.5 border rounded-xs" id="modal-cmp-num">
+            -
+          </span>
+          <span class="badge text-[11px] font-bold" id="modal-status-badge">-</span>
+          <span class="text-[11px] font-bold px-2 py-0.5 border rounded-xs" id="modal-priority-badge">-</span>
+        </div>
+        <button type="button" onclick="document.getElementById('case-modal').classList.add('hidden')"
+          class="text-slate-400 hover:text-slate-700 text-lg font-bold">
+          &times;
+        </button>
+      </div>
+
+      <div>
+        <h3 class="text-base font-bold text-slate-900" id="modal-subject">-</h3>
+        <div class="text-[11px] text-slate-500 mt-1 flex flex-wrap gap-x-4">
+          <span>Farmer: <strong class="text-slate-800" id="modal-farmer">-</strong></span>
+          <span>Center: <strong class="text-slate-800" id="modal-center">-</strong></span>
+          <span>Booking: <strong class="font-mono-num text-slate-800" id="modal-booking">-</strong></span>
+          <span>Token: <strong class="font-mono-num text-slate-800" id="modal-token">-</strong></span>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+        <div>
+          <div class="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">Farmer's Complaint:</div>
+          <div class="p-3 bg-[#faf9f5] border border-[#e2ded4] rounded-xs text-slate-800 leading-relaxed min-h-[70px]" id="modal-desc">
+            -
+          </div>
+        </div>
+        <div>
+          <div class="text-[11px] font-bold text-rose-800 uppercase tracking-wider mb-1">Operator's Escalation Reason:</div>
+          <div class="p-3 bg-rose-50/50 border border-rose-200 rounded-xs text-rose-950 leading-relaxed min-h-[70px]" id="modal-esc-reason">
+            -
+          </div>
+        </div>
+      </div>
+
+      <div id="modal-resolution-box" class="hidden p-3 bg-emerald-50 border border-emerald-200 rounded-xs text-xs">
+        <strong class="text-emerald-900 block mb-0.5">Official Resolution Record:</strong>
+        <span class="text-emerald-950 font-medium" id="modal-resolution-text">-</span>
+      </div>
+
+      <!-- Audit Timeline -->
+      <div>
+        <div class="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2">End-to-End Activity History:</div>
+        <div id="modal-timeline" class="space-y-2 max-h-48 overflow-y-auto border border-slate-100 p-2.5 rounded-xs bg-slate-50 text-xs">
+          <!-- Timeline items -->
+        </div>
+      </div>
+
+      <div class="pt-3 border-t border-[#e2ded4] flex justify-end">
+        <button type="button" onclick="document.getElementById('case-modal').classList.add('hidden')"
+          class="btn btn-outline btn-sm text-xs py-1.5 px-4">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Internal Note Modal -->
+  <div id="note-modal" class="hidden fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white border border-[#e2ded4] rounded-sm max-w-md w-full p-6 shadow-xl space-y-4">
+      <div class="flex items-center justify-between pb-2 border-b border-[#e2ded4]">
+        <div class="text-sm font-bold text-slate-900">Add District Investigation Note</div>
+        <button type="button" onclick="document.getElementById('note-modal').classList.add('hidden')" class="text-slate-400 hover:text-slate-700 text-lg font-bold">&times;</button>
+      </div>
+      <form id="note-form" class="space-y-3">
+        <textarea id="note-text-input" rows="3" class="form-textarea border-[#d6d1c4] text-xs py-2 rounded-xs" placeholder="Enter investigation finding or supervisory note..." required></textarea>
+        <div class="flex justify-end gap-2">
+          <button type="button" onclick="document.getElementById('note-modal').classList.add('hidden')" class="btn btn-outline btn-sm text-xs py-1 px-3">Cancel</button>
+          <button type="submit" class="btn btn-primary btn-sm text-xs py-1 px-4 font-bold">Save Note</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Escalate to Super Admin Modal (Part O) -->
+  <div id="escalate-sa-modal" class="hidden fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white border border-[#e2ded4] rounded-sm max-w-md w-full p-6 shadow-xl space-y-4">
+      <div class="flex items-center justify-between pb-2 border-b border-[#e2ded4]">
+        <div class="flex items-center gap-2 text-rose-800 font-bold text-sm">
+          <span>⚠️</span> Escalate to Super Admin (राज्य/केंद्रीय स्तर पर भेजें)
+        </div>
+        <button type="button" onclick="document.getElementById('escalate-sa-modal').classList.add('hidden')" class="text-slate-400 hover:text-slate-700 text-lg font-bold">&times;</button>
+      </div>
+
+      <div class="text-xs text-slate-600 leading-relaxed">
+        Escalating case <strong class="font-mono-num text-slate-900" id="sa-modal-cmp-num">-</strong> to
+        <span class="text-rose-800 font-semibold">Level 3 (Super Admin)</span>.
+        This is the final escalation tier in the hierarchy.
+      </div>
+
+      <form id="escalate-sa-form" class="space-y-3">
+        <div>
+          <label class="form-label font-bold text-xs text-slate-800">
+            Super Admin Escalation Reason (अनिवार्य कारण) *
+          </label>
+          <textarea id="sa-reason-input" rows="3" class="form-textarea border-[#d6d1c4] text-xs py-2 rounded-xs"
+            placeholder="उदा. राज्य स्तरीय तकनीकी समिति या नीतिगत निर्णय की आवश्यकता..." required></textarea>
+        </div>
+        <div id="sa-esc-error" class="text-xs text-rose-600 font-semibold hidden"></div>
+
+        <div class="flex items-center justify-end gap-2 pt-2 border-t border-slate-100">
+          <button type="button" onclick="document.getElementById('escalate-sa-modal').classList.add('hidden')" class="btn btn-outline btn-sm text-xs py-1.5 px-3">Cancel</button>
+          <button type="submit" class="btn btn-primary btn-sm bg-rose-700 hover:bg-rose-800 text-white border-rose-700 text-xs font-bold py-1.5 px-4">
+            Confirm Escalation
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Resolution Modal -->
+  <div id="resolve-modal" class="hidden fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white border border-[#e2ded4] rounded-sm max-w-md w-full p-6 shadow-xl space-y-4">
+      <div class="flex items-center justify-between pb-2 border-b border-[#e2ded4]">
+        <div class="flex items-center gap-2 text-emerald-800 font-bold text-sm">
+          <span>✅</span> District Resolution Order (समाधान आदेश)
+        </div>
+        <button type="button" onclick="document.getElementById('resolve-modal').classList.add('hidden')" class="text-slate-400 hover:text-slate-700 text-lg font-bold">&times;</button>
+      </div>
+
+      <div class="text-xs text-slate-600">Case: <strong class="font-mono-num" id="res-modal-cmp-num">-</strong></div>
+
+      <form id="resolve-form" class="space-y-3">
+        <div>
+          <label class="form-label font-bold text-xs text-slate-800">Formal Resolution Order *</label>
+          <textarea id="res-order-input" rows="3" class="form-textarea border-[#d6d1c4] text-xs py-2 rounded-xs"
+            placeholder="Enter official resolution decision and corrective instructions..." required></textarea>
+        </div>
+        <div id="res-error" class="text-xs text-rose-600 font-semibold hidden"></div>
+
+        <div class="flex items-center justify-end gap-2 pt-2 border-t border-slate-100">
+          <button type="button" onclick="document.getElementById('resolve-modal').classList.add('hidden')" class="btn btn-outline btn-sm text-xs py-1.5 px-3">Cancel</button>
+          <button type="submit" class="btn btn-primary btn-sm text-xs font-bold py-1.5 px-4">Issue Resolution</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Simple Footer -->
+  <footer class="py-4 text-center text-xs text-slate-400 border-t border-[#e2ded4] bg-white">
+    KisanSetu &copy; 2026 • SIH Innovation Prototype • District Administration Oversight Console
+  </footer>
+
+  <!-- Scripts: Mock Data, Utils, Auth Engine, Admin Module, Complaints Engine -->
+  <script src="../js/mock-data.js"></script>
+  <script src="../js/utils.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="admin.js"></script>
+  <script src="../js/complaints.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // 1. Enforce District Admin Route Protection
+      const user = window.KisanAuth.requireAuth('district_admin', 'login.html');
+      if (!user) return;
+
+      const adminName = user.name || 'Demo District Admin';
+      document.getElementById('header-user-name').textContent = adminName;
+      if (user.district) {
+        document.getElementById('header-district-badge').textContent = `${user.district} Administration`;
+      }
+
+      // Logout handler
+      document.getElementById('logout-btn')?.addEventListener('click', () => {
+        window.KisanAuth.logout('login.html');
+      });
+
+      // 2. Populate Center filter options
+      const centerSelect = document.getElementById('filter-center');
+      const centers = (window.MOCK_CENTERS) || [];
+      centers.forEach(c => {
+        centerSelect.innerHTML += `<option value="${c.id}">${c.name}</option>`;
+      });
+
+      // 3. Selection state for Modals
+      let activeCaseId = null;
+
+      // Filter listeners
+      centerSelect.addEventListener('change', renderTable);
+      document.getElementById('filter-status').addEventListener('change', renderTable);
+      document.getElementById('filter-priority').addEventListener('change', renderTable);
+
+      function renderTable() {
+        // District Admin sees Level 2 complaints
+        const allEscalated = window.KisanComplaints.getAllComplaints().filter(c => {
+          return c.currentLevel === 'DISTRICT_ADMIN' || (c.history && c.history.some(h => h.role === 'district_admin'));
+        });
+
+        // Top KPIs
+        const total = allEscalated.length;
+        const openPending = allEscalated.filter(c => c.status === 'ESCALATED' && c.currentLevel === 'DISTRICT_ADMIN').length;
+        const inProgress = allEscalated.filter(c => c.status === 'IN_PROGRESS' && c.currentLevel === 'DISTRICT_ADMIN').length;
+        const critical = allEscalated.filter(c => ['HIGH', 'CRITICAL'].includes(c.priority)).length;
+        const resolved = allEscalated.filter(c => ['RESOLVED', 'CLOSED'].includes(c.status)).length;
+
+        document.getElementById('kpi-total').textContent = total;
+        document.getElementById('kpi-open').textContent = openPending;
+        document.getElementById('kpi-progress').textContent = inProgress;
+        document.getElementById('kpi-critical').textContent = critical;
+        document.getElementById('kpi-resolved').textContent = resolved;
+        document.getElementById('table-count-badge').textContent = `${allEscalated.length} cases`;
+
+        // Apply filters
+        const selCenter = centerSelect.value;
+        const selStatus = document.getElementById('filter-status').value;
+        const selPriority = document.getElementById('filter-priority').value;
+
+        const filtered = allEscalated.filter(c => {
+          const matchCenter = selCenter === 'ALL' || c.relatedCenterId === selCenter;
+          const matchStatus = selStatus === 'ALL' || c.status === selStatus;
+          const matchPriority = selPriority === 'ALL' || c.priority === selPriority;
+          return matchCenter && matchStatus && matchPriority;
+        });
+
+        const tbody = document.getElementById('complaints-table-body');
+        if (filtered.length === 0) {
+          tbody.innerHTML = `
+            <tr>
+              <td colspan="8" class="p-8 text-center text-slate-400 text-xs">
+                No escalated complaints found matching filter criteria.
+              </td>
+            </tr>
+          `;
+          return;
+        }
+
+        tbody.innerHTML = filtered.map(c => {
+          const statusMeta = window.KisanComplaints.getStatusMeta(c.status);
+          const catLabel = window.KisanComplaints.getCategoryLabel(c.category, 'en');
+          const escDate = c.escalatedAt ? new Date(c.escalatedAt).toLocaleDateString('en-IN', {
+            day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit'
+          }) : 'Direct';
+
+          let pBadgeClass = 'bg-slate-100 text-slate-700 border-slate-200';
+          if (c.priority === 'HIGH') pBadgeClass = 'bg-amber-100 text-amber-900 border-amber-300 font-bold';
+          if (c.priority === 'CRITICAL') pBadgeClass = 'bg-rose-100 text-rose-900 border-rose-300 font-bold';
+
+          const isAtDistrictLevel = c.currentLevel === 'DISTRICT_ADMIN';
+
+          return `
+            <tr class="hover:bg-[#faf9f5] transition-colors">
+              <td class="py-3 px-3 font-mono-num font-bold text-slate-800">
+                ${c.complaintNumber}
+              </td>
+              <td class="py-3 px-3">
+                <div class="font-bold text-slate-800">${c.farmerName}</div>
+                <div class="text-[10px] text-slate-500">${c.relatedCenterName || c.relatedCenterId || 'Center'}</div>
+              </td>
+              <td class="py-3 px-3 text-slate-600">
+                ${catLabel}
+              </td>
+              <td class="py-3 px-3 max-w-xs">
+                <div class="font-medium text-slate-800 truncate" title="${c.subject}">${c.subject}</div>
+                ${c.escalationReason ? `<div class="text-[10px] text-rose-700 italic truncate" title="${c.escalationReason}">Reason: ${c.escalationReason}</div>` : ''}
+              </td>
+              <td class="py-3 px-3">
+                <span class="text-[10px] px-2 py-0.5 border rounded-xs ${pBadgeClass}">
+                  ${c.priority}
+                </span>
+              </td>
+              <td class="py-3 px-3 text-slate-500 text-[11px]">
+                ${escDate}
+              </td>
+              <td class="py-3 px-3">
+                <span class="badge ${statusMeta.badgeClass} text-[10px] font-bold">
+                  ● ${statusMeta.en}
+                </span>
+                ${c.currentLevel !== 'DISTRICT_ADMIN' ? `<span class="block text-[9px] text-rose-700 font-semibold mt-0.5">Tier: ${c.currentLevel}</span>` : ''}
+              </td>
+              <td class="py-3 px-3 text-right">
+                <div class="inline-flex items-center gap-1">
+                  <button type="button" class="btn-view btn btn-outline btn-sm text-[11px] py-1 px-2 text-slate-700" data-id="${c.complaintNumber}">
+                    View
+                  </button>
+
+                  ${isAtDistrictLevel && c.status === 'ESCALATED' ? `
+                    <button type="button" class="btn-inv btn btn-outline btn-sm text-[11px] py-1 px-2 border-teal-300 text-teal-800 bg-teal-50" data-id="${c.complaintNumber}">
+                      Investigate
+                    </button>
+                  ` : ''}
+
+                  ${isAtDistrictLevel && ['ESCALATED', 'IN_PROGRESS'].includes(c.status) ? `
+                    <button type="button" class="btn-note btn btn-outline btn-sm text-[11px] py-1 px-2" data-id="${c.complaintNumber}">
+                      Note
+                    </button>
+                    <button type="button" class="btn-res btn btn-primary btn-sm text-[11px] py-1 px-2" data-id="${c.complaintNumber}">
+                      Resolve
+                    </button>
+                    <button type="button" class="btn-esc-sa btn btn-outline btn-sm text-[11px] py-1 px-2 border-rose-300 text-rose-800 bg-rose-50" data-id="${c.complaintNumber}">
+                      Super Admin &rarr;
+                    </button>
+                  ` : ''}
+
+                  ${isAtDistrictLevel && c.status === 'RESOLVED' ? `
+                    <button type="button" class="btn-close-case btn btn-outline btn-sm text-[11px] py-1 px-2 border-slate-300 text-slate-600" data-id="${c.complaintNumber}">
+                      Close Case
+                    </button>
+                  ` : ''}
+
+                  ${!isAtDistrictLevel ? `
+                    <span class="text-[10px] text-rose-700 font-medium">Forwarded to Super Admin</span>
+                  ` : ''}
+                </div>
+              </td>
+            </tr>
+          `;
+        }).join('');
+      }
+
+      // Event Delegation for Table Buttons
+      const tbody = document.getElementById('complaints-table-body');
+      tbody.addEventListener('click', (e) => {
+        const viewBtn = e.target.closest('.btn-view');
+        const invBtn = e.target.closest('.btn-inv');
+        const noteBtn = e.target.closest('.btn-note');
+        const resBtn = e.target.closest('.btn-res');
+        const escSaBtn = e.target.closest('.btn-esc-sa');
+        const closeBtn = e.target.closest('.btn-close-case');
+
+        if (viewBtn) openCaseModal(viewBtn.dataset.id);
+        else if (invBtn) {
+          const res = window.KisanComplaints.investigateComplaint(invBtn.dataset.id, user);
+          if (res.success) renderTable();
+        } else if (noteBtn) openNoteModal(noteBtn.dataset.id);
+        else if (resBtn) openResolveModal(resBtn.dataset.id);
+        else if (escSaBtn) openEscalateSaModal(escSaBtn.dataset.id);
+        else if (closeBtn) {
+          if (confirm('Are you sure you want to formally close this complaint?')) {
+            window.KisanComplaints.closeComplaint(closeBtn.dataset.id, user);
+            renderTable();
+          }
+        }
+      });
+
+      // View Modal
+      function openCaseModal(cmpNum) {
+        const c = window.KisanComplaints.getComplaintById(cmpNum);
+        if (!c) return;
+
+        const statusMeta = window.KisanComplaints.getStatusMeta(c.status);
+        document.getElementById('modal-cmp-num').textContent = c.complaintNumber;
+        document.getElementById('modal-status-badge').textContent = `● ${statusMeta.en}`;
+        document.getElementById('modal-status-badge').className = `badge ${statusMeta.badgeClass} text-[11px] font-bold`;
+        document.getElementById('modal-priority-badge').textContent = c.priority;
+        document.getElementById('modal-subject').textContent = c.subject;
+        document.getElementById('modal-farmer').textContent = `${c.farmerName} (${c.farmerPhone || 'N/A'})`;
+        document.getElementById('modal-center').textContent = c.relatedCenterName || c.relatedCenterId || 'N/A';
+        document.getElementById('modal-booking').textContent = c.relatedBookingId || 'N/A';
+        document.getElementById('modal-token').textContent = c.relatedToken || 'N/A';
+        document.getElementById('modal-desc').textContent = c.description;
+        document.getElementById('modal-esc-reason').textContent = c.escalationReason || 'None recorded';
+
+        const resBox = document.getElementById('modal-resolution-box');
+        if (c.resolution) {
+          resBox.classList.remove('hidden');
+          document.getElementById('modal-resolution-text').textContent = c.resolution;
+        } else {
+          resBox.classList.add('hidden');
+        }
+
+        // Timeline
+        const tContainer = document.getElementById('modal-timeline');
+        tContainer.innerHTML = (c.history || []).map((h, i) => `
+          <div class="border-b border-slate-200 pb-1.5 mb-1.5 last:border-b-0 last:mb-0 last:pb-0">
+            <div class="flex justify-between text-[10px] text-slate-500 font-semibold">
+              <span class="text-slate-700 font-bold">${h.action} by ${h.actor || h.role} (${h.role})</span>
+              <span class="font-mono-num">${new Date(h.timestamp).toLocaleTimeString()}</span>
+            </div>
+            ${h.note ? `<div class="text-[11px] text-slate-800 mt-0.5">${h.note}</div>` : ''}
+          </div>
+        `).join('');
+
+        document.getElementById('case-modal').classList.remove('hidden');
+      }
+
+      // Note Modal
+      function openNoteModal(cmpNum) {
+        activeCaseId = cmpNum;
+        document.getElementById('note-text-input').value = '';
+        document.getElementById('note-modal').classList.remove('hidden');
+      }
+
+      document.getElementById('note-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const text = document.getElementById('note-text-input').value.trim();
+        if (text) {
+          window.KisanComplaints.addNote(activeCaseId, text, user);
+          document.getElementById('note-modal').classList.add('hidden');
+          renderTable();
+        }
+      });
+
+      // Resolve Modal
+      function openResolveModal(cmpNum) {
+        activeCaseId = cmpNum;
+        document.getElementById('res-modal-cmp-num').textContent = cmpNum;
+        document.getElementById('res-order-input').value = '';
+        document.getElementById('res-error').classList.add('hidden');
+        document.getElementById('resolve-modal').classList.remove('hidden');
+      }
+
+      document.getElementById('resolve-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const order = document.getElementById('res-order-input').value.trim();
+        const err = document.getElementById('res-error');
+        err.classList.add('hidden');
+
+        const res = window.KisanComplaints.resolveComplaint(activeCaseId, order, user);
+        if (res.success) {
+          document.getElementById('resolve-modal').classList.add('hidden');
+          renderTable();
+        } else {
+          err.textContent = res.error || 'Failed to resolve';
+          err.classList.remove('hidden');
+        }
+      });
+
+      // Escalate to Super Admin Modal (Part O)
+      function openEscalateSaModal(cmpNum) {
+        activeCaseId = cmpNum;
+        document.getElementById('sa-modal-cmp-num').textContent = cmpNum;
+        document.getElementById('sa-reason-input').value = '';
+        document.getElementById('sa-esc-error').classList.add('hidden');
+        document.getElementById('escalate-sa-modal').classList.remove('hidden');
+      }
+
+      document.getElementById('escalate-sa-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const reason = document.getElementById('sa-reason-input').value.trim();
+        const err = document.getElementById('sa-esc-error');
+        err.classList.add('hidden');
+
+        const res = window.KisanComplaints.escalateComplaint(activeCaseId, reason, user);
+        if (res.success) {
+          document.getElementById('escalate-sa-modal').classList.add('hidden');
+          renderTable();
+        } else {
+          err.textContent = res.error || 'Failed to escalate';
+          err.classList.remove('hidden');
+        }
+      });
+
+      // Initial Render
+      renderTable();
+    });
+  </script>
+</body>
+
+</html>
