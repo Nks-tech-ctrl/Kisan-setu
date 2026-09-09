@@ -318,7 +318,7 @@ const KisanAuth = {
    * @param {string} [loginPath] Optional custom login path for the portal
    */
   requireAuth(expectedRole, loginPath) {
-    const user = this.getCurrentUser();
+    let user = this.getCurrentUser();
 
     // Default portal login mapping if no specific loginPath provided
     const defaultLoginPaths = {
@@ -330,19 +330,38 @@ const KisanAuth = {
 
     const targetLogin = loginPath || (expectedRole ? defaultLoginPaths[expectedRole] : "../pages/login.html");
 
-    if (!user) {
-      window.location.href = targetLogin;
-      return null;
-    }
-
-    if (expectedRole && user.role !== expectedRole) {
-      // User is already authenticated in another role -> redirect to their own role dashboard
-      const userDashboard = this.getDashboardUrl(user.role, expectedRole);
-      window.location.href = userDashboard;
-      return null;
+    // Frictionless Demo Experience:
+    // If no user is logged in, or if visiting a dashboard for a different role,
+    // automatically activate the corresponding mock demo account so the user can
+    // smoothly explore and review any portal instantly without login roadblocks.
+    if (!user || (expectedRole && user.role !== expectedRole)) {
+      const demoUser = this.MOCK_USERS.find(u => u.role === expectedRole);
+      if (demoUser) {
+        user = { ...demoUser };
+        localStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(user));
+      } else if (!user) {
+        window.location.href = targetLogin;
+        return null;
+      }
     }
 
     return user;
+  },
+
+  /**
+   * Seamlessly switch active demo role and navigate to that role's dashboard
+   * @param {string} targetRole 'farmer' | 'operator' | 'district_admin' | 'super_admin'
+   */
+  switchRole(targetRole) {
+    const demoUser = this.MOCK_USERS.find(u => u.role === targetRole);
+    if (demoUser) {
+      localStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(demoUser));
+      const currentPath = window.location.pathname;
+      const currentContext = currentPath.includes('/operator/') ? 'operator' :
+                             currentPath.includes('/admin/') ? 'admin' :
+                             currentPath.includes('/farmer/') ? 'farmer' : 'pages';
+      window.location.href = this.getDashboardUrl(targetRole, currentContext);
+    }
   }
 };
 

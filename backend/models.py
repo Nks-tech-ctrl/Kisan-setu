@@ -1,0 +1,139 @@
+import datetime
+from sqlalchemy import Column, Integer, String, Float, Boolean, DateTime, Text, ForeignKey
+from sqlalchemy.orm import relationship
+from backend.database import Base
+
+class User(Base):
+    __tablename__ = "users"
+
+    id = Column(String, primary_key=True, index=True)
+    name = Column(String, nullable=False)
+    email = Column(String, unique=True, index=True, nullable=False)
+    phone = Column(String, nullable=True)
+    password = Column(String, nullable=False)
+    role = Column(String, nullable=False)  # 'farmer', 'operator', 'district_admin', 'super_admin'
+    center_id = Column(String, nullable=True)
+    center_name = Column(String, nullable=True)
+    district = Column(String, nullable=True)
+    state = Column(String, nullable=True)
+    village = Column(String, nullable=True)
+    land_area = Column(Float, nullable=True)
+    crop = Column(String, nullable=True)
+    bank_name = Column(String, nullable=True)
+    account_number = Column(String, nullable=True)
+    ifsc = Column(String, nullable=True)
+    profile_completed = Column(Boolean, default=True)
+    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+
+class Center(Base):
+    __tablename__ = "centers"
+
+    id = Column(String, primary_key=True, index=True)
+    name = Column(String, nullable=False, index=True)
+    district = Column(String, nullable=False, index=True)
+    state = Column(String, nullable=False, index=True)
+    address = Column(String, nullable=False)
+    operating_hours = Column(String, default="09:00 AM – 05:00 PM")
+    commodity = Column(String, nullable=False)
+    accepted_crops = Column(Text, default="[]")  # JSON string
+    facilities = Column(Text, default="[]")      # JSON string
+    daily_capacity_mt = Column(Integer, default=500)
+    slot_duration = Column(String, default="60 मिनट")
+    current_queue_vehicles = Column(Integer, default=0)
+    estimated_wait_minutes = Column(Integer, default=0)
+    load_status = Column(String, default="low")  # 'low', 'medium', 'high'
+    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+
+class Commodity(Base):
+    __tablename__ = "commodities"
+
+    id = Column(String, primary_key=True, index=True)
+    name = Column(String, nullable=False)
+    name_english = Column(String, nullable=True)
+    hindi_name = Column(String, nullable=False)
+    category = Column(String, nullable=False)
+    season = Column(String, nullable=False)
+    unit = Column(String, default="QTL")
+    demo_rate = Column(Float, nullable=False)
+    msp_per_quintal = Column(Float, nullable=False)
+    moisture_max_percent = Column(Float, nullable=False)
+
+class Booking(Base):
+    __tablename__ = "bookings"
+
+    id = Column(String, primary_key=True, index=True)          # e.g. KS-BOOK-1011
+    token_id = Column(String, unique=True, index=True)          # e.g. KS-TKN-1011
+    farmer_id = Column(String, nullable=True, index=True)
+    farmer_name = Column(String, nullable=False)
+    farmer_phone = Column(String, nullable=True)
+    center_id = Column(String, ForeignKey("centers.id"), index=True)
+    center_name = Column(String, nullable=False)
+    district = Column(String, nullable=True)
+    commodity = Column(String, nullable=False)
+    booking_date = Column(String, nullable=False)
+    time_slot = Column(String, nullable=False)
+    quantity_qtl = Column(Float, default=40.0)
+    vehicle_number = Column(String, default="HR-05-AB-1234")
+    status = Column(String, default="CONFIRMED")                # 'CONFIRMED', 'ARRIVED', 'CHECKED_IN', 'IN_PROGRESS', 'COMPLETED', 'CANCELLED'
+    arrival_status = Column(String, default="pending")          # 'pending', 'arrived', 'checked_in'
+    queue_position = Column(Integer, default=0)
+    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+
+class QueueEntry(Base):
+    __tablename__ = "queue_entries"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    booking_id = Column(String, index=True, nullable=False)
+    token_id = Column(String, index=True, nullable=False)
+    center_id = Column(String, index=True, nullable=False)
+    farmer_name = Column(String, nullable=False)
+    phone = Column(String, nullable=True)
+    commodity = Column(String, nullable=False)
+    time_slot = Column(String, nullable=False)
+    queue_position = Column(Integer, default=1)
+    total_vehicles_ahead = Column(Integer, default=0)
+    estimated_wait_minutes = Column(Integer, default=15)
+    arrival_status = Column(String, default="checked_in")
+    status = Column(String, default="कतार में प्रतीक्षा (Waiting in Queue)")
+    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+
+class ProcurementRecord(Base):
+    __tablename__ = "procurement_records"
+
+    id = Column(String, primary_key=True, index=True)           # e.g. KSP-RCP-1005
+    booking_id = Column(String, index=True, nullable=False)
+    token_id = Column(String, index=True, nullable=False)
+    farmer_name = Column(String, nullable=False)
+    farmer_phone = Column(String, nullable=True)
+    center_id = Column(String, index=True, nullable=False)
+    center_name = Column(String, nullable=False)
+    district = Column(String, nullable=False)
+    commodity = Column(String, nullable=False)
+    date = Column(String, nullable=False)
+    gross_weight = Column(Float, default=0.0)
+    tare_weight = Column(Float, default=0.0)
+    net_weight = Column(Float, default=0.0)
+    moisture_percent = Column(Float, default=10.0)
+    rate_per_qtl = Column(Float, default=2425.0)
+    total_amount = Column(Float, default=0.0)
+    payment_status = Column(String, default="PAID")
+    receipt_timestamp = Column(DateTime, default=datetime.datetime.utcnow)
+
+class Complaint(Base):
+    __tablename__ = "complaints"
+
+    id = Column(String, primary_key=True, index=True)           # e.g. CMP-2026-001
+    complainant_name = Column(String, nullable=False)
+    complainant_phone = Column(String, nullable=True)
+    category = Column(String, nullable=False)
+    subject = Column(String, nullable=False)
+    description = Column(Text, nullable=False)
+    center_id = Column(String, nullable=True, index=True)
+    center_name = Column(String, nullable=True)
+    booking_id = Column(String, nullable=True)
+    level = Column(String, default="OPERATOR")                  # 'OPERATOR', 'DISTRICT_ADMIN', 'SUPER_ADMIN'
+    priority = Column(String, default="MEDIUM")                 # 'LOW', 'MEDIUM', 'HIGH', 'CRITICAL'
+    status = Column(String, default="OPEN")                     # 'OPEN', 'ACKNOWLEDGED', 'IN_PROGRESS', 'RESOLVED', 'ESCALATED', 'CLOSED'
+    resolution_notes = Column(Text, nullable=True)
+    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.datetime.utcnow)
