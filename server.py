@@ -16,7 +16,9 @@ def main():
     print(f"  -> Swagger Docs:     http://localhost:{port}/docs")
     print(f"  -> Redoc Specs:      http://localhost:{port}/redoc")
     print(f"  -> REST API:         http://localhost:{port}/api/v1")
-    print(f"  -> SQLite DB:        data/kisansetu.db")
+    from backend.database import IS_SUPABASE
+    db_name = "Supabase PostgreSQL" if IS_SUPABASE else "SQLite (data/kisansetu.db)"
+    print(f"  -> Database:         {db_name}")
     print("-" * 65)
     print("  Web Portals:")
     print(f"  * Public Landing:    http://localhost:{port}/index.html")

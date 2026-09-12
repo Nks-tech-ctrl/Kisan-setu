@@ -326,6 +326,10 @@
       if (userNameEl) {
         userNameEl.textContent = operatorUser.name || "Demo Operator";
       }
+      if (operatorUser.centerName) {
+        const badgeEl = document.getElementById('facility-badge');
+        if (badgeEl) badgeEl.textContent = operatorUser.centerName;
+      }
 
       // Logout handler
       document.getElementById('logout-btn')?.addEventListener('click', () => {
@@ -398,7 +402,7 @@
         document.getElementById('inspect-booking-id').textContent = item.bookingId;
         document.getElementById('inspect-commodity').textContent = item.commodity;
         document.getElementById('inspect-slot').textContent = item.timeSlot;
-        document.getElementById('inspect-center').textContent = item.centerName || "Karnal Central Center";
+        document.getElementById('inspect-center').textContent = item.centerName || operatorUser.centerName || "Procurement Center";
         document.getElementById('inspect-status').textContent = item.status;
 
         const pill = document.getElementById('inspection-status-pill');
