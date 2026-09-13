@@ -36,6 +36,7 @@
 
   <!-- Core Stylesheet -->
   <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/voice-assistant.css">
   <style>
     /* Custom Operational Agricultural Aesthetic */
     body {
@@ -117,6 +118,10 @@
 
       <!-- Desktop Action Buttons -->
       <div class="hidden sm:flex items-center gap-3">
+        <button type="button" onclick="window.KisanVoiceAssistant && window.KisanVoiceAssistant.open()"
+          class="btn btn-outline btn-sm text-xs font-semibold py-1.5 px-3 rounded-sm border-[#15803d] text-[#15803d] hover:bg-emerald-50 flex items-center gap-1.5 cursor-pointer">
+          <span>🎙️</span> किसान वाणी AI
+        </button>
         <a href="farmer/dashboard.html" class="btn btn-primary btn-sm text-xs font-bold py-1.5 px-3 rounded-sm shadow-2xs">
           किसान पोर्टल
         </a>
@@ -1070,6 +1075,7 @@
   <script src="js/mock-data.js"></script>
   <script src="js/utils.js"></script>
   <script src="js/api.js"></script>
+  <script src="js/voice-assistant.js"></script>
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {

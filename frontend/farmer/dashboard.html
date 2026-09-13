@@ -16,6 +16,7 @@
 
   <!-- Core Design System -->
   <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/voice-assistant.css">
 </head>
 
 <body class="bg-[#f8fafc] text-[#0f172a] min-h-screen flex flex-col justify-between antialiased">
@@ -52,6 +53,11 @@
           </div>
           <span class="font-semibold text-slate-900" id="header-user-name">लोड हो रहा है...</span>
         </a>
+
+        <button type="button" onclick="window.KisanVoiceAssistant && window.KisanVoiceAssistant.open()"
+          class="btn btn-outline btn-sm text-xs font-semibold flex items-center gap-1.5 py-1.5 px-3 text-[#15803d] border-[#15803d] bg-emerald-50/50 hover:bg-emerald-100/60 cursor-pointer">
+          <span>🎙️</span> किसान वाणी AI
+        </button>
 
         <a href="sales-history.html"
           class="btn btn-outline btn-sm text-xs font-semibold flex items-center gap-1 py-1.5 px-3 text-slate-700 hover:bg-slate-50">
@@ -508,6 +514,7 @@
   <script src="../js/auth.js"></script>
   <script src="farmer.js"></script>
   <script src="../js/complaints.js"></script>
+  <script src="../js/voice-assistant.js"></script>
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
