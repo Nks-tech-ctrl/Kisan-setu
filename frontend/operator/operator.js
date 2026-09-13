@@ -108,14 +108,15 @@
         const bookingId = isObj ? (bookingIdOrDetails.bookingId || "") : bookingIdOrDetails;
         const info = isObj ? bookingIdOrDetails : details;
 
+        const currentUser = (typeof window !== 'undefined' && window.KisanAuth) ? window.KisanAuth.getCurrentUser() : null;
         const entry = {
           id: "ACT-" + Date.now() + "-" + Math.floor(Math.random() * 1000),
           action: action,
           bookingId: bookingId,
           tokenId: info.tokenId || info.token || "",
           farmerName: info.farmerName || "Demo Farmer",
-          centerId: info.centerId || "CTR-HR-01",
-          centerName: info.centerName || "Karnal Central Procurement Center",
+          centerId: info.centerId || currentUser?.centerId || "CTR-HR-01",
+          centerName: info.centerName || currentUser?.centerName || "Karnal Central Procurement Center",
           timestamp: new Date().toISOString(),
           role: "operator"
         };
@@ -179,6 +180,9 @@
     getOperatorQueue() {
       const activeBooking = this.getActiveBooking();
       let liveQueue = this.getLiveQueueStatus();
+      const currentUser = (typeof window !== 'undefined' && window.KisanAuth) ? window.KisanAuth.getCurrentUser() : null;
+      const opCenterId = currentUser?.centerId || "CTR-HR-01";
+      const opCenterName = currentUser?.centerName || "Karnal Central Procurement Center";
 
       const queueList = [];
 
@@ -188,8 +192,8 @@
           liveQueue = {
             bookingId: activeBooking.bookingId,
             tokenId: activeBooking.tokenId || `KS-TKN-${activeBooking.bookingId.replace(/^KS-BOOK-/, '')}`,
-            centerId: activeBooking.centerId || "CTR-HR-01",
-            centerName: activeBooking.centerName || "Karnal Central Procurement Center",
+            centerId: activeBooking.centerId || opCenterId,
+            centerName: activeBooking.centerName || opCenterName,
             farmerName: activeBooking.farmerName || "Demo Farmer",
             commodity: activeBooking.commodity || "Wheat (Grade A)",
             bookingDate: activeBooking.bookingDate || "Today (आज)",
@@ -209,8 +213,8 @@
           tokenId: liveQueue.tokenId || activeBooking.tokenId,
           farmerName: activeBooking.farmerName || "Demo Farmer",
           phone: activeBooking.farmerPhone || "98765 43210",
-          centerId: activeBooking.centerId,
-          centerName: activeBooking.centerName,
+          centerId: activeBooking.centerId || opCenterId,
+          centerName: activeBooking.centerName || opCenterName,
           commodity: activeBooking.commodity,
           bookingDate: activeBooking.bookingDate,
           timeSlot: activeBooking.timeSlot,
@@ -223,10 +227,14 @@
         });
       }
 
-      // Append background yard demo entries (avoiding duplicate bookingIds)
+      // Append background yard demo entries adapted to active operator center
       DEFAULT_DEMO_QUEUE_ENTRIES.forEach(entry => {
         if (!queueList.some(q => q.bookingId === entry.bookingId)) {
-          queueList.push({ ...entry });
+          queueList.push({
+            ...entry,
+            centerId: opCenterId,
+            centerName: opCenterName
+          });
         }
       });
 
@@ -554,9 +562,9 @@
           farmerPhone: activeBooking.farmerPhone || "98765 43210",
           commodity: activeBooking.commodity || liveQueue.commodity || "Wheat (Grade A)",
           crop: activeBooking.commodity || liveQueue.commodity || "Wheat (Grade A)",
-          centerId: activeBooking.centerId || liveQueue.centerId || "CTR-HR-01",
-          centerName: activeBooking.centerName || liveQueue.centerName || "Karnal Central Procurement Center",
-          district: activeBooking.district || "Karnal",
+          centerId: activeBooking.centerId || liveQueue.centerId || (window.KisanAuth?.getCurrentUser()?.centerId) || "CTR-HR-01",
+          centerName: activeBooking.centerName || liveQueue.centerName || (window.KisanAuth?.getCurrentUser()?.centerName) || "Karnal Central Procurement Center",
+          district: activeBooking.district || (window.KisanAuth?.getCurrentUser()?.district) || "Karnal",
           date: new Date().toISOString().split('T')[0],
           time: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }),
           grossWeight: grossWeight,
@@ -656,9 +664,9 @@
           farmerPhone: demoItem.phone || "98120 45678",
           commodity: demoItem.commodity,
           crop: demoItem.commodity,
-          centerId: demoItem.centerId,
-          centerName: demoItem.centerName,
-          district: "Karnal",
+          centerId: demoItem.centerId || (window.KisanAuth?.getCurrentUser()?.centerId) || "CTR-HR-01",
+          centerName: demoItem.centerName || (window.KisanAuth?.getCurrentUser()?.centerName) || "Karnal Central Procurement Center",
+          district: (window.KisanAuth?.getCurrentUser()?.district) || "Karnal",
           date: new Date().toISOString().split('T')[0],
           time: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }),
           grossWeight: grossWeight,
@@ -699,8 +707,107 @@
       }
 
       return { success: false, message: "Booking record not found" };
+    },
+
+    /**
+     * Injects an interactive center switcher next to the facility badge in the operator portal header.
+     * Allows facility operators to test and switch between centers smoothly without logging out.
+     */
+    initHeaderCenterSwitcher() {
+      const facilityBadge = document.getElementById('facility-badge');
+      if (!facilityBadge || document.getElementById('center-switcher-container')) return;
+
+      const currentUser = (typeof window !== 'undefined' && window.KisanAuth) ? window.KisanAuth.getCurrentUser() : null;
+      if (!currentUser) return;
+
+      if (currentUser.centerName) {
+        facilityBadge.textContent = currentUser.centerName;
+      }
+
+      const availableOperators = (window.KisanAuth && window.KisanAuth.getAvailableOperators) ? window.KisanAuth.getAvailableOperators() : [];
+      if (availableOperators.length <= 1) return;
+
+      const container = document.createElement('div');
+      container.className = 'relative inline-block text-left ml-2';
+      container.id = 'center-switcher-container';
+
+      const optionsHtml = availableOperators.map(op => {
+        const isCurrent = op.centerId === currentUser.centerId;
+        return `
+          <button type="button" class="center-switch-item w-full text-left px-3 py-2 text-xs hover:bg-teal-50 flex items-center justify-between transition-colors ${isCurrent ? 'bg-teal-50/70 font-bold text-[#0f766e]' : 'text-slate-700'}" data-center-id="${op.centerId}">
+            <div>
+              <div class="font-medium">${op.centerName}</div>
+              <div class="text-[10px] text-slate-400 font-mono">${op.centerId} • ${op.district}</div>
+            </div>
+            ${isCurrent ? '<span class="text-xs text-[#0f766e] font-bold">✓ Active</span>' : '<span class="text-[10px] text-teal-700 font-medium">Switch &rarr;</span>'}
+          </button>
+        `;
+      }).join('');
+
+      container.innerHTML = `
+        <button type="button" id="center-switcher-btn" class="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-semibold text-teal-800 bg-teal-50 hover:bg-teal-100 border border-teal-200 rounded transition-colors cursor-pointer" title="Switch Procurement Center Operator">
+          <span>⇄ Switch Operator Center</span>
+          <span class="text-[8px]">▼</span>
+        </button>
+        <div id="center-switcher-menu" class="hidden absolute left-0 mt-1 w-72 bg-white rounded-xl shadow-xl border border-slate-200 py-1 z-50 divide-y divide-slate-100">
+          <div class="px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-slate-500 bg-slate-50 rounded-t-xl flex justify-between items-center">
+            <span>Select Center Operator</span>
+            <span class="text-teal-700 font-semibold">${availableOperators.length} Available</span>
+          </div>
+          <div class="max-h-60 overflow-y-auto">
+            ${optionsHtml}
+          </div>
+        </div>
+      `;
+
+      const parent = facilityBadge.parentNode;
+      if (parent) {
+        facilityBadge.classList.add('inline-block');
+        parent.style.display = 'flex';
+        parent.style.alignItems = 'center';
+        parent.style.flexWrap = 'wrap';
+        parent.appendChild(container);
+      }
+
+      const btn = container.querySelector('#center-switcher-btn');
+      const menu = container.querySelector('#center-switcher-menu');
+
+      if (btn && menu) {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          menu.classList.toggle('hidden');
+        });
+
+        document.addEventListener('click', (e) => {
+          if (!container.contains(e.target)) {
+            menu.classList.add('hidden');
+          }
+        });
+
+        container.querySelectorAll('.center-switch-item').forEach(item => {
+          item.addEventListener('click', () => {
+            const targetCenterId = item.getAttribute('data-center-id');
+            if (targetCenterId && targetCenterId !== currentUser.centerId) {
+              window.KisanAuth.switchOperatorCenter(targetCenterId);
+            } else {
+              menu.classList.add('hidden');
+            }
+          });
+        });
+      }
     }
   };
+
+  // Auto-initialize header switcher when DOM is ready
+  if (typeof document !== 'undefined') {
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', () => {
+        KisanOperator.initHeaderCenterSwitcher();
+      });
+    } else {
+      setTimeout(() => KisanOperator.initHeaderCenterSwitcher(), 50);
+    }
+  }
 
   // Export to global scope
   window.KisanOperator = KisanOperator;

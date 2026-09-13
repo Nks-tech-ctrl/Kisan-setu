@@ -74,11 +74,30 @@
         <!-- Login Form -->
         <form id="login-form" class="space-y-4">
 
+          <!-- Select Assigned Center / Operator Preset -->
+          <div class="form-group mb-3">
+            <div class="flex justify-between items-center mb-1">
+              <label for="center-selector" class="form-label text-xs mb-0">Assigned Procurement Center</label>
+              <span class="text-[10px] text-teal-700 font-semibold bg-teal-50 px-1.5 py-0.5 rounded border border-teal-200">
+                Quick Select
+              </span>
+            </div>
+            <select id="center-selector" class="form-input text-xs focus:border-[#0f766e] focus:ring-[#0f766e] bg-slate-50/80 cursor-pointer font-medium">
+              <option value="operator@demo.com" data-pass="Operator@123" selected>Karnal Central Procurement Center (Karnal)</option>
+              <option value="operator.ambala@demo.com" data-pass="Operator@123">Ambala Grain Market Center (Ambala)</option>
+              <option value="operator.rohtak@demo.com" data-pass="Operator@123">Rohtak Central Procurement Center (Rohtak)</option>
+              <option value="operator.jhajjar@demo.com" data-pass="Operator@123">Jhajjar Anaj Mandi Center (Jhajjar)</option>
+              <option value="operator.sonipat@demo.com" data-pass="Operator@123">Sonipat Grain Yard Center (Sonipat)</option>
+              <option value="operator.panipat@demo.com" data-pass="Operator@123">Panipat Agro Intake Terminal (Panipat)</option>
+              <option value="operator.hisar@demo.com" data-pass="Operator@123">Hisar Mandi Hub (Hisar)</option>
+            </select>
+          </div>
+
           <!-- Email or Operator ID -->
           <div class="form-group mb-3">
             <label for="login-email" class="form-label text-xs">Operator Email or Official ID</label>
             <input type="text" id="login-email" class="form-input text-sm focus:border-[#0f766e] focus:ring-[#0f766e]"
-              placeholder="e.g. operator@demo.com" required autocomplete="username">
+              value="operator@demo.com" placeholder="e.g. operator@demo.com" required autocomplete="username">
           </div>
 
           <!-- Password -->
@@ -90,7 +109,7 @@
             </div>
             <div class="relative">
               <input type="password" id="login-password"
-                class="form-input text-sm pr-10 focus:border-[#0f766e] focus:ring-[#0f766e]" placeholder="••••••••"
+                class="form-input text-sm pr-10 focus:border-[#0f766e] focus:ring-[#0f766e]" value="Operator@123" placeholder="••••••••"
                 required autocomplete="current-password">
               <button type="button" id="toggle-password-btn"
                 class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 focus:outline-none"
@@ -130,20 +149,48 @@
 
       <!-- Demo Access Accordion for Prototype Testing -->
       <div class="mt-4 card p-3 bg-slate-50 border-slate-200 text-xs">
-        <details class="group">
+        <details class="group" open>
           <summary class="cursor-pointer font-medium text-slate-600 flex items-center justify-between select-none">
             <span class="flex items-center gap-1.5 text-slate-700">
               <span class="w-2 h-2 rounded-full bg-[#0f766e]"></span>
-              <strong>Demo Operator Credentials</strong>
+              <strong>Available Operator Accounts (Multi-Center)</strong>
             </span>
             <span class="text-slate-400 group-open:rotate-180 transition-transform">▼</span>
           </summary>
           <div class="pt-3 border-t border-slate-200 mt-2 space-y-2">
-            <p class="text-[11px] text-slate-500">Click below to autofill pre-configured demo operator credentials:</p>
-            <button type="button" id="autofill-operator-btn"
-              class="btn btn-outline btn-sm text-[11px] justify-start py-1.5 px-3 w-full">
-              ● Autofill Demo Operator (<span class="font-mono text-slate-700 ml-1">operator@demo.com</span>)
-            </button>
+            <p class="text-[11px] text-slate-500">Click any procurement center operator below to instantly log in or autofill:</p>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
+              <button type="button" class="quick-op-btn btn btn-outline btn-sm text-[11px] justify-start py-1.5 px-2.5 w-full hover:border-[#0f766e] hover:bg-teal-50"
+                data-email="operator@demo.com" data-pass="Operator@123">
+                <span class="truncate">🌾 <strong>Karnal Central</strong></span>
+              </button>
+              <button type="button" class="quick-op-btn btn btn-outline btn-sm text-[11px] justify-start py-1.5 px-2.5 w-full hover:border-[#0f766e] hover:bg-teal-50"
+                data-email="operator.ambala@demo.com" data-pass="Operator@123">
+                <span class="truncate">🌾 <strong>Ambala Market</strong></span>
+              </button>
+              <button type="button" class="quick-op-btn btn btn-outline btn-sm text-[11px] justify-start py-1.5 px-2.5 w-full hover:border-[#0f766e] hover:bg-teal-50"
+                data-email="operator.rohtak@demo.com" data-pass="Operator@123">
+                <span class="truncate">🌾 <strong>Rohtak Central</strong></span>
+              </button>
+              <button type="button" class="quick-op-btn btn btn-outline btn-sm text-[11px] justify-start py-1.5 px-2.5 w-full hover:border-[#0f766e] hover:bg-teal-50"
+                data-email="operator.jhajjar@demo.com" data-pass="Operator@123">
+                <span class="truncate">🌾 <strong>Jhajjar Mandi</strong></span>
+              </button>
+              <button type="button" class="quick-op-btn btn btn-outline btn-sm text-[11px] justify-start py-1.5 px-2.5 w-full hover:border-[#0f766e] hover:bg-teal-50"
+                data-email="operator.sonipat@demo.com" data-pass="Operator@123">
+                <span class="truncate">🌾 <strong>Sonipat Yard</strong></span>
+              </button>
+              <button type="button" class="quick-op-btn btn btn-outline btn-sm text-[11px] justify-start py-1.5 px-2.5 w-full hover:border-[#0f766e] hover:bg-teal-50"
+                data-email="operator.panipat@demo.com" data-pass="Operator@123">
+                <span class="truncate">🌾 <strong>Panipat Terminal</strong></span>
+              </button>
+              <button type="button" class="quick-op-btn btn btn-outline btn-sm text-[11px] justify-start py-1.5 px-2.5 w-full hover:border-[#0f766e] hover:bg-teal-50"
+                data-email="operator.hisar@demo.com" data-pass="Operator@123">
+                <span class="truncate">🌾 <strong>Hisar Hub</strong></span>
+              </button>
+            </div>
+
             <div class="pt-2 border-t border-slate-200 text-[11px] text-slate-500 space-y-1">
               <div class="font-semibold text-slate-700">Looking for other portals?</div>
               <div class="flex flex-wrap gap-2 text-teal-700 font-medium">
@@ -192,14 +239,43 @@
         });
       }
 
-      // Autofill demo button
-      if (autofillOperatorBtn) {
-        autofillOperatorBtn.addEventListener('click', () => {
-          emailInput.value = 'operator@demo.com';
-          passwordInput.value = 'Operator@123';
+      const centerSelector = document.getElementById('center-selector');
+      const quickOpBtns = document.querySelectorAll('.quick-op-btn');
+
+      // Center Selector change listener
+      if (centerSelector) {
+        centerSelector.addEventListener('change', () => {
+          const selectedEmail = centerSelector.value;
+          const selectedPass = centerSelector.options[centerSelector.selectedIndex]?.getAttribute('data-pass') || 'Operator@123';
+          emailInput.value = selectedEmail;
+          passwordInput.value = selectedPass;
           errorBox.classList.add('hidden');
         });
       }
+
+      // Quick Operator 1-Click Buttons
+      quickOpBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const email = btn.getAttribute('data-email');
+          const pass = btn.getAttribute('data-pass') || 'Operator@123';
+          emailInput.value = email;
+          passwordInput.value = pass;
+          errorBox.classList.add('hidden');
+
+          // Sync selector
+          if (centerSelector) {
+            for (let i = 0; i < centerSelector.options.length; i++) {
+              if (centerSelector.options[i].value === email) {
+                centerSelector.selectedIndex = i;
+                break;
+              }
+            }
+          }
+
+          // Trigger smooth direct login
+          loginForm.dispatchEvent(new Event('submit'));
+        });
+      });
 
       // Form submission handler (Fixed Operator Role)
       loginForm.addEventListener('submit', (e) => {

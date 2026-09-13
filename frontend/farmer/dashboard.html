@@ -16,6 +16,7 @@
 
   <!-- Core Design System -->
   <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/voice-assistant.css">
 </head>
 
 <body class="bg-[#f8fafc] text-[#0f172a] min-h-screen flex flex-col justify-between antialiased">
@@ -51,6 +52,16 @@
             K
           </div>
           <span class="font-semibold text-slate-900" id="header-user-name">लोड हो रहा है...</span>
+        </a>
+
+        <button type="button" onclick="window.KisanVoiceAssistant && window.KisanVoiceAssistant.open()"
+          class="btn btn-outline btn-sm text-xs font-semibold flex items-center gap-1.5 py-1.5 px-3 text-[#15803d] border-[#15803d] bg-emerald-50/50 hover:bg-emerald-100/60 cursor-pointer">
+          <span>🎙️</span> किसान वाणी AI
+        </button>
+
+        <a href="soil-testing.html"
+          class="btn btn-outline btn-sm text-xs font-semibold flex items-center gap-1 py-1.5 px-3 text-emerald-800 border-emerald-300 hover:bg-emerald-50">
+          <span>🧪</span> मृदा परीक्षण (Soil Health)
         </a>
 
         <a href="sales-history.html"
@@ -342,6 +353,33 @@
               </div>
             </a>
 
+            <!-- Action 5: Soil Testing & Health Card -->
+            <a href="soil-testing.html"
+              class="card p-5 bg-gradient-to-br from-white to-emerald-50/50 border-emerald-300 hover:border-emerald-600 hover:shadow-md transition-all group flex flex-col justify-between sm:col-span-2">
+              <div>
+                <div class="flex items-center justify-between mb-3">
+                  <div
+                    class="w-10 h-10 rounded-lg bg-emerald-600 text-white flex items-center justify-center group-hover:scale-105 transition-transform shadow-xs">
+                    <span class="text-lg">🧪</span>
+                  </div>
+                  <span class="badge badge-success text-[10px]">मृदा स्वास्थ्य कार्ड (Active)</span>
+                </div>
+                <h3 class="text-sm font-bold text-slate-900 group-hover:text-[#15803d] transition-colors flex items-center gap-2">
+                  मृदा परीक्षण एवं उर्वरक सलाह
+                  <span class="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-1.5 py-0.5 rounded">NEW</span>
+                </h3>
+                <div class="text-[11px] font-medium text-slate-400">Soil Testing, Crop-specific Fertilizer & Pesticide Advisory</div>
+                <p class="text-xs text-slate-600 mt-2 leading-relaxed">
+                  मिट्टी की जांच करवाएं, सरकारी मृदा स्वास्थ्य कार्ड (Soil Health Card) डाउनलोड करें, और अपनी चुनी हुई फसल अनुसार यूरिया, DAP, पोटाश व कीटनाशक की सही मात्रा जानें।
+                </p>
+              </div>
+              <div
+                class="mt-4 pt-2 border-t border-emerald-100 text-xs font-semibold text-[#15803d] flex items-center justify-between">
+                <span>जांच बुक करें अथवा रिपोर्ट देखें &rarr;</span>
+                <span class="text-[10px] text-amber-700 bg-amber-50 px-2 py-0.5 rounded border border-amber-200">⚠️ उर्वरक कब न डालें नियम शामिल</span>
+              </div>
+            </a>
+
           </div>
         </div>
 
@@ -508,6 +546,7 @@
   <script src="../js/auth.js"></script>
   <script src="farmer.js"></script>
   <script src="../js/complaints.js"></script>
+  <script src="../js/voice-assistant.js"></script>
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {

@@ -16,6 +16,7 @@
 
   <!-- Core Design System -->
   <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/voice-assistant.css">
   <style>
     body {
       background-color: #faf9f5;
@@ -69,6 +70,10 @@
         <a href="complaints.html" class="btn btn-primary btn-sm text-xs font-bold py-1.5 px-2.5">
           शिकायतें (Complaints)
         </a>
+        <button type="button" onclick="window.KisanVoiceAssistant && window.KisanVoiceAssistant.open()"
+          class="btn btn-outline btn-sm text-xs font-semibold py-1.5 px-2.5 text-[#15803d] border-[#15803d] bg-emerald-50/50 hover:bg-emerald-100/60 cursor-pointer flex items-center gap-1">
+          <span>🎙️</span> किसान वाणी AI
+        </button>
         <button type="button" id="logout-btn" class="btn btn-outline btn-sm text-xs py-1.5 px-2.5 text-slate-600">
           लॉगआउट
         </button>
@@ -290,6 +295,7 @@
   <script src="../js/auth.js"></script>
   <script src="farmer.js"></script>
   <script src="../js/complaints.js"></script>
+  <script src="../js/voice-assistant.js"></script>
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
