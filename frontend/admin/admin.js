@@ -1075,8 +1075,105 @@
       }
 
       return headerComments + "No data\n";
+    },
+
+    /**
+     * Injects an interactive district switcher next to the district badge in the admin portal header.
+     * Allows district administrators to switch jurisdictions smoothly without logging out.
+     */
+    initHeaderDistrictSwitcher() {
+      const badge = document.getElementById('district-badge') || document.getElementById('header-district-badge');
+      if (!badge || document.getElementById('district-switcher-container')) return;
+
+      const currentUser = (typeof window !== 'undefined' && window.KisanAuth) ? window.KisanAuth.getCurrentUser() : null;
+      if (!currentUser) return;
+
+      const availableAdmins = (window.KisanAuth && window.KisanAuth.getAvailableDistrictAdmins) ? window.KisanAuth.getAvailableDistrictAdmins() : [];
+      if (availableAdmins.length <= 1) return;
+
+      const currentDistrict = (currentUser.district || "Karnal").toLowerCase();
+
+      const container = document.createElement('div');
+      container.className = 'relative inline-block text-left ml-2';
+      container.id = 'district-switcher-container';
+
+      const optionsHtml = availableAdmins.map(adm => {
+        const isCurrent = (adm.district || "").toLowerCase() === currentDistrict;
+        return `
+          <button type="button" class="district-switch-item w-full text-left px-3 py-2 text-xs hover:bg-amber-50 flex items-center justify-between transition-colors ${isCurrent ? 'bg-amber-50/70 font-bold text-amber-800' : 'text-slate-700'}" data-district="${adm.district}">
+            <div>
+              <div class="font-medium">${adm.name}</div>
+              <div class="text-[10px] text-slate-400 font-mono">${adm.district} District • Haryana</div>
+            </div>
+            ${isCurrent ? '<span class="text-xs text-amber-800 font-bold">✓ Active</span>' : '<span class="text-[10px] text-amber-700 font-medium">Switch &rarr;</span>'}
+          </button>
+        `;
+      }).join('');
+
+      container.innerHTML = `
+        <button type="button" id="district-switcher-btn" class="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-semibold text-amber-800 bg-amber-50 hover:bg-amber-100 border border-amber-200 rounded transition-colors cursor-pointer" title="Switch District Administration">
+          <span>⇄ Switch District</span>
+          <span class="text-[8px]">▼</span>
+        </button>
+        <div id="district-switcher-menu" class="hidden absolute left-0 mt-1 w-72 bg-white rounded-xl shadow-xl border border-slate-200 py-1 z-50 divide-y divide-slate-100">
+          <div class="px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-slate-500 bg-slate-50 rounded-t-xl flex justify-between items-center">
+            <span>Select Jurisdiction</span>
+            <span class="text-amber-700 font-semibold">${availableAdmins.length} Available</span>
+          </div>
+          <div class="max-h-60 overflow-y-auto">
+            ${optionsHtml}
+          </div>
+        </div>
+      `;
+
+      const parent = badge.parentNode;
+      if (parent) {
+        badge.classList.add('inline-block');
+        parent.style.display = 'flex';
+        parent.style.alignItems = 'center';
+        parent.style.flexWrap = 'wrap';
+        parent.appendChild(container);
+      }
+
+      const btn = container.querySelector('#district-switcher-btn');
+      const menu = container.querySelector('#district-switcher-menu');
+
+      if (btn && menu) {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          menu.classList.toggle('hidden');
+        });
+
+        document.addEventListener('click', (e) => {
+          if (!container.contains(e.target)) {
+            menu.classList.add('hidden');
+          }
+        });
+
+        container.querySelectorAll('.district-switch-item').forEach(item => {
+          item.addEventListener('click', () => {
+            const targetDistrict = item.getAttribute('data-district');
+            if (targetDistrict && targetDistrict.toLowerCase() !== currentDistrict) {
+              window.KisanAuth.switchAdminDistrict(targetDistrict);
+            } else {
+              menu.classList.add('hidden');
+            }
+          });
+        });
+      }
     }
   };
+
+  // Auto-initialize header district switcher when DOM is ready
+  if (typeof document !== 'undefined') {
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', () => {
+        KisanAdmin.initHeaderDistrictSwitcher();
+      });
+    } else {
+      setTimeout(() => KisanAdmin.initHeaderDistrictSwitcher(), 50);
+    }
+  }
 
   // Export to global scope
   window.KisanAdmin = KisanAdmin;

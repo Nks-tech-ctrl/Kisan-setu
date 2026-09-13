@@ -23,25 +23,167 @@ const MOCK_USERS = [
     phone: "+91 98765 43210",
     profileCompleted: true
   },
+  // Multi-Center Facility Operators
   {
     id: "USR-OPERATOR-01",
-    name: "Demo Operator",
+    name: "Karnal Desk Operator",
     email: "operator@demo.com",
+    aliases: ["operator.karnal@demo.com"],
     password: "Operator@123",
     role: "operator",
     centerId: "CTR-HR-01",
-    centerName: "Karnal Central Procurement Center (Demo)",
+    centerName: "Karnal Central Procurement Center",
+    district: "Karnal",
+    state: "Haryana",
     profileCompleted: true
   },
   {
-    id: "USR-ADMIN-01",
-    name: "Demo District Admin",
-    email: "admin@demo.com",
-    password: "Admin@123",
-    role: "district_admin",
-    district: "Karnal District",
+    id: "USR-OPERATOR-02",
+    name: "Ambala Desk Operator",
+    email: "operator.ambala@demo.com",
+    password: "Operator@123",
+    role: "operator",
+    centerId: "CTR-HR-02",
+    centerName: "Ambala Grain Market Center",
+    district: "Ambala",
+    state: "Haryana",
     profileCompleted: true
   },
+  {
+    id: "USR-OPERATOR-03",
+    name: "Rohtak Desk Operator",
+    email: "operator.rohtak@demo.com",
+    password: "Operator@123",
+    role: "operator",
+    centerId: "CTR-HR-03",
+    centerName: "Rohtak Central Procurement Center",
+    district: "Rohtak",
+    state: "Haryana",
+    profileCompleted: true
+  },
+  {
+    id: "USR-OPERATOR-04",
+    name: "Jhajjar Desk Operator",
+    email: "operator.jhajjar@demo.com",
+    password: "Operator@123",
+    role: "operator",
+    centerId: "CTR-HR-04",
+    centerName: "Jhajjar Anaj Mandi Center",
+    district: "Jhajjar",
+    state: "Haryana",
+    profileCompleted: true
+  },
+  {
+    id: "USR-OPERATOR-05",
+    name: "Sonipat Desk Operator",
+    email: "operator.sonipat@demo.com",
+    password: "Operator@123",
+    role: "operator",
+    centerId: "CTR-HR-05",
+    centerName: "Sonipat Grain Yard Center",
+    district: "Sonipat",
+    state: "Haryana",
+    profileCompleted: true
+  },
+  {
+    id: "USR-OPERATOR-06",
+    name: "Panipat Desk Operator",
+    email: "operator.panipat@demo.com",
+    password: "Operator@123",
+    role: "operator",
+    centerId: "CTR-HR-06",
+    centerName: "Panipat Agro Intake Terminal",
+    district: "Panipat",
+    state: "Haryana",
+    profileCompleted: true
+  },
+  {
+    id: "USR-OPERATOR-07",
+    name: "Hisar Desk Operator",
+    email: "operator.hisar@demo.com",
+    password: "Operator@123",
+    role: "operator",
+    centerId: "CTR-HR-07",
+    centerName: "Hisar Mandi Hub",
+    district: "Hisar",
+    state: "Haryana",
+    profileCompleted: true
+  },
+
+  // Multi-District Administrators
+  {
+    id: "USR-ADMIN-01",
+    name: "Karnal District Admin",
+    email: "admin@demo.com",
+    aliases: ["admin.karnal@demo.com"],
+    password: "Admin@123",
+    role: "district_admin",
+    district: "Karnal",
+    state: "Haryana",
+    profileCompleted: true
+  },
+  {
+    id: "USR-ADMIN-02",
+    name: "Ambala District Admin",
+    email: "admin.ambala@demo.com",
+    password: "Admin@123",
+    role: "district_admin",
+    district: "Ambala",
+    state: "Haryana",
+    profileCompleted: true
+  },
+  {
+    id: "USR-ADMIN-03",
+    name: "Rohtak District Admin",
+    email: "admin.rohtak@demo.com",
+    password: "Admin@123",
+    role: "district_admin",
+    district: "Rohtak",
+    state: "Haryana",
+    profileCompleted: true
+  },
+  {
+    id: "USR-ADMIN-04",
+    name: "Jhajjar District Admin",
+    email: "admin.jhajjar@demo.com",
+    password: "Admin@123",
+    role: "district_admin",
+    district: "Jhajjar",
+    state: "Haryana",
+    profileCompleted: true
+  },
+  {
+    id: "USR-ADMIN-05",
+    name: "Sonipat District Admin",
+    email: "admin.sonipat@demo.com",
+    password: "Admin@123",
+    role: "district_admin",
+    district: "Sonipat",
+    state: "Haryana",
+    profileCompleted: true
+  },
+  {
+    id: "USR-ADMIN-06",
+    name: "Panipat District Admin",
+    email: "admin.panipat@demo.com",
+    password: "Admin@123",
+    role: "district_admin",
+    district: "Panipat",
+    state: "Haryana",
+    profileCompleted: true
+  },
+  {
+    id: "USR-ADMIN-07",
+    name: "Hisar District Admin",
+    email: "admin.hisar@demo.com",
+    password: "Admin@123",
+    role: "district_admin",
+    district: "Hisar",
+    state: "Haryana",
+    profileCompleted: true
+  },
+
+  // State Super Admin
   {
     id: "USR-SUPERADMIN-01",
     name: "Demo Super Admin",
@@ -104,7 +246,10 @@ const KisanAuth = {
 
     // Check pre-configured demo users + dynamically registered farmers
     const allUsers = [...MOCK_USERS, ...getDynamicallyRegisteredUsers()];
-    const matchedUser = allUsers.find(u => u.email.toLowerCase() === cleanEmail);
+    const matchedUser = allUsers.find(u =>
+      u.email.toLowerCase() === cleanEmail ||
+      (Array.isArray(u.aliases) && u.aliases.some(a => a.toLowerCase() === cleanEmail))
+    );
 
     if (!matchedUser || matchedUser.password !== cleanPass) {
       return {
@@ -139,6 +284,7 @@ const KisanAuth = {
       centerId: matchedUser.centerId || null,
       centerName: matchedUser.centerName || null,
       district: matchedUser.district || null,
+      state: matchedUser.state || "Haryana",
       loggedInAt: new Date().toISOString()
     };
 
@@ -358,8 +504,8 @@ const KisanAuth = {
       localStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(demoUser));
       const currentPath = window.location.pathname;
       const currentContext = currentPath.includes('/operator/') ? 'operator' :
-                             currentPath.includes('/admin/') ? 'admin' :
-                             currentPath.includes('/farmer/') ? 'farmer' : 'pages';
+        currentPath.includes('/admin/') ? 'admin' :
+          currentPath.includes('/farmer/') ? 'farmer' : 'pages';
       window.location.href = this.getDashboardUrl(targetRole, currentContext);
     }
   }

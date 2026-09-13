@@ -359,6 +359,10 @@
       if (userNameEl) {
         userNameEl.textContent = operatorUser.name || "Demo Operator";
       }
+      if (operatorUser.centerName) {
+        const badgeEl = document.getElementById('facility-badge');
+        if (badgeEl) badgeEl.textContent = operatorUser.centerName;
+      }
 
       // Logout handler
       document.getElementById('logout-btn')?.addEventListener('click', () => {

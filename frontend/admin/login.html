@@ -74,11 +74,30 @@
         <!-- Login Form -->
         <form id="login-form" class="space-y-4">
 
+          <!-- Select Assigned District Preset -->
+          <div class="form-group mb-3">
+            <div class="flex justify-between items-center mb-1">
+              <label for="district-selector" class="form-label text-xs mb-0">Assigned District Administration</label>
+              <span class="text-[10px] text-amber-700 font-semibold bg-amber-50 px-1.5 py-0.5 rounded border border-amber-200">
+                Quick Select
+              </span>
+            </div>
+            <select id="district-selector" class="form-input text-xs focus:border-amber-600 focus:ring-amber-600 bg-slate-50/80 cursor-pointer font-medium">
+              <option value="admin@demo.com" data-pass="Admin@123" selected>Karnal Administrative District</option>
+              <option value="admin.ambala@demo.com" data-pass="Admin@123">Ambala Administrative District</option>
+              <option value="admin.rohtak@demo.com" data-pass="Admin@123">Rohtak Administrative District</option>
+              <option value="admin.jhajjar@demo.com" data-pass="Admin@123">Jhajjar Administrative District</option>
+              <option value="admin.sonipat@demo.com" data-pass="Admin@123">Sonipat Administrative District</option>
+              <option value="admin.panipat@demo.com" data-pass="Admin@123">Panipat Administrative District</option>
+              <option value="admin.hisar@demo.com" data-pass="Admin@123">Hisar Administrative District</option>
+            </select>
+          </div>
+
           <!-- Email or Admin ID -->
           <div class="form-group mb-3">
             <label for="login-email" class="form-label text-xs">Administrative Email</label>
             <input type="text" id="login-email" class="form-input text-sm focus:border-amber-600 focus:ring-amber-600"
-              placeholder="e.g. admin@demo.com" required autocomplete="username">
+              value="admin@demo.com" placeholder="e.g. admin@demo.com" required autocomplete="username">
           </div>
 
           <!-- Password -->
@@ -90,7 +109,7 @@
             </div>
             <div class="relative">
               <input type="password" id="login-password"
-                class="form-input text-sm pr-10 focus:border-amber-600 focus:ring-amber-600" placeholder="••••••••"
+                class="form-input text-sm pr-10 focus:border-amber-600 focus:ring-amber-600" value="Admin@123" placeholder="••••••••"
                 required autocomplete="current-password">
               <button type="button" id="toggle-password-btn"
                 class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 focus:outline-none"
@@ -130,20 +149,48 @@
 
       <!-- Demo Access Accordion for Prototype Testing -->
       <div class="mt-4 card p-3 bg-slate-50 border-slate-200 text-xs">
-        <details class="group">
+        <details class="group" open>
           <summary class="cursor-pointer font-medium text-slate-600 flex items-center justify-between select-none">
             <span class="flex items-center gap-1.5 text-slate-700">
               <span class="w-2 h-2 rounded-full bg-amber-600"></span>
-              <strong>Demo District Admin Credentials</strong>
+              <strong>Available District Admin Accounts</strong>
             </span>
             <span class="text-slate-400 group-open:rotate-180 transition-transform">▼</span>
           </summary>
           <div class="pt-3 border-t border-slate-200 mt-2 space-y-2">
-            <p class="text-[11px] text-slate-500">Click below to autofill pre-configured district admin credentials:</p>
-            <button type="button" id="autofill-admin-btn"
-              class="btn btn-outline btn-sm text-[11px] justify-start py-1.5 px-3 w-full">
-              ● Autofill Demo District Admin (<span class="font-mono text-slate-700 ml-1">admin@demo.com</span>)
-            </button>
+            <p class="text-[11px] text-slate-500">Click any district admin below to instantly log in or autofill:</p>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
+              <button type="button" class="quick-admin-btn btn btn-outline btn-sm text-[11px] justify-start py-1.5 px-2.5 w-full hover:border-amber-600 hover:bg-amber-50"
+                data-email="admin@demo.com" data-pass="Admin@123">
+                <span class="truncate">🏛️ <strong>Karnal District</strong></span>
+              </button>
+              <button type="button" class="quick-admin-btn btn btn-outline btn-sm text-[11px] justify-start py-1.5 px-2.5 w-full hover:border-amber-600 hover:bg-amber-50"
+                data-email="admin.ambala@demo.com" data-pass="Admin@123">
+                <span class="truncate">🏛️ <strong>Ambala District</strong></span>
+              </button>
+              <button type="button" class="quick-admin-btn btn btn-outline btn-sm text-[11px] justify-start py-1.5 px-2.5 w-full hover:border-amber-600 hover:bg-amber-50"
+                data-email="admin.rohtak@demo.com" data-pass="Admin@123">
+                <span class="truncate">🏛️ <strong>Rohtak District</strong></span>
+              </button>
+              <button type="button" class="quick-admin-btn btn btn-outline btn-sm text-[11px] justify-start py-1.5 px-2.5 w-full hover:border-amber-600 hover:bg-amber-50"
+                data-email="admin.jhajjar@demo.com" data-pass="Admin@123">
+                <span class="truncate">🏛️ <strong>Jhajjar District</strong></span>
+              </button>
+              <button type="button" class="quick-admin-btn btn btn-outline btn-sm text-[11px] justify-start py-1.5 px-2.5 w-full hover:border-amber-600 hover:bg-amber-50"
+                data-email="admin.sonipat@demo.com" data-pass="Admin@123">
+                <span class="truncate">🏛️ <strong>Sonipat District</strong></span>
+              </button>
+              <button type="button" class="quick-admin-btn btn btn-outline btn-sm text-[11px] justify-start py-1.5 px-2.5 w-full hover:border-amber-600 hover:bg-amber-50"
+                data-email="admin.panipat@demo.com" data-pass="Admin@123">
+                <span class="truncate">🏛️ <strong>Panipat District</strong></span>
+              </button>
+              <button type="button" class="quick-admin-btn btn btn-outline btn-sm text-[11px] justify-start py-1.5 px-2.5 w-full hover:border-amber-600 hover:bg-amber-50"
+                data-email="admin.hisar@demo.com" data-pass="Admin@123">
+                <span class="truncate">🏛️ <strong>Hisar District</strong></span>
+              </button>
+            </div>
+
             <div class="pt-2 border-t border-slate-200 text-[11px] text-slate-500 space-y-1">
               <div class="font-semibold text-slate-700">Looking for other portals?</div>
               <div class="flex flex-wrap gap-2 text-amber-700 font-medium">
@@ -193,14 +240,43 @@
         });
       }
 
-      // Autofill demo button
-      if (autofillAdminBtn) {
-        autofillAdminBtn.addEventListener('click', () => {
-          emailInput.value = 'admin@demo.com';
-          passwordInput.value = 'Admin@123';
+      const districtSelector = document.getElementById('district-selector');
+      const quickAdminBtns = document.querySelectorAll('.quick-admin-btn');
+
+      // District Selector change listener
+      if (districtSelector) {
+        districtSelector.addEventListener('change', () => {
+          const selectedEmail = districtSelector.value;
+          const selectedPass = districtSelector.options[districtSelector.selectedIndex]?.getAttribute('data-pass') || 'Admin@123';
+          emailInput.value = selectedEmail;
+          passwordInput.value = selectedPass;
           errorBox.classList.add('hidden');
         });
       }
+
+      // Quick District Admin 1-Click Buttons
+      quickAdminBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const email = btn.getAttribute('data-email');
+          const pass = btn.getAttribute('data-pass') || 'Admin@123';
+          emailInput.value = email;
+          passwordInput.value = pass;
+          errorBox.classList.add('hidden');
+
+          // Sync selector
+          if (districtSelector) {
+            for (let i = 0; i < districtSelector.options.length; i++) {
+              if (districtSelector.options[i].value === email) {
+                districtSelector.selectedIndex = i;
+                break;
+              }
+            }
+          }
+
+          // Trigger smooth direct login
+          loginForm.dispatchEvent(new Event('submit'));
+        });
+      });
 
       // Form submission handler (Fixed District Admin Role)
       loginForm.addEventListener('submit', (e) => {

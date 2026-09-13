@@ -57,11 +57,14 @@ def on_startup():
 
 @app.get("/api/v1/health", tags=["System Health"])
 def health_check():
+    from backend.database import IS_SUPABASE
+    db_name = "Supabase PostgreSQL" if IS_SUPABASE else "SQLite (data/kisansetu.db)"
     return {
         "status": "healthy",
         "service": "KisanSetu Backend Engine",
         "version": "1.0.0",
-        "database": "SQLite (data/kisansetu.db)",
+        "database": db_name,
+        "is_supabase": IS_SUPABASE,
         "docs": "/docs"
     }
 

@@ -393,7 +393,7 @@ DEFAULT_USERS = [
     },
     {
         "id": "USR-OPERATOR-01",
-        "name": "Demo Operator",
+        "name": "Karnal Desk Operator",
         "email": "operator@demo.com",
         "password": "Operator@123",
         "role": "operator",
@@ -404,13 +404,145 @@ DEFAULT_USERS = [
         "state": "Haryana"
     },
     {
+        "id": "USR-OPERATOR-02",
+        "name": "Ambala Desk Operator",
+        "email": "operator.ambala@demo.com",
+        "password": "Operator@123",
+        "role": "operator",
+        "phone": "+91 98120 22334",
+        "center_id": "CTR-HR-02",
+        "center_name": "Ambala Grain Market Center",
+        "district": "Ambala",
+        "state": "Haryana"
+    },
+    {
+        "id": "USR-OPERATOR-03",
+        "name": "Rohtak Desk Operator",
+        "email": "operator.rohtak@demo.com",
+        "password": "Operator@123",
+        "role": "operator",
+        "phone": "+91 98120 33445",
+        "center_id": "CTR-HR-03",
+        "center_name": "Rohtak Central Procurement Center",
+        "district": "Rohtak",
+        "state": "Haryana"
+    },
+    {
+        "id": "USR-OPERATOR-04",
+        "name": "Jhajjar Desk Operator",
+        "email": "operator.jhajjar@demo.com",
+        "password": "Operator@123",
+        "role": "operator",
+        "phone": "+91 98120 44556",
+        "center_id": "CTR-HR-04",
+        "center_name": "Jhajjar Anaj Mandi Center",
+        "district": "Jhajjar",
+        "state": "Haryana"
+    },
+    {
+        "id": "USR-OPERATOR-05",
+        "name": "Sonipat Desk Operator",
+        "email": "operator.sonipat@demo.com",
+        "password": "Operator@123",
+        "role": "operator",
+        "phone": "+91 98120 55667",
+        "center_id": "CTR-HR-05",
+        "center_name": "Sonipat Grain Yard Center",
+        "district": "Sonipat",
+        "state": "Haryana"
+    },
+    {
+        "id": "USR-OPERATOR-06",
+        "name": "Panipat Desk Operator",
+        "email": "operator.panipat@demo.com",
+        "password": "Operator@123",
+        "role": "operator",
+        "phone": "+91 98120 66778",
+        "center_id": "CTR-HR-06",
+        "center_name": "Panipat Agro Intake Terminal",
+        "district": "Panipat",
+        "state": "Haryana"
+    },
+    {
+        "id": "USR-OPERATOR-07",
+        "name": "Hisar Desk Operator",
+        "email": "operator.hisar@demo.com",
+        "password": "Operator@123",
+        "role": "operator",
+        "phone": "+91 98120 77889",
+        "center_id": "CTR-HR-07",
+        "center_name": "Hisar Mandi Hub",
+        "district": "Hisar",
+        "state": "Haryana"
+    },
+    {
         "id": "USR-ADMIN-01",
-        "name": "Demo District Admin",
+        "name": "Karnal District Admin",
         "email": "admin@demo.com",
         "password": "Admin@123",
         "role": "district_admin",
         "phone": "+91 98130 99887",
         "district": "Karnal",
+        "state": "Haryana"
+    },
+    {
+        "id": "USR-ADMIN-02",
+        "name": "Ambala District Admin",
+        "email": "admin.ambala@demo.com",
+        "password": "Admin@123",
+        "role": "district_admin",
+        "phone": "+91 98130 11223",
+        "district": "Ambala",
+        "state": "Haryana"
+    },
+    {
+        "id": "USR-ADMIN-03",
+        "name": "Rohtak District Admin",
+        "email": "admin.rohtak@demo.com",
+        "password": "Admin@123",
+        "role": "district_admin",
+        "phone": "+91 98130 22334",
+        "district": "Rohtak",
+        "state": "Haryana"
+    },
+    {
+        "id": "USR-ADMIN-04",
+        "name": "Jhajjar District Admin",
+        "email": "admin.jhajjar@demo.com",
+        "password": "Admin@123",
+        "role": "district_admin",
+        "phone": "+91 98130 33445",
+        "district": "Jhajjar",
+        "state": "Haryana"
+    },
+    {
+        "id": "USR-ADMIN-05",
+        "name": "Sonipat District Admin",
+        "email": "admin.sonipat@demo.com",
+        "password": "Admin@123",
+        "role": "district_admin",
+        "phone": "+91 98130 44556",
+        "district": "Sonipat",
+        "state": "Haryana"
+    },
+    {
+        "id": "USR-ADMIN-06",
+        "name": "Panipat District Admin",
+        "email": "admin.panipat@demo.com",
+        "password": "Admin@123",
+        "role": "district_admin",
+        "phone": "+91 98130 55667",
+        "district": "Panipat",
+        "state": "Haryana"
+    },
+    {
+        "id": "USR-ADMIN-07",
+        "name": "Hisar District Admin",
+        "email": "admin.hisar@demo.com",
+        "password": "Admin@123",
+        "role": "district_admin",
+        "phone": "+91 98130 66778",
+        "district": "Hisar",
         "state": "Haryana"
     },
     {
@@ -612,11 +744,18 @@ def seed_all():
                 db.add(Commodity(**com))
             print(f"[Seed] Added {len(DEFAULT_COMMODITIES)} commodities.")
 
-        # Seed Users if empty
-        if db.query(User).count() == 0:
-            for u in DEFAULT_USERS:
+        # Seed or sync Users
+        existing_user_ids = {u.id for u in db.query(User.id).all()}
+        existing_emails = {u.email.lower() for u in db.query(User.email).all()}
+        added_users = 0
+        for u in DEFAULT_USERS:
+            if u["id"] not in existing_user_ids and u["email"].lower() not in existing_emails:
                 db.add(User(**u))
-            print(f"[Seed] Added {len(DEFAULT_USERS)} demo users.")
+                existing_user_ids.add(u["id"])
+                existing_emails.add(u["email"].lower())
+                added_users += 1
+        if added_users > 0:
+            print(f"[Seed] Added {added_users} new demo users.")
 
         # Seed Queue Entries if empty
         if db.query(QueueEntry).count() == 0:
