@@ -17,6 +17,7 @@ from backend.routers import (
     complaints,
     analytics,
     assistant,
+    soil_testing,
 )
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -50,6 +51,7 @@ app.include_router(procurement.router, prefix="/api/v1")
 app.include_router(complaints.router, prefix="/api/v1")
 app.include_router(analytics.router, prefix="/api/v1")
 app.include_router(assistant.router, prefix="/api/v1")
+app.include_router(soil_testing.router, prefix="/api/v1")
 
 @app.on_event("startup")
 def on_startup():
