@@ -510,14 +510,14 @@ def get_farmer_soil_status(farmer_id_or_phone: str, crop_override: Optional[str]
     """
     clean_val = farmer_id_or_phone.replace(" ", "").replace("+91", "").strip()
 
-    # Search by phone or ID
-    record = db.query(SoilTestRecord).filter(
+    # Search by phone or ID - prefer COMPLETED record if available so farmer gets lab advisory
+    records = db.query(SoilTestRecord).filter(
         (SoilTestRecord.farmer_phone == clean_val) |
         (SoilTestRecord.farmer_id == clean_val) |
         (SoilTestRecord.farmer_phone.like(f"%{clean_val}%"))
-    ).order_by(SoilTestRecord.created_at.desc()).first()
+    ).order_by(SoilTestRecord.created_at.desc()).all()
 
-    if not record:
+    if not records:
         return {
             "success": True,
             "has_soil_test": False,
@@ -528,6 +528,8 @@ def get_farmer_soil_status(farmer_id_or_phone: str, crop_override: Optional[str]
             "status_label": "परीक्षण नहीं हुआ (Soil Testing NOT Done)",
             "message": "इस किसान का कोई पंजीकृत मृदा परीक्षण रिकॉर्ड नहीं मिला। कृपया परीक्षण स्लॉट बुक करें।"
         }
+
+    record = next((r for r in records if r.status == "COMPLETED"), records[0])
 
     target_crop = crop_override or record.crop_planned
     soil_data = {
