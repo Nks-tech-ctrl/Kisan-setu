@@ -2,7 +2,7 @@ import json
 import datetime
 from sqlalchemy.orm import Session
 from backend.database import SessionLocal, init_db
-from backend.models import User, Center, Commodity, Booking, QueueEntry, ProcurementRecord, Complaint
+from backend.models import User, Center, Commodity, Booking, QueueEntry, ProcurementRecord, Complaint, SoilTestRecord
 
 DEFAULT_CENTERS = [
     {
@@ -728,6 +728,69 @@ DEFAULT_COMPLAINTS = [
     }
 ]
 
+DEFAULT_SOIL_TESTS = [
+    {
+        "id": "ST-2026-1001",
+        "sample_id": "SMP-HR-7821",
+        "farmer_id": "USR-FARMER-01",
+        "farmer_name": "Demo Farmer",
+        "farmer_phone": "9876543210",
+        "district": "Karnal",
+        "state": "Haryana",
+        "village": "Kachhwa",
+        "center_id": "CTR-HR-01",
+        "center_name": "Karnal Central Procurement Center",
+        "booking_date": "2026-03-10",
+        "time_slot": "10:00 AM – 11:00 AM",
+        "crop_planned": "Wheat (Grade A)",
+        "land_area_acres": 5.5,
+        "soil_type": "Alluvial Loam (दोमट मिट्टी)",
+        "status": "COMPLETED",
+        "ph_level": 7.2,
+        "ec_level": 0.42,
+        "organic_carbon_percent": 0.54,
+        "nitrogen_kg_ha": 245.0,
+        "phosphorus_kg_ha": 17.2,
+        "potassium_kg_ha": 215.0,
+        "zinc_ppm": 0.54,
+        "sulphur_ppm": 8.5,
+        "health_status": "MODERATE",
+        "advisory_notes": "मृदा स्वास्थ्य मध्यम है। फास्फोरस व पोटाश पर्याप्त है। जिंक और नाइट्रोजन की अनुशंसित खुराक अवश्य डालें।",
+        "created_at": datetime.datetime.utcnow(),
+        "tested_at": datetime.datetime.utcnow()
+    },
+    {
+        "id": "ST-2026-1002",
+        "sample_id": "SMP-HR-7822",
+        "farmer_id": "USR-FARMER-02",
+        "farmer_name": "Ramesh Kumar",
+        "farmer_phone": "9812045678",
+        "district": "Karnal",
+        "state": "Haryana",
+        "village": "Taraori",
+        "center_id": "CTR-HR-01",
+        "center_name": "Karnal Central Procurement Center",
+        "booking_date": "2026-03-12",
+        "time_slot": "11:00 AM – 12:00 PM",
+        "crop_planned": "Mustard",
+        "land_area_acres": 4.0,
+        "soil_type": "Sandy Loam (बलुई दोमट)",
+        "status": "IN_TESTING",
+        "ph_level": 7.4,
+        "ec_level": 0.38,
+        "organic_carbon_percent": 0.48,
+        "nitrogen_kg_ha": 220.0,
+        "phosphorus_kg_ha": 14.0,
+        "potassium_kg_ha": 190.0,
+        "zinc_ppm": 0.48,
+        "sulphur_ppm": 6.8,
+        "health_status": "TESTING_IN_LAB",
+        "advisory_notes": "नमूना जांच प्रयोगशाला में प्रक्रियाधीन है।",
+        "created_at": datetime.datetime.utcnow(),
+        "tested_at": datetime.datetime.utcnow()
+    }
+]
+
 def seed_all():
     init_db()
     db: Session = SessionLocal()
@@ -780,6 +843,12 @@ def seed_all():
             for cmp in DEFAULT_COMPLAINTS:
                 db.add(Complaint(**cmp))
             print(f"[Seed] Added {len(DEFAULT_COMPLAINTS)} complaints.")
+
+        # Seed Soil Test Records if empty
+        if db.query(SoilTestRecord).count() == 0:
+            for st in DEFAULT_SOIL_TESTS:
+                db.add(SoilTestRecord(**st))
+            print(f"[Seed] Added {len(DEFAULT_SOIL_TESTS)} soil test records.")
 
         db.commit()
     except Exception as e:

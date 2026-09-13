@@ -137,3 +137,39 @@ class Complaint(Base):
     resolution_notes = Column(Text, nullable=True)
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.datetime.utcnow)
+
+class SoilTestRecord(Base):
+    __tablename__ = "soil_tests"
+
+    id = Column(String, primary_key=True, index=True)           # e.g. ST-2026-101
+    sample_id = Column(String, unique=True, index=True)         # e.g. SMP-HR-7821
+    farmer_id = Column(String, index=True, nullable=False)
+    farmer_name = Column(String, nullable=False)
+    farmer_phone = Column(String, index=True, nullable=False)
+    district = Column(String, nullable=False)
+    state = Column(String, default="Haryana")
+    village = Column(String, nullable=True)
+    center_id = Column(String, nullable=True, index=True)
+    center_name = Column(String, nullable=True)
+    booking_date = Column(String, nullable=False)
+    time_slot = Column(String, nullable=False)
+    crop_planned = Column(String, nullable=False, default="Wheat (Grade A)")
+    land_area_acres = Column(Float, default=5.0)
+    soil_type = Column(String, default="Alluvial Loam (दोमट मिट्टी)")
+    status = Column(String, default="COMPLETED")                # 'BOOKED', 'SAMPLE_COLLECTED', 'IN_TESTING', 'COMPLETED'
+    
+    # Soil Health Card Parameters
+    ph_level = Column(Float, default=7.2)
+    ec_level = Column(Float, default=0.45)                      # dS/m
+    organic_carbon_percent = Column(Float, default=0.52)        # %
+    nitrogen_kg_ha = Column(Float, default=240.0)               # Available N kg/ha
+    phosphorus_kg_ha = Column(Float, default=16.5)              # Available P kg/ha
+    potassium_kg_ha = Column(Float, default=210.0)              # Available K kg/ha
+    zinc_ppm = Column(Float, default=0.55)                      # Zinc ppm
+    sulphur_ppm = Column(Float, default=8.2)                    # Sulphur ppm
+    
+    # Health Assessment & Advisories
+    health_status = Column(String, default="MODERATE")          # 'EXCELLENT', 'GOOD', 'MODERATE', 'POOR'
+    advisory_notes = Column(Text, nullable=True)
+    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+    tested_at = Column(DateTime, default=datetime.datetime.utcnow)

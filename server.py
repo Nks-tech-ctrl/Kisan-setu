@@ -3,6 +3,9 @@ import sys
 # pyrefly: ignore [missing-import]
 import uvicorn
 
+# Expose top-level FastAPI application instance for ASGI servers and preview tools
+from backend.main import app
+
 PORT = 8000
 
 def main():
@@ -30,7 +33,7 @@ def main():
 
     # Run Uvicorn ASGI server
     uvicorn.run(
-        "backend.main:app",
+        "server:app",
         host="0.0.0.0",
         port=port,
         reload=False,
@@ -39,3 +42,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
